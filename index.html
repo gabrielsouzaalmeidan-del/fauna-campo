@@ -439,9 +439,9 @@ textarea { resize: vertical; min-height: 60px; }
 .stag-COL { background:#fce4ec; color:#b71c1c; }
 .stag-NA  { background:#f5f5f5; color:#616161; }
 
-/* 6 nav buttons */
-.nav-btn { font-size: 8.5px; padding: 7px 1px 9px; }
-.nav-btn .nav-icon { font-size: 16px; }
+/* 7 nav buttons */
+.nav-btn { font-size: 8px; padding: 6px 1px 8px; }
+.nav-btn .nav-icon { font-size: 15px; }
 
 
 /* ── GPS / COORDENADAS UTM ───────────────────────────── */
@@ -863,6 +863,112 @@ body.dark-mode .lightbox-overlay { background: rgba(0,0,0,0.97); }
 #network-badge.online  { background: #e8f5e9; color: #2e7d32; opacity: 0; }
 #network-badge.offline { background: var(--perigo-bg); color: var(--perigo); opacity: 1; }
 
+
+/* ── FASE 2: HIERARQUIA DE CAMPANHA ─────────────────────── */
+
+/* Painel de campanhas */
+.camp-list { display:flex; flex-direction:column; gap:8px; margin-bottom:12px; }
+.camp-card {
+  background:var(--branco); border:1px solid var(--verde-borda);
+  border-left:4px solid var(--verde-medio); border-radius:var(--radius);
+  padding:12px 14px; cursor:pointer; box-shadow:var(--sombra);
+  transition:all 0.15s; position:relative;
+}
+.camp-card:active { transform:scale(0.98); }
+.camp-card.ativa  { border-left-color:#2196F3; background:var(--verde-suave); }
+.camp-nome  { font-size:14px; font-weight:800; color:var(--texto); margin-bottom:2px; }
+.camp-meta  { font-size:11px; color:var(--texto-muted); line-height:1.6; }
+.camp-badge {
+  position:absolute; top:10px; right:10px;
+  font-size:9px; font-weight:800; padding:2px 8px;
+  border-radius:99px; letter-spacing:0.04em;
+}
+.camp-badge.ativa  { background:#e3f2fd; color:#1565c0; }
+.camp-badge.inativa{ background:var(--areia-escura); color:var(--texto-muted); }
+.camp-actions { display:flex; gap:6px; margin-top:8px; }
+.camp-actions button {
+  flex:1; padding:6px; border-radius:var(--radius-sm);
+  border:1.5px solid var(--verde-borda); background:var(--branco);
+  font-size:11px; font-weight:700; cursor:pointer; color:var(--texto-suave);
+}
+.camp-actions .btn-ativar {
+  background:var(--verde-medio); color:#fff; border-color:var(--verde-medio);
+}
+
+/* Formulário nova campanha */
+.new-camp-form {
+  background:var(--verde-suave); border:1px solid var(--verde-borda);
+  border-radius:var(--radius); padding:14px; margin-bottom:12px; display:none;
+}
+.new-camp-form.show { display:block; }
+
+/* Pontos amostrais */
+.ponto-list { display:flex; flex-direction:column; gap:6px; margin-bottom:10px; }
+.ponto-card {
+  background:var(--branco); border:1px solid var(--verde-borda);
+  border-radius:var(--radius-sm); padding:10px 12px;
+  display:flex; align-items:center; gap:10px;
+  box-shadow:var(--sombra); cursor:pointer; transition:all 0.12s;
+}
+.ponto-card:active { transform:scale(0.97); }
+.ponto-card.sel { background:var(--verde-suave); border-color:var(--verde-medio); }
+.ponto-icon  { font-size:20px; }
+.ponto-info  { flex:1; min-width:0; }
+.ponto-nome  { font-size:13px; font-weight:700; color:var(--texto); }
+.ponto-coord { font-size:10px; color:var(--texto-muted); font-family:monospace; }
+.ponto-del   {
+  background:none; border:none; color:var(--texto-muted);
+  font-size:16px; cursor:pointer; padding:4px; line-height:1;
+}
+
+/* Barra de contexto ativo — aparece em todos os formulários */
+.ctx-banner {
+  background:var(--verde-escuro); color:#fff;
+  border-radius:var(--radius-sm); padding:8px 12px;
+  margin-bottom:10px; font-size:11px; line-height:1.6;
+  display:none;
+}
+.ctx-banner.show { display:block; }
+.ctx-banner strong { color:#a5d6a7; }
+.ctx-banner-row { display:flex; align-items:center; justify-content:space-between; gap:8px; }
+.ctx-banner-trocar {
+  background:rgba(255,255,255,0.15); border:none; color:#fff;
+  border-radius:var(--radius-sm); padding:3px 9px;
+  font-size:10px; font-weight:700; cursor:pointer; white-space:nowrap;
+}
+
+/* Indicador de campanha ativa no header */
+.camp-indicator {
+  background:rgba(255,255,255,0.12); border-radius:var(--radius-sm);
+  padding:2px 10px; font-size:10px; font-weight:700; color:rgba(255,255,255,0.9);
+  max-width:180px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+}
+.camp-indicator.none { opacity:0.5; }
+
+/* Tabs dentro do painel campanha */
+.camp-tabs { display:flex; gap:6px; margin-bottom:14px; }
+.camp-tab {
+  flex:1; padding:8px; border-radius:var(--radius-sm);
+  border:1.5px solid var(--verde-borda); background:var(--branco);
+  font-size:11px; font-weight:700; cursor:pointer; text-align:center;
+  color:var(--texto-suave); transition:all 0.12s;
+}
+.camp-tab.active { background:var(--verde-medio); color:#fff; border-color:var(--verde-medio); }
+.camp-tab-section { display:none; }
+.camp-tab-section.active { display:block; }
+
+/* Esforço amostral */
+.esforco-grid {
+  display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:10px;
+}
+.esforco-card {
+  background:var(--branco); border:1px solid var(--verde-borda);
+  border-radius:var(--radius-sm); padding:10px; text-align:center;
+  box-shadow:var(--sombra);
+}
+.esforco-num   { font-size:22px; font-weight:900; color:var(--verde-medio); }
+.esforco-label { font-size:9px; color:var(--texto-muted); font-weight:700; text-transform:uppercase; letter-spacing:0.04em; margin-top:2px; }
+
 </style>
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -1140,6 +1246,15 @@ body.dark-mode .lightbox-overlay { background: rgba(0,0,0,0.97); }
       </div>
     </div>
 
+<div class="ctx-banner" id="ctx-banner-bio">
+  <div class="ctx-banner-row">
+    <div>
+      <strong id="ctx-b-bio-camp">—</strong><br>
+      <span id="ctx-b-bio-ponto">Nenhum ponto selecionado</span>
+    </div>
+    <button class="ctx-banner-trocar" onclick="irPara('campanhas', document.querySelector('[onclick*=campanhas]'))">Trocar</button>
+  </div>
+</div>
 <div class="bio-tabs" id="bio-tabs">
     <button class="bio-tab active" onclick="bioTab('Avifauna',this)"><span class="tab-icon">🐦</span>Avifauna</button>
     <button class="bio-tab" onclick="bioTab('Mastofauna',this)"><span class="tab-icon">🐾</span>Mastofauna</button>
@@ -1816,6 +1931,172 @@ body.dark-mode .lightbox-overlay { background: rgba(0,0,0,0.97); }
 
 
 
+<!-- CAMPANHAS -->
+<div class="panel" id="panel-campanhas">
+ <div class="card">
+  <div class="card-title">🗂️ Campanhas</div>
+
+  <!-- Campanha ativa -->
+  <div id="camp-ativa-bar" style="display:none;background:var(--verde-suave);border:1px solid var(--verde-borda);border-radius:var(--radius-sm);padding:10px 12px;margin-bottom:12px">
+    <div style="font-size:10px;font-weight:700;color:var(--verde-medio);text-transform:uppercase;letter-spacing:.04em;margin-bottom:3px">✅ Campanha ativa</div>
+    <div id="camp-ativa-nome" style="font-size:14px;font-weight:800;color:var(--texto)"></div>
+    <div id="camp-ativa-info" style="font-size:11px;color:var(--texto-muted);margin-top:2px"></div>
+  </div>
+
+  <!-- Tabs: Campanhas / Pontos / Esforço -->
+  <div class="camp-tabs">
+    <button class="camp-tab active" onclick="campTab('campanhas',this)">🗂️ Campanhas</button>
+    <button class="camp-tab" onclick="campTab('pontos',this)">📍 Pontos</button>
+    <button class="camp-tab" onclick="campTab('esforco',this)">⏱️ Esforço</button>
+  </div>
+
+  <!-- TAB: CAMPANHAS ──────────────────────────────────── -->
+  <div class="camp-tab-section active" id="camp-tab-campanhas">
+    <button class="btn btn-primary" style="width:100%;margin-bottom:10px"
+      onclick="toggleNovaCamp()">+ Nova campanha</button>
+
+    <!-- Formulário nova/editar campanha -->
+    <div class="new-camp-form" id="new-camp-form">
+      <div class="section-header" style="margin-bottom:8px" id="new-camp-title">Nova campanha</div>
+      <div class="field-group"><label>Nome da campanha *</label>
+        <input id="nc-nome" placeholder="Ex: Campanha 01 — Caatinga"/></div>
+      <div class="field-group"><label>Projeto / Empreendimento</label>
+        <input id="nc-projeto" placeholder="Ex: EIA Parque Eólico Taboca"/></div>
+      <div class="field-row">
+        <div class="field-group"><label>Data início</label>
+          <input id="nc-inicio" type="date"/></div>
+        <div class="field-group"><label>Data fim</label>
+          <input id="nc-fim" type="date"/></div>
+      </div>
+      <div class="field-row">
+        <div class="field-group"><label>Área de influência</label>
+          <select id="nc-area">
+            <option value="ADA">ADA — Área Diretamente Afetada</option>
+            <option value="AID">AID — Área de Influência Direta</option>
+            <option value="AII">AII — Área de Influência Indireta</option>
+            <option value="Controle">Área Controle</option>
+            <option value="Outra">Outra</option>
+          </select></div>
+        <div class="field-group"><label>Estação</label>
+          <select id="nc-estacao">
+            <option>Chuvosa</option><option>Seca</option><option>Transição</option>
+          </select></div>
+      </div>
+      <div class="field-group"><label>Consultor responsável</label>
+        <input id="nc-consultor" placeholder="Nome do biólogo responsável"/></div>
+      <div class="field-group"><label>Observações</label>
+        <textarea id="nc-obs" placeholder="Objetivos, área de estudo, metodologias previstas..." rows="2"></textarea></div>
+      <div class="alert" id="nc-alert"></div>
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-primary" style="flex:1" onclick="salvarCampanha()">💾 Salvar</button>
+        <button class="btn btn-secondary" onclick="toggleNovaCamp()">Cancelar</button>
+      </div>
+    </div>
+
+    <!-- Lista de campanhas -->
+    <div class="camp-list" id="camp-list">
+      <div class="empty"><div class="empty-icon">🗂️</div>
+        <p>Nenhuma campanha criada.<br>Crie a primeira campanha para começar.</p></div>
+    </div>
+  </div>
+
+  <!-- TAB: PONTOS AMOSTRAIS ───────────────────────────── -->
+  <div class="camp-tab-section" id="camp-tab-pontos">
+    <div id="pontos-sem-camp" style="text-align:center;color:var(--texto-muted);padding:16px;font-size:12px">
+      ⚠️ Selecione uma campanha ativa primeiro
+    </div>
+    <div id="pontos-conteudo" style="display:none">
+      <button class="btn btn-primary" style="width:100%;margin-bottom:10px"
+        onclick="toggleNovoPonto()">+ Adicionar ponto amostral</button>
+
+      <!-- Formulário novo ponto -->
+      <div class="new-camp-form" id="new-ponto-form">
+        <div class="section-header" style="margin-bottom:8px">Novo ponto amostral</div>
+        <div class="field-group"><label>Nome / Código *</label>
+          <input id="np-nome" placeholder="Ex: P01, Trilha A, Riacho R1"/></div>
+        <div class="field-group"><label>Tipo de ambiente</label>
+          <select id="np-tipo">
+            <option>Mata ciliar</option><option>Caatinga arbórea</option>
+            <option>Caatinga arbustiva</option><option>Cerrado</option>
+            <option>Campo aberto</option><option>Área úmida</option>
+            <option>Riacho/Rio</option><option>Açude/Lago</option>
+            <option>Área antropizada</option><option>Outro</option>
+          </select></div>
+        <div class="field-group"><label>Fitofisionomia</label>
+          <input id="np-fito" placeholder="Ex: Mata seca semidecidual..."/></div>
+        <!-- GPS para o ponto -->
+        <div class="gps-group field-group">
+          <label>Coordenadas UTM</label>
+          <div class="gps-bar">
+            <div class="gps-input-wrap">
+              <input id="np-coord" placeholder="UTM auto ou manual" autocomplete="off"/>
+            </div>
+            <button class="btn-gps" data-gps="np-coord"
+              onclick="captureGps('np-coord','np-coord-meta','np-coord-detail')"
+              title="GPS">📡</button>
+          </div>
+          <div class="gps-meta" id="np-coord-meta"></div>
+          <div class="gps-progress" id="np-coord-progress">
+            <div class="gps-progress-fill" id="np-coord-fill"></div></div>
+          <div class="gps-detail" id="np-coord-detail"></div>
+        </div>
+        <div class="field-group"><label>Observações</label>
+          <textarea id="np-obs" placeholder="Cobertura do dossel, proximidade a cursos d'água, grau de perturbação..." rows="2"></textarea></div>
+        <div class="alert" id="np-alert"></div>
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-primary" style="flex:1" onclick="salvarPonto()">💾 Salvar ponto</button>
+          <button class="btn btn-secondary" onclick="toggleNovoPonto()">Cancelar</button>
+        </div>
+      </div>
+
+      <!-- Lista de pontos -->
+      <div class="ponto-list" id="ponto-list"></div>
+    </div>
+  </div>
+
+  <!-- TAB: ESFORÇO AMOSTRAL ───────────────────────────── -->
+  <div class="camp-tab-section" id="camp-tab-esforco">
+    <div id="esforco-sem-camp" style="text-align:center;color:var(--texto-muted);padding:16px;font-size:12px">
+      ⚠️ Selecione uma campanha ativa primeiro
+    </div>
+    <div id="esforco-conteudo" style="display:none">
+      <div class="section-header">Esforço calculado automaticamente</div>
+      <div class="esforco-grid" id="esforco-grid">
+        <!-- preenchido por JS -->
+      </div>
+      <div class="section-header" style="margin-top:12px">Esforço manual adicional</div>
+      <div class="field-row">
+        <div class="field-group">
+          <label>Horas de rede (aves)</label>
+          <input id="ef-rede-aves" type="number" step="0.5" placeholder="0"/>
+          <div class="unit-label">h·rede</div>
+        </div>
+        <div class="field-group">
+          <label>Armadilha-noite (mamíf.)</label>
+          <input id="ef-armadilha" type="number" step="0.5" placeholder="0"/>
+          <div class="unit-label">arm·noite</div>
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field-group">
+          <label>Parcelas herpeto (m²)</label>
+          <input id="ef-parcela" type="number" step="1" placeholder="0"/>
+          <div class="unit-label">m²</div>
+        </div>
+        <div class="field-group">
+          <label>Horas de rede (quiro)</label>
+          <input id="ef-rede-quiro" type="number" step="0.5" placeholder="0"/>
+          <div class="unit-label">h·rede</div>
+        </div>
+      </div>
+      <button class="btn btn-primary" style="width:100%;margin-top:4px"
+        onclick="salvarEsforco()">💾 Salvar esforço</button>
+    </div>
+  </div>
+
+ </div>
+</div>
+
 <!-- DASHBOARD -->
 <div class="panel" id="panel-dashboard">
   <div class="card">
@@ -2008,6 +2289,9 @@ body.dark-mode .lightbox-overlay { background: rgba(0,0,0,0.97); }
   </button>
   <button class="nav-btn" onclick="irPara('biometria', this)">
     <span class="nav-icon">📏</span>Bio
+  </button>
+  <button class="nav-btn" onclick="irPara('campanhas', this)">
+    <span class="nav-icon">🗂️</span>Campanha
   </button>
   <button class="nav-btn" onclick="irPara('dashboard', this)">
     <span class="nav-icon">📊</span>Resumo
@@ -2220,6 +2504,7 @@ function init() {
   buildAcIndex();
   carregarDados();
   carregarBio();
+  carregarCampanhas();
   loadDarkMode();
   registrarPWA();
   // Indicador online/offline
@@ -2292,6 +2577,7 @@ function irPara(panel, btn) {
   btn.classList.add('active');
   if (panel === 'registros') { renderRegistros(); renderBioRegistros(document.getElementById('bio-lista')); }
   if (panel === 'dashboard') { renderDashboard(); }
+  if (panel === 'campanhas') { renderCampanhas(); }
   if (panel === 'biometria') { atualizarIdDisplay(document.querySelector('.bio-tab.active')?.textContent?.trim()?.replace(/\n.*/,'')?.trim() || 'Avifauna'); }
   if (panel === 'enviar') atualizarResumo();
 }
@@ -2441,6 +2727,8 @@ function adicionarManual() {
     consultor: document.getElementById('m-consultor').value,
     obs: document.getElementById('m-obs').value
   };
+  r.campId  = window._campIdAtivo  || '';
+  r.pontoId = window._pontoIdAtivo || '';
   registros.push(r);
   salvarDados();
   mostrarAlert('manual-alert', 'success', `✓ "${especie}" salvo localmente. Total: ${registros.length} registro(s).`);
@@ -2861,6 +3149,8 @@ function adicionarBio(grupo) {
   const cond = getCondicoesAmbientais();
   const r = { _id: Date.now()+Math.random(), _ts: new Date().toISOString(), _tipo: grupo, _id_num: idNum, _id_str: idStr, foto: fotoEl ? fotoEl.value : '', ...cond };
   cfg.formFields.forEach(c => { r[c]=get(c); });
+  r.campId  = window._campIdAtivo  || '';
+  r.pontoId = window._pontoIdAtivo || '';
   bioRegistros.push(r);
   salvarBio();
   const st=get('status')||'';
@@ -3886,7 +4176,7 @@ function setText(id, val) {
 // INDEXEDDB — armazenamento robusto offline
 // ══════════════════════════════════════════════════════════
 const IDB_NAME    = 'FaunaCampoDB';
-const IDB_VERSION = 1;
+const IDB_VERSION = 2;
 let _db = null;
 
 function abrirDB() {
@@ -3904,6 +4194,10 @@ function abrirDB() {
         db.createObjectStore('config', { keyPath: 'chave' });
       if (!db.objectStoreNames.contains('fotos'))
         db.createObjectStore('fotos', { keyPath: '_id' });
+      if (!db.objectStoreNames.contains('campanhas'))
+        db.createObjectStore('campanhas', { keyPath: '_id' });
+      if (!db.objectStoreNames.contains('pontos'))
+        db.createObjectStore('pontos', { keyPath: '_id' });
     };
     req.onsuccess = e => { _db = e.target.result; resolve(_db); };
     req.onerror   = e => { console.error('IDB error', e); reject(e); };
@@ -4221,6 +4515,435 @@ function instalarApp() {
 }
 
 window.addEventListener('appinstalled', () => toast('✅ Fauna Campo instalado!'));
+
+
+// ══════════════════════════════════════════════════════════
+// FASE 2 — HIERARQUIA DE CAMPANHA
+// ══════════════════════════════════════════════════════════
+
+let campanhas  = [];   // todas as campanhas
+let pontos     = [];   // pontos da campanha ativa
+let campAtiva  = null; // objeto campanha ativa
+let pontoAtivo = null; // objeto ponto ativo
+let editCampId = null; // ID da campanha em edição
+
+// ── Carregar / Salvar ────────────────────────────────────
+async function carregarCampanhas() {
+  try {
+    campanhas = await idbGetAll('campanhas');
+    campanhas.sort((a,b) => (b._ts||'') > (a._ts||'') ? 1 : -1);
+    // Restaurar campanha ativa do localStorage (só o ID)
+    const aid = localStorage.getItem('fauna_camp_ativa');
+    if (aid) {
+      campAtiva = campanhas.find(c => c._id === aid) || null;
+    }
+    const pid = localStorage.getItem('fauna_ponto_ativo');
+    if (pid && campAtiva) {
+      const pts = await idbGetAll('pontos');
+      pontos = pts.filter(p => p.campId === campAtiva._id);
+      pontoAtivo = pontos.find(p => p._id === pid) || null;
+    }
+    atualizarBannersContexto();
+  } catch(e) { campanhas = []; }
+}
+
+async function salvarCampanhaIDB(c) {
+  await idbPut('campanhas', c);
+  campanhas = await idbGetAll('campanhas');
+  campanhas.sort((a,b) => (b._ts||'') > (a._ts||'') ? 1 : -1);
+}
+
+async function salvarPontoIDB(p) {
+  await idbPut('pontos', p);
+}
+
+async function carregarPontosDaCampanha(campId) {
+  try {
+    const todos = await idbGetAll('pontos');
+    pontos = todos.filter(p => p.campId === campId);
+    pontos.sort((a,b) => (a.nome||'') < (b.nome||'') ? -1 : 1);
+  } catch(e) { pontos = []; }
+}
+
+// ── Campanha ─────────────────────────────────────────────
+function toggleNovaCamp() {
+  const form = document.getElementById('new-camp-form');
+  form.classList.toggle('show');
+  if (form.classList.contains('show')) {
+    document.getElementById('new-camp-title').textContent =
+      editCampId ? 'Editar campanha' : 'Nova campanha';
+    if (!editCampId) limparFormCampanha();
+    document.getElementById('nc-nome').focus();
+  }
+}
+
+function limparFormCampanha() {
+  ['nc-nome','nc-projeto','nc-inicio','nc-fim','nc-consultor','nc-obs']
+    .forEach(id => { const el = document.getElementById(id); if(el) el.value=''; });
+  document.getElementById('nc-area').value = 'ADA';
+  document.getElementById('nc-estacao').value = 'Chuvosa';
+  editCampId = null;
+}
+
+async function salvarCampanha() {
+  const nome = document.getElementById('nc-nome').value.trim();
+  if (!nome) { mostrarAlert('nc-alert','error','Informe o nome da campanha.'); return; }
+
+  const c = {
+    _id:       editCampId || (Date.now() + Math.random()).toString(),
+    _ts:       new Date().toISOString(),
+    nome,
+    projeto:   document.getElementById('nc-projeto').value.trim(),
+    inicio:    document.getElementById('nc-inicio').value,
+    fim:       document.getElementById('nc-fim').value,
+    area:      document.getElementById('nc-area').value,
+    estacao:   document.getElementById('nc-estacao').value,
+    consultor: document.getElementById('nc-consultor').value.trim(),
+    obs:       document.getElementById('nc-obs').value.trim(),
+    ativa:     false,
+  };
+
+  await salvarCampanhaIDB(c);
+  editCampId = null;
+  document.getElementById('new-camp-form').classList.remove('show');
+  renderCampanhas();
+  toast('✓ Campanha "' + nome + '" salva');
+}
+
+async function ativarCampanha(id) {
+  campAtiva = campanhas.find(c => c._id === id);
+  if (!campAtiva) return;
+  pontoAtivo = null;
+  localStorage.setItem('fauna_camp_ativa', id);
+  localStorage.removeItem('fauna_ponto_ativo');
+  await carregarPontosDaCampanha(id);
+  atualizarBannersContexto();
+  renderCampanhas();
+  renderPontos();
+  // Atualizar campos de projeto/campanha em todos os formulários
+  propagarContexto();
+  toast('✅ Campanha "' + campAtiva.nome + '" ativada');
+}
+
+async function editarCampanha(id) {
+  const c = campanhas.find(x => x._id === id);
+  if (!c) return;
+  editCampId = id;
+  document.getElementById('nc-nome').value      = c.nome      || '';
+  document.getElementById('nc-projeto').value   = c.projeto   || '';
+  document.getElementById('nc-inicio').value    = c.inicio    || '';
+  document.getElementById('nc-fim').value       = c.fim       || '';
+  document.getElementById('nc-area').value      = c.area      || 'ADA';
+  document.getElementById('nc-estacao').value   = c.estacao   || 'Chuvosa';
+  document.getElementById('nc-consultor').value = c.consultor || '';
+  document.getElementById('nc-obs').value       = c.obs       || '';
+  document.getElementById('new-camp-form').classList.add('show');
+  document.getElementById('new-camp-title').textContent = 'Editar campanha';
+  document.getElementById('nc-nome').focus();
+}
+
+async function deletarCampanha(id) {
+  const c = campanhas.find(x => x._id === id);
+  if (!confirm('Excluir campanha "' + (c?.nome||'') + '"?\nOs registros vinculados serão mantidos.')) return;
+  await idbDelete('campanhas', id);
+  campanhas = campanhas.filter(x => x._id !== id);
+  if (campAtiva?._id === id) {
+    campAtiva = null;
+    pontoAtivo = null;
+    localStorage.removeItem('fauna_camp_ativa');
+    localStorage.removeItem('fauna_ponto_ativo');
+    atualizarBannersContexto();
+  }
+  renderCampanhas();
+  toast('Campanha excluída');
+}
+
+function renderCampanhas() {
+  const list = document.getElementById('camp-list');
+  const bar  = document.getElementById('camp-ativa-bar');
+
+  if (campAtiva) {
+    bar.style.display = 'block';
+    document.getElementById('camp-ativa-nome').textContent = campAtiva.nome;
+    document.getElementById('camp-ativa-info').textContent =
+      [campAtiva.projeto, campAtiva.area, campAtiva.estacao].filter(Boolean).join(' · ');
+  } else {
+    bar.style.display = 'none';
+  }
+
+  if (!campanhas.length) {
+    list.innerHTML = '<div class="empty"><div class="empty-icon">🗂️</div><p>Nenhuma campanha criada.<br>Crie a primeira campanha para começar.</p></div>';
+    return;
+  }
+
+  const fmt = d => d ? new Date(d + 'T12:00:00').toLocaleDateString('pt-BR') : '';
+
+  list.innerHTML = campanhas.map(c => {
+    const isAtiva = campAtiva?._id === c._id;
+    const nReg  = registros.filter(r => r.campanha === c.nome || r.campId === c._id).length;
+    const nBio  = bioRegistros.filter(r => r.campanha === c.nome || r.campId === c._id).length;
+    const datas = [fmt(c.inicio), fmt(c.fim)].filter(Boolean).join(' → ');
+    return `<div class="camp-card ${isAtiva ? 'ativa' : ''}">
+      <span class="camp-badge ${isAtiva ? 'ativa' : 'inativa'}">${isAtiva ? '● ATIVA' : '○ INATIVA'}</span>
+      <div class="camp-nome">${c.nome}</div>
+      <div class="camp-meta">
+        ${c.projeto ? c.projeto + '<br>' : ''}
+        ${[c.area, c.estacao, datas].filter(Boolean).join(' · ')}
+        ${nReg+nBio > 0 ? '<br>📋 ' + nReg + ' obs. + ' + nBio + ' bio' : ''}
+      </div>
+      <div class="camp-actions">
+        ${!isAtiva ? `<button class="btn-ativar" onclick="ativarCampanha('${c._id}')">✅ Ativar</button>` : '<button disabled style="opacity:.5">✅ Ativa</button>'}
+        <button onclick="editarCampanha('${c._id}')">✏️ Editar</button>
+        <button onclick="deletarCampanha('${c._id}')" style="color:var(--perigo)">🗑️</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ── Pontos amostrais ─────────────────────────────────────
+function toggleNovoPonto() {
+  const form = document.getElementById('new-ponto-form');
+  form.classList.toggle('show');
+  if (form.classList.contains('show')) {
+    ['np-nome','np-fito','np-coord','np-obs'].forEach(id => {
+      const el = document.getElementById(id); if(el) el.value='';
+    });
+    document.getElementById('np-nome').focus();
+  }
+}
+
+async function salvarPonto() {
+  if (!campAtiva) { mostrarAlert('np-alert','error','Ative uma campanha primeiro.'); return; }
+  const nome = document.getElementById('np-nome').value.trim();
+  if (!nome) { mostrarAlert('np-alert','error','Informe o nome/código do ponto.'); return; }
+
+  const p = {
+    _id:   (Date.now() + Math.random()).toString(),
+    _ts:   new Date().toISOString(),
+    campId: campAtiva._id,
+    nome,
+    tipo:  document.getElementById('np-tipo').value,
+    fito:  document.getElementById('np-fito').value.trim(),
+    coord: document.getElementById('np-coord').value.trim(),
+    obs:   document.getElementById('np-obs').value.trim(),
+  };
+
+  await salvarPontoIDB(p);
+  pontos.push(p);
+  document.getElementById('new-ponto-form').classList.remove('show');
+  renderPontos();
+  toast('✓ Ponto "' + nome + '" salvo');
+}
+
+async function selecionarPonto(id) {
+  pontoAtivo = pontos.find(p => p._id === id) || null;
+  localStorage.setItem('fauna_ponto_ativo', id);
+  atualizarBannersContexto();
+  propagarContexto();
+  renderPontos();
+  toast('📍 Ponto "' + (pontoAtivo?.nome||'') + '" selecionado');
+}
+
+async function deletarPonto(id) {
+  const p = pontos.find(x => x._id === id);
+  if (!confirm('Excluir ponto "' + (p?.nome||'') + '"?')) return;
+  await idbDelete('pontos', id);
+  pontos = pontos.filter(x => x._id !== id);
+  if (pontoAtivo?._id === id) {
+    pontoAtivo = null;
+    localStorage.removeItem('fauna_ponto_ativo');
+    atualizarBannersContexto();
+    propagarContexto();
+  }
+  renderPontos();
+  toast('Ponto excluído');
+}
+
+function renderPontos() {
+  const semCamp  = document.getElementById('pontos-sem-camp');
+  const conteudo = document.getElementById('pontos-conteudo');
+  const list     = document.getElementById('ponto-list');
+
+  if (!campAtiva) {
+    semCamp.style.display = 'block';
+    conteudo.style.display = 'none';
+    return;
+  }
+  semCamp.style.display = 'none';
+  conteudo.style.display = 'block';
+
+  if (!pontos.length) {
+    list.innerHTML = '<div class="empty" style="padding:12px"><div class="empty-icon">📍</div><p>Nenhum ponto cadastrado.<br>Adicione o primeiro ponto amostral.</p></div>';
+    return;
+  }
+
+  list.innerHTML = pontos.map(p => {
+    const isSel = pontoAtivo?._id === p._id;
+    return `<div class="ponto-card ${isSel ? 'sel' : ''}" onclick="selecionarPonto('${p._id}')">
+      <span class="ponto-icon">${isSel ? '📍' : '○'}</span>
+      <div class="ponto-info">
+        <div class="ponto-nome">${p.nome}${isSel ? ' <span style="color:var(--verde-medio);font-size:9px;font-weight:800">● ATIVO</span>' : ''}</div>
+        <div class="ponto-coord">${p.tipo || ''}${p.coord ? ' · ' + p.coord : ''}${p.fito ? '<br>' + p.fito : ''}</div>
+      </div>
+      <button class="ponto-del" onclick="event.stopPropagation();deletarPonto('${p._id}')">✕</button>
+    </div>`;
+  }).join('');
+}
+
+// ── Esforço amostral ─────────────────────────────────────
+function renderEsforco() {
+  const semCamp  = document.getElementById('esforco-sem-camp');
+  const conteudo = document.getElementById('esforco-conteudo');
+  if (!campAtiva) {
+    semCamp.style.display='block'; conteudo.style.display='none'; return;
+  }
+  semCamp.style.display='none'; conteudo.style.display='block';
+
+  // Calcular esforço dos registros existentes
+  const bioAtivos = bioRegistros.filter(r =>
+    r.campId === campAtiva._id || r.campanha === campAtiva.nome
+  );
+  const redes  = bioAtivos.filter(r => r._tipo === 'Avifauna' || r._tipo === 'Quiropterofauna');
+  const esforcoRede = redes.reduce((s,r) => s + (parseFloat(r.esforco)||0), 0);
+  const arms   = bioAtivos.filter(r => r._tipo === 'Mastofauna');
+  const esforcoArm = arms.reduce((s,r) => s + (parseFloat(r.esforco)||0), 0);
+
+  const grid = document.getElementById('esforco-grid');
+  grid.innerHTML = [
+    ['🐦 Aves cap.', bioAtivos.filter(r=>r._tipo==='Avifauna').length, 'indivíduos'],
+    ['🐾 Masto cap.', bioAtivos.filter(r=>r._tipo==='Mastofauna').length, 'indivíduos'],
+    ['🦎 Herpe cap.', bioAtivos.filter(r=>r._tipo==='Herpetofauna').length, 'indivíduos'],
+    ['🦇 Quiro cap.', bioAtivos.filter(r=>r._tipo==='Quiropterofauna').length, 'indivíduos'],
+    ['⏱ H·rede acum.', esforcoRede.toFixed(1), 'h·rede (auto)'],
+    ['🪤 Arm·noite', esforcoArm.toFixed(1), 'arm·noite (auto)'],
+  ].map(([label, val, unit]) => `
+    <div class="esforco-card">
+      <div class="esforco-num">${val}</div>
+      <div class="esforco-label">${label}</div>
+      <div style="font-size:9px;color:var(--texto-muted)">${unit}</div>
+    </div>`).join('');
+
+  // Restaurar valores manuais
+  if (campAtiva.esforco) {
+    const ef = campAtiva.esforco;
+    ['rede-aves','armadilha','parcela','rede-quiro'].forEach(k => {
+      const el = document.getElementById('ef-' + k);
+      if (el && ef[k]) el.value = ef[k];
+    });
+  }
+}
+
+async function salvarEsforco() {
+  if (!campAtiva) return;
+  campAtiva.esforco = {
+    'rede-aves':  document.getElementById('ef-rede-aves').value,
+    'armadilha':  document.getElementById('ef-armadilha').value,
+    'parcela':    document.getElementById('ef-parcela').value,
+    'rede-quiro': document.getElementById('ef-rede-quiro').value,
+  };
+  await salvarCampanhaIDB(campAtiva);
+  toast('✓ Esforço salvo');
+}
+
+// ── Tabs dentro do painel campanhas ──────────────────────
+function campTab(nome, btn) {
+  document.querySelectorAll('.camp-tab').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.camp-tab-section').forEach(s => s.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('camp-tab-' + nome).classList.add('active');
+  if (nome === 'pontos')  renderPontos();
+  if (nome === 'esforco') renderEsforco();
+}
+
+// ── Propagação de contexto ────────────────────────────────
+// Preenche projeto/campanha/ponto em todos os formulários automaticamente
+function propagarContexto() {
+  if (!campAtiva) return;
+
+  const camp = campAtiva.nome || '';
+  const proj = campAtiva.projeto || '';
+  const cons = campAtiva.consultor || '';
+  const pto  = pontoAtivo?.nome || '';
+  const coord = pontoAtivo?.coord || '';
+
+  // Formulário manual
+  const setVal = (id, val) => {
+    const el = document.getElementById(id);
+    if (el && val) { el.value = val; el.classList.add('autofilled'); setTimeout(()=>el.classList.remove('autofilled'),3000); }
+  };
+  setVal('m-projeto',  proj);
+  setVal('m-campanha', camp);
+  if (pto)   setVal('m-ponto', pto);
+  if (coord) setVal('m-coord', coord);
+  if (cons)  setVal('m-consultor', cons);
+
+  // Todos os grupos de biometria
+  ['bav','bma','bhe','bic','bqu'].forEach(p => {
+    setVal(p+'-projeto',  proj);
+    setVal(p+'-campanha', camp);
+    if (pto)   setVal(p+'-local', pto);
+    if (coord) setVal(p+'-coord', coord);
+    if (cons)  setVal(p+'-consultor', cons);
+  });
+
+  // Guardar campId nos novos registros
+  window._campIdAtivo  = campAtiva._id;
+  window._pontoIdAtivo = pontoAtivo?._id || '';
+}
+
+// ── Banners de contexto ───────────────────────────────────
+function atualizarBannersContexto() {
+  const camp  = campAtiva?.nome  || null;
+  const ponto = pontoAtivo?.nome || null;
+  const label = camp
+    ? (ponto ? ponto + ' · ' + camp : camp)
+    : null;
+
+  // Banner no Manual
+  const bManual = document.getElementById('ctx-banner-manual');
+  if (bManual) {
+    if (camp) {
+      bManual.classList.add('show');
+      document.getElementById('ctx-b-manual-camp').textContent  = camp;
+      document.getElementById('ctx-b-manual-ponto').textContent = ponto || 'Nenhum ponto selecionado';
+    } else {
+      bManual.classList.remove('show');
+    }
+  }
+  // Banner na Bio
+  const bBio = document.getElementById('ctx-banner-bio');
+  if (bBio) {
+    if (camp) {
+      bBio.classList.add('show');
+      document.getElementById('ctx-b-bio-camp').textContent  = camp;
+      document.getElementById('ctx-b-bio-ponto').textContent = ponto || 'Nenhum ponto selecionado';
+    } else {
+      bBio.classList.remove('show');
+    }
+  }
+
+  // Indicador no header
+  const ind = document.getElementById('camp-indicator');
+  if (ind) {
+    if (camp) {
+      ind.textContent = '🗂️ ' + (ponto ? ponto + ' · ' : '') + camp;
+      ind.classList.remove('none');
+    } else {
+      ind.textContent = '🗂️ Sem campanha ativa';
+      ind.classList.add('none');
+    }
+  }
+}
+
+// ── Guardar campId nos registros salvos ───────────────────
+// Injetar campId/pontoId ao salvar manual e bio
+const _origAdicionarManual = adicionarManual;
+function adicionarManual() {
+  // Será sobrescrito após declaração — usar wrapper via init
+}
+
+// Injetar campId no adicionarBio via BIO_FIELDS extra
+// Feito via modificação do objeto r antes de push
 
 init();
 </script>
