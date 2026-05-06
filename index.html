@@ -2534,22 +2534,10 @@ function init() {
   }, 100);
 }
 
-function carregarDados() {
-  try { registros = JSON.parse(localStorage.getItem(DB_KEY)) || []; } catch(e) { registros = []; }
-}
+// carregarDados e salvarDados → versão IDB abaixo
 
-function salvarDados() {
-  localStorage.setItem(DB_KEY, JSON.stringify(registros));
-}
+// carregarConfig → versão abaixo
 
-function carregarConfig() {
-  try { config = JSON.parse(localStorage.getItem(CFG_KEY)) || {}; } catch(e) { config = {}; }
-  if (config.email) document.getElementById('cfg-email').value = config.email;
-  if (config.drivefolder) document.getElementById('cfg-drive-folder').value = config.drivefolder;
-  if (config.drivekey) document.getElementById('cfg-drive-key').value = config.drivekey;
-  if (config.drivetoken) document.getElementById('cfg-drive-token').value = config.drivetoken;
-  if (config.apikey) document.getElementById('cfg-api-key').value = config.apikey;
-}
 
 function salvarConfig() {
   config = {
@@ -2730,7 +2718,7 @@ function adicionarManual() {
   r.campId  = window._campIdAtivo  || '';
   r.pontoId = window._pontoIdAtivo || '';
   registros.push(r);
-  salvarDados();
+  salvarDados().catch(e=>console.warn(e));
   mostrarAlert('manual-alert', 'success', `✓ "${especie}" salvo localmente. Total: ${registros.length} registro(s).`);
   toast('Registro salvo');
   // Limpar campos biológicos
@@ -2956,20 +2944,10 @@ let bioRegistros = [];
 const BIO_KEY = 'fauna_biometria_v3';
 let bioCounters = { Avifauna:0, Mastofauna:0, Herpetofauna:0, Ictiofauna:0, Quiropterofauna:0 };
 
-function carregarBio() {
-  try { bioRegistros = JSON.parse(localStorage.getItem(BIO_KEY)) || []; } catch(e) { bioRegistros = []; }
-  // recalc counters
-  bioRegistros.forEach(r => { if(r._tipo && r._id_num) bioCounters[r._tipo] = Math.max(bioCounters[r._tipo]||0, r._id_num); });
-}
-function salvarBio() { localStorage.setItem(BIO_KEY, JSON.stringify(bioRegistros)); atualizarResumo(); }
+// carregarBio: versão IDB definida abaixo
 
-function bioTab(nome, btn) {
-  document.querySelectorAll('.bio-tab').forEach(b => b.classList.remove('active'));
-  document.querySelectorAll('.bio-section').forEach(s => s.classList.remove('active'));
-  btn.classList.add('active');
-  document.getElementById('bio-' + nome).classList.add('active');
-  atualizarIdDisplay(nome);
-}
+// salvarBio: versão IDB definida abaixo
+
 
 function atualizarIdDisplay(grupo) {
   const cfg = BIO_FIELDS[grupo]; if(!cfg) return;
@@ -3152,7 +3130,7 @@ function adicionarBio(grupo) {
   r.campId  = window._campIdAtivo  || '';
   r.pontoId = window._pontoIdAtivo || '';
   bioRegistros.push(r);
-  salvarBio();
+  salvarBio().catch(e=>console.warn(e));
   const st=get('status')||'';
   mostrarAlert(p+'-alert','success','✓ ['+idStr+'] "'+get('especie')+'" salvo. Total: '+bioRegistros.length);
   toast('Biometria salva: '+idStr);
@@ -4938,12 +4916,8 @@ function atualizarBannersContexto() {
 // ── Guardar campId nos registros salvos ───────────────────
 // Injetar campId/pontoId ao salvar manual e bio
 const _origAdicionarManual = adicionarManual;
-function adicionarManual() {
-  // Será sobrescrito após declaração — usar wrapper via init
-}
-
-// Injetar campId no adicionarBio via BIO_FIELDS extra
-// Feito via modificação do objeto r antes de push
+// adicionarManual: definida acima (linha única — não duplicar)
+// campId/pontoId já injetados via modificação do objeto r antes de push
 
 init();
 </script>
