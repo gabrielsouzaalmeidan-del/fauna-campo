@@ -1546,6 +1546,36 @@ input.req-missing, select.req-missing, textarea.req-missing {
       </div>
         <div class="field-group"><label>Código cor ⑩</label><input id="bav-codigo" placeholder="VD-AM"/></div>
       </div>
+      <div class="field-row">
+        <div class="field-group">
+          <label>Tamanho da anilha ★ <span style="font-size:9px;color:var(--texto-muted)">(CEMAVE)</span></label>
+          <select id="bav-anilha-tamanho">
+            <option value="">— selecione —</option>
+            <option value="A">A — 1,6 mm (minúsculos: beija-flores pequenos)</option>
+            <option value="B">B — 2,0 mm (beija-flores, corruíras)</option>
+            <option value="C">C — 2,5 mm (pequenos pássaros)</option>
+            <option value="D">D — 3,0 mm (pássaros médios)</option>
+            <option value="E">E — 3,8 mm (pássaros médios/grandes)</option>
+            <option value="F">F — 4,8 mm (grandes pássaros, rapinantes)</option>
+            <option value="G">G — 6,4 mm (garças, rapinantes grandes)</option>
+            <option value="H">H — 8,0 mm (grandes aves: seriema, emas)</option>
+            <option value="X">X — Sem anilha / não aplicável</option>
+          </select>
+          <div style="font-size:9px;color:var(--texto-muted);margin-top:3px">
+            Tamanho padrão CEMAVE/IBAMA — diâmetro interno da anilha
+          </div>
+        </div>
+        <div class="field-group">
+          <label>Material da anilha</label>
+          <select id="bav-anilha-material">
+            <option value="">—</option>
+            <option value="Alumínio">Alumínio (padrão CEMAVE)</option>
+            <option value="Inox">Inox (ambientes úmidos)</option>
+            <option value="Plástico colorido">Plástico colorido</option>
+            <option value="Combinação">Combinação alumínio + plástico</option>
+          </select>
+        </div>
+      </div>
       <div class="field-group">
         <label>Status de captura ★</label>
         <select id="bav-status">
@@ -2344,6 +2374,7 @@ input.req-missing, select.req-missing, textarea.req-missing {
 <div class="panel" id="panel-dashboard">
   <div class="card">
     <div class="card-title">📊 Resumo da Campanha</div>
+    <div id="dash-camp-label" style="font-size:11px;color:var(--texto-muted);margin-bottom:8px;text-align:center"></div>
 
     <!-- Totais gerais -->
     <div class="dash-section-title">Registros totais</div>
@@ -2813,6 +2844,7 @@ async function init() {
   await carregarBio();
   await carregarCampanhas();
   carregarReqConfig();
+  await carregarConfig();
   loadDarkMode();
   registrarPWA();
   // Indicador online/offline
@@ -3016,6 +3048,8 @@ function adicionarManual() {
     coord: document.getElementById('m-coord') ? document.getElementById('m-coord').value : '',
     ...getCondicoesAmbientais(),
     foto: document.getElementById('m-foto-b64') ? document.getElementById('m-foto-b64').value : '',
+    campId:  window._campIdAtivo  || '',
+    pontoId: window._pontoIdAtivo || '',
     data: document.getElementById('m-data').value,
     horario: document.getElementById('m-horario').value,
     periodo: document.getElementById('m-periodo').value,
@@ -3058,8 +3092,8 @@ function adicionarManual() {
 function renderRegistros() {
   const lista = document.getElementById('lista-registros');
   const bar = document.getElementById('record-count-bar');
-  const totalReg = registros.length;
-  const totalBio = bioRegistros.length;
+  const totalReg = regFiltrados.length;
+  const totalBio = bioFiltrados.length;
   const total = totalReg + totalBio;
   bar.textContent = `${totalReg} obs. manual${totalReg!==1?'s':''} + ${totalBio} biometria = ${total} registro${total!==1?'s':''} salvos localmente`;
 
@@ -3345,18 +3379,18 @@ const BIO_FIELDS = {
     p:'bav',
     // export cols = planilha cols + extras com ★
     exportCols: ['_id_str','data','hora','local','coord','linha-rede','esforco','metodo',
-                 'anilha','codigo','peso-saco','peso-total','massa',
+                 'anilha','codigo','anilha-tamanho','anilha-material','peso-saco','peso-total','massa',
                  'especie','familia','ordem','sexo','idade','placa','muda','gordura','condicao',
                  'asa','cauda','tarso','culmen','ferimentos','parasitas','obs','foto','coleta',
                  'status','bolsa','ossif','ct','hora-inicio','hora-fim'],
     exportHeaders: ['ID','Data','Hora','Local','Coordenadas','Linha Rede','Esforço','Método',
-                    'Anilha','Código','Peso Saco (g)','Peso Total (g)','Massa Real (g)',
+                    'Anilha','Código','Tam. Anilha','Material Anilha','Peso Saco (g)','Peso Total (g)','Massa Real (g)',
                     'Espécie','Família','Ordem','Sexo','Idade','Placa Incubatória','Muda',
                     'Gordura','Condição','Asa (mm)','Cauda (mm)','Tarso (mm)','Cúlmen (mm)',
                     'Ferimentos','Parasitas','Observações','Foto','Coleta Biológica',
                     '★ Status','★ Bolsa','★ Ossif. Craniana','★ CT (mm)','★ H. Início','★ H. Fim'],
     formFields: ['projeto','campanha','data','hora','local','coord','linha-rede','esforco','metodo','bolsa',
-                 'anilha','codigo','status','especie','familia','ordem','sexo','idade',
+                 'anilha','codigo','anilha-tamanho','anilha-material','status','especie','familia','ordem','sexo','idade',
                  'placa','muda','gordura','ossif','condicao',
                  'peso-saco','peso-total','massa','asa','cauda','tarso','culmen','ct',
                  'ferimentos','parasitas','obs','foto','coleta','hora-inicio','hora-fim','consultor'],
@@ -4002,9 +4036,12 @@ function salvarRapida() {
   const idNum = bioCounters[qcGrupo];
   const idStr = qcGrupo.slice(0,3).toUpperCase()+'-'+String(idNum).padStart(4,'0');
 
+  const cond = getCondicoesAmbientais();
   const r = {
     _id: Date.now()+Math.random(), _ts: new Date().toISOString(),
     _tipo: qcGrupo, _id_num: idNum, _id_str: idStr, _rapida: true,
+    campId:  window._campIdAtivo  || '',
+    pontoId: window._pontoIdAtivo || '',
     especie: esp,
     sexo: document.getElementById('qc-sexo').value,
     anilha: document.getElementById('qc-anilha').value,
@@ -4012,7 +4049,8 @@ function salvarRapida() {
     obs: document.getElementById('qc-obs').value,
     data: new Date().toISOString().slice(0,10),
     hora: new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}),
-    foto: qcFotoB64
+    foto: qcFotoB64,
+    ...cond
   };
 
   // medidas
@@ -4314,6 +4352,7 @@ function verificarRecaptura(anilha) {
     }
     const massaStr = massa > 0 ? `${massa}g${delta}` : '';
     const tipo = r._tipo || r.classe || '';
+    const tamAnilha = r['anilha-tamanho'] ? ' · Anilha ' + r['anilha-tamanho'] : '';
     return `<div class="recap-item">
       <strong>${i+1}ª</strong> ${dataFmt} ${r.hora || ''} · <em>${r.especie || '—'}</em>
       ${massaStr ? '<br>' + massaStr : ''}
@@ -4345,9 +4384,18 @@ function verificarRecaptura(anilha) {
 // ══════════════════════════════════════════════════════════
 function renderDashboard() {
   // Combinar todos os registros
+  // Filtrar por campanha ativa se houver, senão mostrar todos
+  const filtrarCamp = campAtiva !== null;
+  const regFiltrados = filtrarCamp
+    ? registros.filter(r => r.campId === campAtiva._id || r.campanha === campAtiva.nome)
+    : registros;
+  const bioFiltrados = filtrarCamp
+    ? bioRegistros.filter(r => r.campId === campAtiva._id || r.campanha === campAtiva.nome)
+    : bioRegistros;
+
   const allReg = [
-    ...registros.map(r => ({ ...r, _src:'manual' })),
-    ...bioRegistros.map(r => ({
+    ...regFiltrados.map(r => ({ ...r, _src:'manual' })),
+    ...bioFiltrados.map(r => ({
       ...r, _src:'bio',
       classe: r._tipo ? r._tipo.replace('fauna','').replace('Avifauna','Aves')
                          .replace('Mastofauna','Mammalia')
@@ -4373,6 +4421,12 @@ function renderDashboard() {
   const manSpp   = new Set(registros.map(r => r.especie).filter(Boolean));
   const bioSpp   = new Set(bioRegistros.map(r => r.especie).filter(Boolean));
 
+  // Label de filtro
+  const lbl = document.getElementById('dash-camp-label');
+  if (lbl) lbl.textContent = filtrarCamp
+    ? '🗂️ ' + campAtiva.nome + (pontoAtivo ? ' · 📍 ' + pontoAtivo.nome : '')
+    : '🌐 Todas as campanhas';
+
   setText('dash-total',     total);
   setText('dash-spp-total', allSpp.size + ' espécies únicas');
   setText('dash-manual',    totalReg);
@@ -4386,7 +4440,7 @@ function renderDashboard() {
     'Ictio':'Ictiofauna','Quiro':'Quiropterofauna'
   };
   Object.entries(bioGrupos).forEach(([key, tipo]) => {
-    setText('dash-bio-' + key, bioRegistros.filter(r => r._tipo === tipo).length);
+    setText('dash-bio-' + key, bioFiltrados.filter(r => r._tipo === tipo).length);
   });
 
   // ── Riqueza por classe ──────────────────────────────────
@@ -4854,6 +4908,7 @@ async function carregarCampanhas() {
       pontoAtivo = pontos.find(p => p._id === pid) || null;
     }
     atualizarBannersContexto();
+    if (campAtiva) propagarContexto();
   } catch(e) { campanhas = []; }
 }
 
@@ -5560,6 +5615,8 @@ const VAL_RANGES = {
     massa:  [0.1,   0.2,  30000, 40000],  // g — pequeníssimos anuros a jacaré
     crc:    [5,     8,    3000,  3500],   // mm — CRC
     cauda:  [0,     0,    2000,  2500],   // mm (cobra sem cauda = 0)
+    'cab-comp': [2, 3,    500,   600],    // mm cabeça comprimento
+    'cab-larg': [1, 2,    400,   500],    // mm cabeça largura
     'cab-comp': [2, 3,    500,   600],    // mm
     'cab-larg': [1, 2,    400,   500],    // mm
     temp:   [5,     10,   45,    50],     // °C corporal
@@ -6169,7 +6226,7 @@ function gerarRelatorioHTML() {
   <div class="meta-item"><span class="meta-label">Consultor:</span> ${campAtiva.consultor||'—'}</div>
   <div class="meta-item"><span class="meta-label">Total registros:</span> ${regCamp.length}</div>
   <div class="meta-item"><span class="meta-label">Total espécies:</span> ${spList.length}</div>
-  <div class="meta-item"><span class="meta-label">Pontos amostrais:</span> ${pontos.length}</div>
+  <div class="meta-item"><span class="meta-label">Pontos amostrais:</span> ${(typeof pontos !== 'undefined' ? pontos.length : 0)}</div>
   <div class="meta-item"><span class="meta-label">Gerado em:</span> ${hoje}</div>
 </div>
 
