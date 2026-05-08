@@ -3510,6 +3510,8 @@ function adicionarManual() {
   const r = {
     _id: gerarUUID(),
     _ts: new Date().toISOString(),
+    _src: 'manual',
+    _record_type: 'observacao',
     projeto: document.getElementById('m-projeto').value,
     campanha: document.getElementById('m-campanha').value,
     area: document.getElementById('m-area').value,
@@ -3538,7 +3540,7 @@ function adicionarManual() {
   };
   if (window._campEstacao && !r.estacao) r.estacao = window._campEstacao;
   if (window._campArea    && !r.area)    r.area    = window._campArea;
-  registros.push(injetarPerfilNoRegistro(r));
+  registros.push(normalizarRegistro(injetarPerfilNoRegistro(r)));
   salvarDados().catch(e=>console.warn(e));
   mostrarAlert('manual-alert', 'success', `✓ "${especie}" salvo localmente. Total: ${registros.length} registro(s).`);
   toast('Registro salvo');
@@ -3972,7 +3974,7 @@ function _adicionarBioLegacy(grupo) {
   cfg.formFields.forEach(c => { r[c]=get(c); });
   r.campId  = window._campIdAtivo  || '';
   r.pontoId = window._pontoIdAtivo || '';
-  bioRegistros.push(injetarPerfilNoRegistro(r));
+  bioRegistros.push(normalizarRegistro(injetarPerfilNoRegistro(r)));
   salvarBio().catch(e=>console.warn(e));
   const st=get('status')||'';
   mostrarAlert(p+'-alert','success','✓ ['+idStr+'] "'+get('especie')+'" salvo. Total: '+bioRegistros.length);
@@ -4528,7 +4530,8 @@ function salvarRapida() {
 
   const cond = getCondicoesAmbientais();
   const r = {
-    _id: Date.now()+Math.random(), _ts: new Date().toISOString(),
+    _id: gerarUUID(), _ts: new Date().toISOString(),
+    _src: 'captura_rapida', _record_type: 'captura',
     _tipo: qcGrupo, _id_num: idNum, _id_str: idStr, _rapida: true,
     campId:  window._campIdAtivo  || '',
     pontoId: window._pontoIdAtivo || '',
@@ -4554,7 +4557,7 @@ function salvarRapida() {
     r.familia = match.fa || ''; r.ordem = match.or || '';
   }
 
-  bioRegistros.push(injetarPerfilNoRegistro(r));
+  bioRegistros.push(normalizarRegistro(injetarPerfilNoRegistro(r)));
   salvarBio();
   toast('⚡ '+idStr+' salvo');
 
@@ -5270,8 +5273,8 @@ async function restaurarBackupJSON(file) {
     const existBioIds = new Set(bioRegistros.map(r => r._id));
     const novosReg = reg.filter(r => !existIds.has(r._id));
     const novosBio = bio.filter(r => !existBioIds.has(r._id));
-    registros.push(...novosReg);
-    bioRegistros.push(...novosBio);
+    registros.push(...novosReg.map(r => normalizarRegistro(r)));
+    bioRegistros.push(...novosBio.map(r => normalizarRegistro(r)));
     await salvarDados();
     await salvarBio();
     toast(`✓ Restaurados: ${novosReg.length} obs. + ${novosBio.length} bio`);
@@ -6991,7 +6994,7 @@ function mckFinalizarLista(incompleta = false) {
       consultor: listaObj.observador, obs: `Lista ${listaObj.num} de Mackinnon`,
       ...getCondicoesAmbientais()
     };
-    registros.push(reg);
+    registros.push(normalizarRegistro(injetarPerfilNoRegistro(reg)));
   });
   salvarDados().catch(e=>console.warn(e));
 
@@ -7338,6 +7341,122 @@ function injetarPerfilNoRegistro(r) {
     _coletor_inst:  perfilUsuario.inst  || '',
     _coletor_reg:   perfilUsuario.registro || '',
   };
+}
+
+
+// ══════════════════════════════════════════════════════════
+// NORMALIZAÇÃO DE DADOS — prepara registros para o banco
+// ══════════════════════════════════════════════════════════
+
+// Converte string UTM "24L 391452 9584731" em objeto
+function parseCoordUTM(coordStr) {
+  if (!coordStr || !coordStr.trim()) return { utmZona:'', utmX:'', utmY:'', lat:'', lon:'' };
+  const m = coordStr.trim().match(/^(\d{1,2}[A-Z])\s+([\d.]+)\s+([\d.]+)$/i);
+  if (m) return { utmZona: m[1], utmX: parseFloat(m[2]), utmY: parseFloat(m[3]), lat:'', lon:'' };
+  return { utmZona: coordStr, utmX:'', utmY:'', lat:'', lon:'' };
+}
+
+// Recupera lat/lon do cache GPS se disponível
+function enrichCoordFromCache(fieldId, coordObj) {
+  const cached = gpsCache[fieldId];
+  if (cached && cached.lat) {
+    coordObj.lat = cached.lat;
+    coordObj.lon = cached.lon;
+    coordObj.acc = cached.acc;
+    if (cached.utm) {
+      coordObj.utmZona = cached.utm.label || coordObj.utmZona;
+      coordObj.utmX    = cached.utm.easting  || coordObj.utmX;
+      coordObj.utmY    = cached.utm.northing || coordObj.utmY;
+    }
+  }
+  return coordObj;
+}
+
+// Mapeia _tipo de biometria para classe taxonômica padrão
+const TIPO_TO_CLASSE = {
+  'Avifauna':       'Aves',
+  'Mastofauna':     'Mammalia',
+  'Herpetofauna':   'Herpetofauna', // Reptilia + Amphibia — resolvido na coleta
+  'Ictiofauna':     'Pisces',
+  'Quiropterofauna':'Mammalia',
+};
+
+// Normaliza um registro antes de salvar
+// Aplica a TODOS os tipos (manual, bio, rápida, mackinnon)
+function normalizarRegistro(r) {
+  const n = { ...r };
+
+  // 1. ID — garantir UUID
+  if (!n._id || typeof n._id !== 'string' || n._id.length < 10)
+    n._id = gerarUUID();
+
+  // 2. Timestamp padronizado ISO 8601
+  if (!n._ts) n._ts = new Date().toISOString();
+
+  // 3. horario → hora (unificar nome do campo)
+  if (n.horario !== undefined && n.hora === undefined) {
+    n.hora    = n.horario;
+    delete n.horario;
+  }
+
+  // 4. ponto → local (unificar nome do campo)
+  if (n.ponto !== undefined && n.local === undefined) {
+    n.local   = n.ponto;
+  }
+  // manter ponto também para compatibilidade
+
+  // 5. n_individuos — garantir inteiro
+  if (n.n_individuos !== undefined)
+    n.n_individuos = parseInt(n.n_individuos) || 1;
+
+  // 6. coord — separar em campos estruturados
+  if (n.coord && typeof n.coord === 'string') {
+    const parsed = parseCoordUTM(n.coord);
+    n.utm_zona = parsed.utmZona;
+    n.utm_x    = parsed.utmX;
+    n.utm_y    = parsed.utmY;
+    // lat/lon do cache se disponível
+    if (!n.lat && !n.lon) {
+      const cacheKey = n._src === 'manual' ? 'm-coord'
+        : (n._tipo ? BIO_FIELDS[n._tipo]?.p + '-coord' : null);
+      if (cacheKey && gpsCache[cacheKey]) {
+        n.lat = gpsCache[cacheKey].lat || '';
+        n.lon = gpsCache[cacheKey].lon || '';
+        n.gps_precisao = gpsCache[cacheKey].acc || '';
+      }
+    }
+  }
+
+  // 7. classe — derivar de _tipo para bio se não existir
+  if (!n.classe && n._tipo) {
+    n.classe = TIPO_TO_CLASSE[n._tipo] || n._tipo;
+  }
+
+  // 8. Campos numéricos de medidas — garantir float ou null
+  const camposMedida = ['massa','asa','cauda','tarso','culmen','ct','cp',
+    'cc','pe','orelha','crc','temp','antebraco','trago','antebraco',
+    'peso-saco','peso-total','cab-comp','cab-larg'];
+  camposMedida.forEach(c => {
+    if (n[c] !== undefined && n[c] !== '') {
+      const v = parseFloat(n[c]);
+      n[c] = isNaN(v) ? null : v;
+    }
+  });
+
+  // 9. Strings vazias → null para campos não preenchidos
+  // (facilita queries no banco com IS NULL)
+  const optionalStr = ['sexo','idade','obs','obs_campo','destinacao',
+    'microhabitat','metodo','tipo_registro','periodo','estacao',
+    'anilha','codigo','status','coleta','ferimentos','parasitas'];
+  optionalStr.forEach(c => {
+    if (n[c] === '') n[c] = null;
+  });
+
+  // 10. _schema_version — versionar o formato dos dados
+  n._schema_version = 2;
+  n._app_version    = 'v17';
+
+  return n;
 }
 
 init();
