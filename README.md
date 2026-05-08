@@ -1,1 +1,0 @@
-# gabrielsouzaalmeidan-del.github.io
