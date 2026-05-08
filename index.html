@@ -439,9 +439,9 @@ textarea { resize: vertical; min-height: 60px; }
 .stag-COL { background:#fce4ec; color:#b71c1c; }
 .stag-NA  { background:#f5f5f5; color:#616161; }
 
-/* 7 nav buttons */
-.nav-btn { font-size: 8px; padding: 6px 1px 8px; }
-.nav-btn .nav-icon { font-size: 15px; }
+/* 8 nav buttons */
+.nav-btn { font-size: 7.5px; padding: 5px 0 7px; }
+.nav-btn .nav-icon { font-size: 14px; }
 
 
 /* ── GPS / COORDENADAS UTM ───────────────────────────── */
@@ -1160,6 +1160,158 @@ input.req-missing, select.req-missing, textarea.req-missing {
 .relatorio-btn:active { opacity: .9; }
 .relatorio-btn .rel-icon { font-size: 22px; }
 
+
+/* ── LISTAS DE MACKINNON ─────────────────────────────────── */
+.mck-header {
+  background: var(--verde-escuro); color: #fff;
+  border-radius: var(--radius-sm); padding: 10px 14px;
+  margin-bottom: 12px; display: flex; align-items: center;
+  justify-content: space-between; gap: 8px;
+}
+.mck-header-info { flex: 1; }
+.mck-lista-num {
+  font-size: 22px; font-weight: 900; color: #a5d6a7; line-height: 1;
+}
+.mck-lista-label { font-size: 10px; opacity: .75; letter-spacing: .05em; }
+.mck-progress-wrap {
+  background: var(--verde-suave); border: 1px solid var(--verde-borda);
+  border-radius: var(--radius); padding: 10px 12px; margin-bottom: 10px;
+}
+.mck-progress-bar-bg {
+  height: 8px; background: var(--verde-borda); border-radius: 99px;
+  overflow: hidden; margin: 6px 0 4px;
+}
+.mck-progress-bar-fill {
+  height: 100%; background: var(--verde-medio);
+  border-radius: 99px; transition: width .3s ease;
+}
+.mck-progress-txt {
+  display: flex; justify-content: space-between;
+  font-size: 10px; color: var(--texto-muted); font-weight: 700;
+}
+.mck-sp-list { margin-bottom: 10px; }
+.mck-sp-item {
+  display: flex; align-items: center; gap: 8px;
+  padding: 7px 10px; background: var(--branco);
+  border: 1px solid var(--verde-borda); border-radius: var(--radius-sm);
+  margin-bottom: 4px; box-shadow: var(--sombra);
+}
+.mck-sp-num {
+  font-size: 11px; font-weight: 900; color: var(--verde-medio);
+  width: 20px; flex-shrink: 0; text-align: center;
+}
+.mck-sp-name { font-size: 12px; font-style: italic; flex: 1; color: var(--texto); }
+.mck-sp-np   { font-size: 10px; color: var(--texto-muted); }
+.mck-sp-del  {
+  background: none; border: none; color: var(--texto-muted);
+  font-size: 15px; cursor: pointer; padding: 2px 5px; line-height: 1;
+}
+.mck-sp-del:active { color: var(--perigo); }
+.mck-lista-completa {
+  background: var(--verde-suave); border: 2px solid var(--verde-medio);
+  border-radius: var(--radius); padding: 14px; text-align: center;
+  margin-bottom: 10px;
+}
+.mck-lista-completa-icon { font-size: 36px; margin-bottom: 6px; }
+.mck-lista-completa-txt  { font-size: 13px; font-weight: 800; color: var(--verde-medio); }
+.mck-lista-completa-sub  { font-size: 11px; color: var(--texto-muted); margin-top: 3px; }
+
+/* histórico de listas */
+.mck-hist-card {
+  background: var(--branco); border: 1px solid var(--verde-borda);
+  border-left: 3px solid var(--verde-medio); border-radius: var(--radius-sm);
+  padding: 9px 12px; margin-bottom: 6px; box-shadow: var(--sombra);
+}
+.mck-hist-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 4px;
+}
+.mck-hist-num  { font-size: 11px; font-weight: 800; color: var(--verde-medio); }
+.mck-hist-meta { font-size: 10px; color: var(--texto-muted); }
+.mck-hist-spp  {
+  font-size: 10px; color: var(--texto-suave); font-style: italic;
+  line-height: 1.6;
+}
+
+/* IFL — índice de frequência */
+.ifl-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 10px; }
+.ifl-bar-row {
+  display: flex; align-items: center; gap: 6px;
+  padding: 4px 0; border-bottom: 1px solid var(--verde-borda);
+  font-size: 10px;
+}
+.ifl-bar-row:last-child { border-bottom: none; }
+.ifl-name { flex: 1; font-style: italic; color: var(--texto); min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ifl-bar  { width: 60px; height: 6px; background: var(--verde-borda); border-radius: 99px; overflow: hidden; flex-shrink: 0; }
+.ifl-fill { height: 100%; background: var(--verde-medio); border-radius: 99px; }
+.ifl-pct  { width: 30px; text-align: right; font-weight: 700; color: var(--verde-medio); flex-shrink: 0; }
+
+/* Tabs Mackinnon */
+.mck-tabs { display: flex; gap: 6px; margin-bottom: 12px; }
+.mck-tab {
+  flex: 1; padding: 8px 4px; border-radius: var(--radius-sm);
+  border: 1.5px solid var(--verde-borda); background: var(--branco);
+  font-size: 10px; font-weight: 700; cursor: pointer; text-align: center;
+  color: var(--texto-suave); transition: all .12s;
+}
+.mck-tab.active { background: var(--verde-medio); color: #fff; border-color: var(--verde-medio); }
+.mck-tab-section { display: none; }
+.mck-tab-section.active { display: block; }
+
+
+/* ── PERFIL DO USUÁRIO ───────────────────────────────────── */
+.perfil-card {
+  background: var(--verde-escuro); color: #fff;
+  border-radius: var(--radius); padding: 16px;
+  margin-bottom: 12px; position: relative;
+}
+.perfil-avatar {
+  width: 52px; height: 52px; border-radius: 50%;
+  background: rgba(255,255,255,0.15); display: flex;
+  align-items: center; justify-content: center;
+  font-size: 24px; margin-bottom: 10px; flex-shrink: 0;
+}
+.perfil-row { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+.perfil-nome { font-size: 16px; font-weight: 800; line-height: 1.2; }
+.perfil-inst { font-size: 11px; opacity: .75; margin-top: 2px; }
+.perfil-uuid {
+  font-size: 9px; opacity: .5; font-family: monospace;
+  margin-top: 4px; letter-spacing: .03em;
+}
+.perfil-chips { display: flex; flex-wrap: wrap; gap: 5px; }
+.perfil-chip {
+  background: rgba(255,255,255,0.12); border-radius: 99px;
+  padding: 3px 10px; font-size: 10px; font-weight: 700;
+  letter-spacing: .03em;
+}
+.perfil-edit-btn {
+  position: absolute; top: 12px; right: 12px;
+  background: rgba(255,255,255,0.15); border: none; color: #fff;
+  border-radius: var(--radius-sm); padding: 5px 10px;
+  font-size: 11px; font-weight: 700; cursor: pointer;
+}
+.perfil-edit-btn:active { background: rgba(255,255,255,0.25); }
+.perfil-form {
+  background: var(--verde-suave); border: 1px solid var(--verde-borda);
+  border-radius: var(--radius); padding: 14px; margin-bottom: 12px;
+  display: none;
+}
+.perfil-form.show { display: block; }
+.perfil-header-bar {
+  background: var(--verde-escuro); color: #fff;
+  padding: 4px 10px; border-radius: 99px;
+  font-size: 9px; font-weight: 800; letter-spacing: .06em;
+  display: inline-flex; align-items: center; gap: 5px;
+  margin-bottom: 8px;
+}
+/* indicador de perfil no header principal */
+.user-badge {
+  font-size: 10px; font-weight: 700; color: rgba(255,255,255,0.8);
+  background: rgba(255,255,255,0.1); border-radius: 99px;
+  padding: 2px 8px; max-width: 120px; overflow: hidden;
+  text-overflow: ellipsis; white-space: nowrap;
+}
+
 </style>
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -1193,6 +1345,7 @@ input.req-missing, select.req-missing, textarea.req-missing {
     <div style="flex:1;min-width:0">
       <h1>🌿 Fauna Campo</h1>
       <div id="camp-indicator" class="camp-indicator none">🗂️ Sem campanha ativa</div>
+      <div class="user-badge" id="user-badge" style="display:none">👤 —</div>
     </div>
     <div style="display:flex;align-items:center;gap:8px;flex-shrink:0">
       <span class="status-dot" id="dot"></span>
@@ -1310,11 +1463,38 @@ input.req-missing, select.req-missing, textarea.req-missing {
     <div class="field-row">
       <div class="field-group">
         <label>Método</label>
-        <select id="m-metodo"><option>IPA</option><option>Censo</option><option>Ocasional</option><option>Transecto</option></select>
+        <select id="m-metodo">
+            <option value="">— selecione —</option>
+            <option>Listas de Mackinnon</option>
+            <option>Ponto de escuta (IPA)</option>
+            <option>Ponto de escuta (CP)</option>
+            <option>Censo por transecto</option>
+            <option>Busca ativa</option>
+            <option>Encontro ocasional</option>
+            <option>Camera trap</option>
+            <option>Rede de neblina</option>
+            <option>Armadilha</option>
+            <option>Pitfall</option>
+            <option>Procura limitada por tempo</option>
+            <option>Observação embarcada</option>
+          </select>
       </div>
       <div class="field-group">
         <label>Tipo de registro</label>
-        <select id="m-tipo"><option>auditivo</option><option>visual</option><option>armadilhamento</option><option>rastro</option><option>nada</option></select>
+        <select id="m-tipo">
+            <option value="">— selecione —</option>
+            <option>Visual direto</option>
+            <option>Auditivo (vocalização)</option>
+            <option>Visual + auditivo</option>
+            <option>Captura / armadilhamento</option>
+            <option>Rastro / pegada</option>
+            <option>Fezes / pelotas</option>
+            <option>Pelagem / penas</option>
+            <option>Carcaça / ossos</option>
+            <option>Ninho / toca / abrigo</option>
+            <option>Camera trap</option>
+            <option>Indireto (outro)</option>
+          </select>
       </div>
     </div>
 
@@ -1353,6 +1533,33 @@ input.req-missing, select.req-missing, textarea.req-missing {
         <select id="m-sexo"><option value=""></option><option>Macho</option><option>Fêmea</option><option>Casal</option><option>Indeterminado</option></select>
       </div>
     </div>
+    <div class="field-row">
+      <div class="field-group">
+        <label>Destinação</label>
+        <select id="m-destinacao">
+          <option value="">—</option>
+          <option>Solto no local</option>
+          <option>Solto em outro local</option>
+          <option>Fotografado e solto</option>
+          <option>Coletado (voucher)</option>
+          <option>Encontrado morto</option>
+          <option>Encaminhado para reabilitação</option>
+          <option>Não aplicável</option>
+        </select>
+      </div>
+      <div class="field-group">
+        <label>Microhabitat</label>
+        <select id="m-microhabitat">
+          <option value="">—</option>
+          <option>Solo</option><option>Folhiço</option>
+          <option>Estrato herbáceo</option><option>Arbustivo</option>
+          <option>Sub-bosque</option><option>Dossel</option>
+          <option>Tronco/galho</option><option>Água</option>
+          <option>Margem</option><option>Área aberta</option>
+          <option>Borda de mata</option><option>Interior de mata</option>
+        </select>
+      </div>
+    </div>
     <div class="field-group"><label>Consultor</label><input id="m-consultor" /></div>
     <div class="field-group"><label>Observações</label><textarea id="m-obs" placeholder="Condições climáticas, comportamento..."></textarea></div>
 
@@ -1379,6 +1586,184 @@ input.req-missing, select.req-missing, textarea.req-missing {
   </div>
 </div>
 
+
+<!-- MACKINNON -->
+<div class="panel" id="panel-mackinnon">
+ <div class="card">
+  <div class="card-title">🐦 Listas de Mackinnon</div>
+
+  <!-- Contexto da campanha -->
+  <div class="ctx-banner show" id="mck-ctx-banner">
+    <div class="ctx-banner-row">
+      <div>
+        <strong id="mck-ctx-camp">—</strong><br>
+        <span id="mck-ctx-ponto">Nenhum ponto selecionado</span>
+      </div>
+      <button class="ctx-banner-trocar"
+        onclick="irPara('campanhas', document.querySelector('[onclick*=campanhas]'))">
+        Trocar
+      </button>
+    </div>
+  </div>
+
+  <!-- Configuração -->
+  <div class="field-row" style="margin-bottom:10px">
+    <div class="field-group">
+      <label>Espécies por lista</label>
+      <select id="mck-tamanho">
+        <option value="10">10 espécies (padrão)</option>
+        <option value="5">5 espécies</option>
+        <option value="15">15 espécies</option>
+        <option value="20">20 espécies</option>
+      </select>
+    </div>
+    <div class="field-group">
+      <label>Observador</label>
+      <input id="mck-observador" placeholder="Nome..."/>
+    </div>
+  </div>
+  <div class="field-row" style="margin-bottom:10px">
+    <div class="field-group">
+      <label>Data</label>
+      <input id="mck-data" type="date"/>
+    </div>
+    <div class="field-group">
+      <label>Hora início</label>
+      <input id="mck-hora" placeholder="06:00"/>
+    </div>
+  </div>
+  <div class="gps-group field-group" style="margin-bottom:12px">
+    <label>Coordenadas UTM</label>
+    <div class="gps-bar">
+      <div class="gps-input-wrap">
+        <input id="mck-coord" placeholder="UTM auto ou manual" autocomplete="off"/>
+      </div>
+      <button class="btn-gps" data-gps="mck-coord"
+        onclick="captureGps('mck-coord','mck-coord-meta','mck-coord-detail')"
+        title="GPS">📡</button>
+    </div>
+    <div class="gps-meta" id="mck-coord-meta"></div>
+    <div class="gps-progress" id="mck-coord-progress">
+      <div class="gps-progress-fill" id="mck-coord-fill"></div></div>
+    <div class="gps-detail" id="mck-coord-detail"></div>
+  </div>
+
+  <!-- Tabs: Coletar / Histórico / IFL -->
+  <div class="mck-tabs">
+    <button class="mck-tab active" onclick="mckTab('coletar',this)">📝 Coletar</button>
+    <button class="mck-tab" onclick="mckTab('historico',this)">📋 Histórico</button>
+    <button class="mck-tab" onclick="mckTab('ifl',this)">📊 IFL</button>
+  </div>
+
+  <!-- TAB: COLETAR ─────────────────────────────────────── -->
+  <div class="mck-tab-section active" id="mck-tab-coletar">
+
+    <!-- Header lista atual -->
+    <div class="mck-header">
+      <div class="mck-header-info">
+        <div class="mck-lista-num" id="mck-lista-num">1</div>
+        <div class="mck-lista-label">LISTA ATUAL</div>
+      </div>
+      <div style="text-align:right">
+        <div style="font-size:10px;opacity:.75">Listas completas</div>
+        <div style="font-size:20px;font-weight:900;color:#a5d6a7" id="mck-listas-completas">0</div>
+      </div>
+    </div>
+
+    <!-- Barra de progresso -->
+    <div class="mck-progress-wrap">
+      <div class="mck-progress-txt">
+        <span id="mck-prog-txt">0 espécies nesta lista</span>
+        <span id="mck-prog-max">meta: 10</span>
+      </div>
+      <div class="mck-progress-bar-bg">
+        <div class="mck-progress-bar-fill" id="mck-prog-fill" style="width:0%"></div>
+      </div>
+    </div>
+
+    <!-- Campo de entrada de espécie -->
+    <div class="field-group">
+      <label>Adicionar espécie *
+        <span id="mck-dup-warn" style="color:var(--perigo);font-size:10px;font-weight:700;display:none">
+          ⚠ Já está nesta lista
+        </span>
+      </label>
+      <div class="ac-wrapper">
+        <div class="ac-inline" id="mck-ac-inline" aria-hidden="true">
+          <span id="mck-ac-typed"></span>
+          <span id="mck-ac-ghost" style="opacity:.4"></span>
+        </div>
+        <input id="mck-especie"
+          placeholder="Nome científico ou popular..."
+          autocomplete="off" spellcheck="false"
+          oninput="acOnInputBio('mck',this.value);mckCheckDup(this.value)"
+          onkeydown="mckOnKeydown(event)"
+          onblur="setTimeout(()=>acCloseBio('mck'),180)"
+          onfocus="acOnInputBio('mck',this.value)"/>
+        <div class="ac-dropdown" id="mck-ac-dropdown"></div>
+      </div>
+    </div>
+    <button class="btn btn-primary" style="width:100%;margin-bottom:10px"
+      onclick="mckAdicionarEspecie()">
+      + Adicionar à lista
+    </button>
+
+    <!-- Lista de espécies da lista atual -->
+    <div class="mck-sp-list" id="mck-sp-list">
+      <div style="text-align:center;color:var(--texto-muted);font-size:12px;padding:12px">
+        Nenhuma espécie adicionada ainda
+      </div>
+    </div>
+
+    <!-- Completar lista -->
+    <div id="mck-completa-wrap" style="display:none">
+      <div class="mck-lista-completa">
+        <div class="mck-lista-completa-icon">✅</div>
+        <div class="mck-lista-completa-txt">Lista completa!</div>
+        <div class="mck-lista-completa-sub" id="mck-completa-sub"></div>
+      </div>
+      <button class="btn btn-primary" style="width:100%;margin-bottom:6px"
+        onclick="mckFinalizarLista()">
+        ✅ Salvar e iniciar próxima lista
+      </button>
+    </div>
+
+    <!-- Ações -->
+    <div style="display:flex;gap:8px;margin-top:8px">
+      <button class="btn btn-secondary" style="flex:1"
+        onclick="mckFinalizarLista(true)">
+        💾 Salvar lista incompleta
+      </button>
+      <button class="btn btn-secondary"
+        onclick="mckEncerrarSessao()"
+        style="background:var(--perigo-bg);color:var(--perigo);border-color:var(--perigo)">
+        ⏹ Encerrar
+      </button>
+    </div>
+  </div>
+
+  <!-- TAB: HISTÓRICO ───────────────────────────────────── -->
+  <div class="mck-tab-section" id="mck-tab-historico">
+    <div id="mck-hist-list">
+      <div class="empty"><div class="empty-icon">📋</div>
+        <p>Nenhuma lista registrada ainda.</p></div>
+    </div>
+    <button class="btn btn-secondary" style="width:100%;margin-top:8px"
+      onclick="mckExportarXLSX()">
+      📥 Exportar listas (.xlsx)
+    </button>
+  </div>
+
+  <!-- TAB: IFL ─────────────────────────────────────────── -->
+  <div class="mck-tab-section" id="mck-tab-ifl">
+    <div id="mck-ifl-wrap">
+      <div class="empty"><div class="empty-icon">📊</div>
+        <p>Complete ao menos 2 listas para calcular o IFL.</p></div>
+    </div>
+  </div>
+
+ </div>
+</div>
 
 <!-- BIOMETRIA -->
 <div class="panel" id="panel-biometria">
@@ -2528,6 +2913,78 @@ input.req-missing, select.req-missing, textarea.req-missing {
 <!-- ENVIAR -->
 <div class="panel" id="panel-enviar">
   <div class="card">
+    <div class="card-title">👤 Perfil do Consultor</div>
+
+    <!-- Card exibição do perfil -->
+    <div id="perfil-card" class="perfil-card">
+      <button class="perfil-edit-btn" onclick="togglePerfilForm()">✏️ Editar</button>
+      <div class="perfil-row">
+        <div class="perfil-avatar" id="perfil-avatar">👤</div>
+        <div>
+          <div class="perfil-nome" id="perfil-display-nome">—</div>
+          <div class="perfil-inst" id="perfil-display-inst"></div>
+          <div class="perfil-uuid" id="perfil-display-uuid"></div>
+        </div>
+      </div>
+      <div class="perfil-chips" id="perfil-chips"></div>
+    </div>
+
+    <!-- Formulário de edição -->
+    <div class="perfil-form" id="perfil-form">
+      <div class="perfil-header-bar">✏️ EDITAR PERFIL</div>
+      <div class="field-group">
+        <label>Nome completo *</label>
+        <input id="pfr-nome" placeholder="Ex: Gabriel Almeida"/>
+      </div>
+      <div class="field-row">
+        <div class="field-group">
+          <label>Instituição / Empresa</label>
+          <input id="pfr-inst" placeholder="Ex: BioConsult Ambiental"/>
+        </div>
+        <div class="field-group">
+          <label>Cargo / Função</label>
+          <input id="pfr-cargo" placeholder="Ex: Biólogo de Campo"/>
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field-group">
+          <label>CRBio / CREA</label>
+          <input id="pfr-registro" placeholder="Ex: CRBio-01/12345-D"/>
+        </div>
+        <div class="field-group">
+          <label>Especialidade</label>
+          <select id="pfr-especialidade">
+            <option value="">—</option>
+            <option>Ornitologia</option>
+            <option>Mastozoologia</option>
+            <option>Herpetologia</option>
+            <option>Ictiologia</option>
+            <option>Quiropterologia</option>
+            <option>Fauna em geral</option>
+            <option>Botânica</option>
+            <option>Ecologia</option>
+          </select>
+        </div>
+      </div>
+      <div class="field-group">
+        <label>E-mail</label>
+        <input id="pfr-email" type="email" placeholder="nome@empresa.com.br"/>
+      </div>
+      <div class="field-group">
+        <label>Telefone / WhatsApp</label>
+        <input id="pfr-telefone" type="tel" placeholder="(85) 9 9999-9999"/>
+      </div>
+      <div class="alert" id="pfr-alert"></div>
+      <div style="display:flex;gap:8px;margin-top:4px">
+        <button class="btn btn-primary" style="flex:1" onclick="salvarPerfil()">
+          💾 Salvar perfil
+        </button>
+        <button class="btn btn-secondary" onclick="togglePerfilForm()">Cancelar</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
     <div class="card-title">📤 Exportar dados</div>
     <button id="btn-instalar" onclick="instalarApp()">
       <span class="install-icon">📲</span> Instalar app na tela inicial
@@ -2628,8 +3085,11 @@ input.req-missing, select.req-missing, textarea.req-missing {
   <button class="nav-btn" onclick="irPara('biometria', this)">
     <span class="nav-icon">📏</span>Bio
   </button>
+  <button class="nav-btn" onclick="irPara('mackinnon', this)">
+    <span class="nav-icon">🐦</span>Mack.
+  </button>
   <button class="nav-btn" onclick="irPara('campanhas', this)">
-    <span class="nav-icon">🗂️</span>Campanha
+    <span class="nav-icon">🗂️</span>Camp.
   </button>
   <button class="nav-btn" onclick="irPara('dashboard', this)">
     <span class="nav-icon">📊</span>Resumo
@@ -2695,7 +3155,13 @@ function acOnInput(val) {
     return;
   }
 
-  acResults = acSearch(val);
+  // Priorizar espécies da classe selecionada
+  const classeEl = document.getElementById('m-classe');
+  const classeFilter = classeEl ? classeEl.value : '';
+  const all = acSearch(val);
+  acResults = classeFilter
+    ? all.filter(s => s.cl === classeFilter).concat(all.filter(s => s.cl !== classeFilter)).slice(0, 8)
+    : all;
   acSelected = -1;
 
   const best = acResults[0];
@@ -2844,6 +3310,7 @@ async function init() {
   await carregarBio();
   await carregarCampanhas();
   carregarReqConfig();
+  mckCarregar();
   await carregarConfig();
   loadDarkMode();
   registrarPWA();
@@ -2905,8 +3372,10 @@ function irPara(panel, btn) {
   btn.classList.add('active');
   if (panel === 'registros') { renderRegistros(); renderBioRegistros(document.getElementById('bio-lista')); }
   if (panel === 'dashboard') { renderDashboard(); }
-  if (panel === 'enviar')    { renderReqConfig(); }
-  if (panel === 'campanhas') { renderCampanhas(); }
+  if (panel === 'enviar')    { renderReqConfig(); renderPerfil(); if (!perfilUsuario.nome) { document.getElementById('perfil-form').classList.add('show'); } }
+  if (panel === 'campanhas')  { renderCampanhas(); }
+  if (panel === 'manual' || panel === 'biometria' || panel === 'mackinnon') { propagarConsultor(); }
+  if (panel === 'mackinnon')  { mckIniciar(); }
   if (panel === 'biometria') { atualizarIdDisplay(document.querySelector('.bio-tab.active')?.textContent?.trim()?.replace(/\n.*/,'')?.trim() || 'Avifauna'); }
   if (panel === 'enviar') atualizarResumo();
 }
@@ -2998,7 +3467,7 @@ Responda SOMENTE JSON válido, sem markdown:
     const novos = parsed.registros || [];
     if (novos.length === 0) throw new Error('Nenhum registro encontrado na imagem. Tente foto mais nítida.');
 
-    novos.forEach(r => { r._id = Date.now() + Math.random(); r._ts = new Date().toISOString(); });
+    novos.forEach(r => { if (!r._id || typeof r._id !== 'string' || r._id.length < 10) r._id = gerarUUID(); r._ts = r._ts || new Date().toISOString(); });
     registros = [...registros, ...novos];
     salvarDados();
 
@@ -3039,7 +3508,7 @@ function adicionarManual() {
     return;
   }
   const r = {
-    _id: Date.now() + Math.random(),
+    _id: gerarUUID(),
     _ts: new Date().toISOString(),
     projeto: document.getElementById('m-projeto').value,
     campanha: document.getElementById('m-campanha').value,
@@ -3056,6 +3525,8 @@ function adicionarManual() {
     estacao: document.getElementById('m-estacao').value,
     metodo: document.getElementById('m-metodo').value,
     tipo_registro: document.getElementById('m-tipo').value,
+    destinacao:   (document.getElementById('m-destinacao')   || {}).value || '',
+    microhabitat: (document.getElementById('m-microhabitat') || {}).value || '',
     classe: document.getElementById('m-classe').value,
     ordem: document.getElementById('m-ordem').value,
     familia: document.getElementById('m-familia').value,
@@ -3065,16 +3536,16 @@ function adicionarManual() {
     consultor: document.getElementById('m-consultor').value,
     obs: document.getElementById('m-obs').value
   };
-  r.campId  = window._campIdAtivo  || '';
-  r.pontoId = window._pontoIdAtivo || '';
   if (window._campEstacao && !r.estacao) r.estacao = window._campEstacao;
   if (window._campArea    && !r.area)    r.area    = window._campArea;
-  registros.push(r);
+  registros.push(injetarPerfilNoRegistro(r));
   salvarDados().catch(e=>console.warn(e));
   mostrarAlert('manual-alert', 'success', `✓ "${especie}" salvo localmente. Total: ${registros.length} registro(s).`);
   toast('Registro salvo');
   // Limpar campos biológicos
-  ['m-especie','m-ordem','m-familia','m-obs'].forEach(id => document.getElementById(id).value = '');
+  ['m-especie','m-ordem','m-familia','m-obs','m-microhabitat'].forEach(id => {
+    const el = document.getElementById(id); if(el) el.value = '';
+  });
   document.getElementById('status-row').style.display = 'none';
   document.getElementById('ac-ghost').textContent = '';
   document.getElementById('ac-typed').textContent = '';
@@ -3122,6 +3593,8 @@ function renderRegistros() {
             ${r.classe || ''} · ${r.ordem || ''} · ${r.familia || ''}<br>
             ${r.n_individuos || 0} ind.${r.sexo ? ' · ' + r.sexo : ''} · ${r.tipo_registro || ''} · ${r.metodo || ''}<br>
             ${r.ponto || ''} · ${dataFmt} ${r.horario || ''} · ${r.periodo || ''} · ${r.estacao || ''}
+            ${r.metodo ? ' · ' + r.metodo : ''}${r.tipo_registro ? ' · ' + r.tipo_registro : ''}
+            ${r.destinacao ? '<br>📌 ' + r.destinacao : ''}${r.microhabitat ? ' · 🌿 ' + r.microhabitat : ''}
             ${r.coord ? `<br>📡 ${r.coord}` : '<br><span style="color:var(--texto-muted);font-size:10px">📍 Coordenadas não registradas</span>'}
             ${r.obs ? '<br><em>' + r.obs + '</em>' : ''}
           </div>
@@ -3145,6 +3618,23 @@ function renderRegistros() {
           <div class="field-group"><label>Horário</label><input data-f="horario"/></div>
         </div>
         <div class="field-group"><label>Coordenadas UTM</label><input data-f="coord"/></div>
+        <div class="edit-grid">
+          <div class="field-group"><label>Destinação</label>
+            <select data-f="destinacao">
+              <option value="">—</option>
+              <option>Solto no local</option><option>Fotografado e solto</option>
+              <option>Coletado (voucher)</option><option>Encontrado morto</option>
+              <option>Encaminhado para reabilitação</option>
+            </select>
+          </div>
+          <div class="field-group"><label>Microhabitat</label>
+            <select data-f="microhabitat">
+              <option value="">—</option>
+              <option>Solo</option><option>Folhiço</option><option>Sub-bosque</option>
+              <option>Dossel</option><option>Água</option><option>Borda de mata</option>
+            </select>
+          </div>
+        </div>
         <div class="field-group"><label>Observações</label><textarea data-f="obs" rows="2"></textarea></div>
         <button class="edit-save-btn" onclick="salvarEdicaoManual(${idx})">💾 Salvar edição</button>
       </div>
@@ -3189,7 +3679,7 @@ function gerarXLSX() {
       if (m) { utmZona = m[1]; utmX = m[2]; utmY = m[3]; }
       else { utmZona = r.coord; } // fallback: put raw value in ZONA col
     }
-    return [r.projeto||'','',r.campanha||'',r.area||'',r.ponto||'',utmZona,utmX,utmY,dataFmt,r.horario||'',r.periodo||'',r.estacao||'',r.metodo||'',r.tipo_registro||'','',r.classe||'',r.ordem||'',r.familia||'',r.especie||'',r.n_individuos||0,r.sexo||'',r.consultor||'',r.obs||''];
+    return [r.projeto||'','',r.campanha||'',r.area||'',r.ponto||'',utmZona,utmX,utmY,dataFmt,r.horario||'',r.periodo||'',r.estacao||'',r.metodo||'',r.tipo_registro||'',r.destinacao||'',r.microhabitat||'',r.classe||'',r.ordem||'',r.familia||'',r.especie||'',r.n_individuos||0,r.sexo||'',r.consultor||'',r.obs||''];
   });
 
   const ws = XLSX.utils.aoa_to_sheet([cabecalho1, cabecalho2, ...linhas]);
@@ -3482,7 +3972,7 @@ function _adicionarBioLegacy(grupo) {
   cfg.formFields.forEach(c => { r[c]=get(c); });
   r.campId  = window._campIdAtivo  || '';
   r.pontoId = window._pontoIdAtivo || '';
-  bioRegistros.push(r);
+  bioRegistros.push(injetarPerfilNoRegistro(r));
   salvarBio().catch(e=>console.warn(e));
   const st=get('status')||'';
   mostrarAlert(p+'-alert','success','✓ ['+idStr+'] "'+get('especie')+'" salvo. Total: '+bioRegistros.length);
@@ -4064,7 +4554,7 @@ function salvarRapida() {
     r.familia = match.fa || ''; r.ordem = match.or || '';
   }
 
-  bioRegistros.push(r);
+  bioRegistros.push(injetarPerfilNoRegistro(r));
   salvarBio();
   toast('⚡ '+idStr+' salvo');
 
@@ -4697,6 +5187,7 @@ async function salvarBio() {
 async function carregarConfig() {
   try {
     config = JSON.parse(localStorage.getItem(CFG_KEY)) || {};
+    carregarPerfil();
     if (config.email) document.getElementById('cfg-email').value = config.email || '';
     if (config.driveFolder) document.getElementById('cfg-drive-folder').value = config.driveFolder || '';
     if (config.driveKey) document.getElementById('cfg-drive-key').value = config.driveKey || '';
@@ -4955,7 +5446,7 @@ async function salvarCampanha() {
   if (!nome) { mostrarAlert('nc-alert','error','Informe o nome da campanha.'); return; }
 
   const c = {
-    _id:       editCampId || (Date.now() + Math.random()).toString(),
+    _id:       editCampId || gerarUUID(),
     _ts:       new Date().toISOString(),
     nome,
     projeto:   document.getElementById('nc-projeto').value.trim(),
@@ -5083,7 +5574,7 @@ async function salvarPonto() {
   if (!nome) { mostrarAlert('np-alert','error','Informe o nome/código do ponto.'); return; }
 
   const p = {
-    _id:   (Date.now() + Math.random()).toString(),
+    _id:   gerarUUID(),
     _ts:   new Date().toISOString(),
     campId: campAtiva._id,
     nome,
@@ -5559,7 +6050,7 @@ async function confirmarImportacao() {
       continue;
     }
     const novoPonto = {
-      _id:    (Date.now() + Math.random()).toString(),
+      _id:    gerarUUID(),
       _ts:    new Date().toISOString(),
       campId: campAtiva._id,
       nome:   p.nome,
@@ -6292,6 +6783,561 @@ ${ameacadas.length ? `
   a.click();
   URL.revokeObjectURL(url);
   toast('📋 Relatório gerado!');
+}
+
+
+// ══════════════════════════════════════════════════════════
+// LISTAS DE MACKINNON
+// ══════════════════════════════════════════════════════════
+const MCK_KEY = 'fauna_mackinnon_v1';
+let mckSessao = {
+  listas: [],        // listas finalizadas
+  listaAtual: [],    // espécies da lista em progresso
+  numLista: 1,       // número da lista atual
+  tamanho: 10,       // espécies por lista
+  campId: '',
+  pontoId: '',
+  campNome: '',
+  pontoNome: '',
+  data: '',
+  hora: '',
+  coord: '',
+  observador: '',
+  ativa: false,
+};
+
+function mckCarregar() {
+  try {
+    const d = JSON.parse(localStorage.getItem(MCK_KEY));
+    if (d) mckSessao = d;
+  } catch(e) {}
+}
+
+function mckSalvar() {
+  localStorage.setItem(MCK_KEY, JSON.stringify(mckSessao));
+}
+
+function mckIniciar() {
+  mckCarregar();
+  // Pré-preencher contexto
+  if (campAtiva) {
+    mckSessao.campId   = campAtiva._id;
+    mckSessao.campNome = campAtiva.nome;
+    const el = document.getElementById('mck-observador');
+    if (el && !el.value && campAtiva.consultor) el.value = campAtiva.consultor;
+  }
+  if (pontoAtivo) {
+    mckSessao.pontoId   = pontoAtivo._id;
+    mckSessao.pontoNome = pontoAtivo.nome;
+    const coordEl = document.getElementById('mck-coord');
+    if (coordEl && !coordEl.value && pontoAtivo.coord) coordEl.value = pontoAtivo.coord;
+  }
+  // preencher data se vazia
+  const dataEl = document.getElementById('mck-data');
+  if (dataEl && !dataEl.value) dataEl.value = new Date().toISOString().slice(0,10);
+
+  // atualizar tamanho
+  const tamEl = document.getElementById('mck-tamanho');
+  if (tamEl) mckSessao.tamanho = parseInt(tamEl.value) || 10;
+
+  mckAtualizarBanner();
+  mckRenderAtual();
+  mckRenderHistorico();
+  mckRenderIFL();
+}
+
+function mckTab(nome, btn) {
+  document.querySelectorAll('.mck-tab').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.mck-tab-section').forEach(s => s.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('mck-tab-' + nome).classList.add('active');
+  if (nome === 'historico') mckRenderHistorico();
+  if (nome === 'ifl')       mckRenderIFL();
+}
+
+function mckAtualizarBanner() {
+  const camp  = campAtiva?.nome  || mckSessao.campNome || '—';
+  const ponto = pontoAtivo?.nome || mckSessao.pontoNome || 'Nenhum ponto selecionado';
+  const elC = document.getElementById('mck-ctx-camp');
+  const elP = document.getElementById('mck-ctx-ponto');
+  if (elC) elC.textContent = camp;
+  if (elP) elP.textContent = ponto;
+}
+
+// ── Lógica da lista atual ─────────────────────────────────
+function mckCheckDup(val) {
+  const warn = document.getElementById('mck-dup-warn');
+  if (!warn || !val || val.length < 2) { warn.style.display='none'; return; }
+  const isDup = mckSessao.listaAtual.some(s =>
+    normalizeStr(s.sp).includes(normalizeStr(val)) ||
+    normalizeStr(val).includes(normalizeStr(s.sp.split(' ')[0]))
+  );
+  warn.style.display = isDup ? 'inline' : 'none';
+}
+
+function mckOnKeydown(e) {
+  if (e.key === 'Enter') { e.preventDefault(); mckAdicionarEspecie(); }
+  else acOnKeydownBio('mck', e);
+}
+
+function mckAdicionarEspecie() {
+  const input = document.getElementById('mck-especie');
+  const val   = input?.value?.trim();
+  if (!val) return;
+
+  const tam = parseInt(document.getElementById('mck-tamanho')?.value) || 10;
+  mckSessao.tamanho = tam;
+
+  // Verificar duplicata na lista atual
+  const isDup = mckSessao.listaAtual.some(s =>
+    normalizeStr(s.sp) === normalizeStr(val) ||
+    (s.np && normalizeStr(s.np) === normalizeStr(val))
+  );
+  if (isDup) {
+    toast('⚠ Esta espécie já está na lista atual');
+    document.getElementById('mck-dup-warn').style.display = 'inline';
+    return;
+  }
+
+  // Buscar dados da espécie
+  const match = (bioAcResults['mck'] || []).find(s =>
+    normalizeStr(s.sp) === normalizeStr(val) ||
+    (s.np && normalizeStr(s.np) === normalizeStr(val))
+  ) || acSearch(val)[0];
+
+  const sp = match?.sp || val;
+  const np = match?.np || '';
+  const fa = match?.fa || '';
+  const cl = match?.cl || '';
+
+  mckSessao.listaAtual.push({ sp, np, fa, cl, ts: new Date().toISOString() });
+  mckSessao.ativa = true;
+
+  // Limpar campo
+  input.value = '';
+  document.getElementById('mck-ac-ghost').textContent  = '';
+  document.getElementById('mck-ac-typed').textContent  = '';
+  document.getElementById('mck-dup-warn').style.display = 'none';
+  acCloseBio('mck');
+  mckSalvar();
+  mckRenderAtual();
+
+  // Verificar se lista completou
+  if (mckSessao.listaAtual.length >= mckSessao.tamanho) {
+    mckListaCompleta();
+  }
+}
+
+function mckRemoverEspecie(idx) {
+  mckSessao.listaAtual.splice(idx, 1);
+  mckSalvar();
+  mckRenderAtual();
+  document.getElementById('mck-completa-wrap').style.display = 'none';
+}
+
+function mckListaCompleta() {
+  const sub = document.getElementById('mck-completa-sub');
+  if (sub) sub.textContent =
+    `${mckSessao.tamanho} espécies registradas · toque para iniciar Lista ${mckSessao.numLista + 1}`;
+  document.getElementById('mck-completa-wrap').style.display = 'block';
+}
+
+function mckFinalizarLista(incompleta = false) {
+  const lista = mckSessao.listaAtual;
+  if (!lista.length) { toast('Adicione ao menos 1 espécie'); return; }
+
+  // Capturar metadados atuais
+  const dataEl  = document.getElementById('mck-data');
+  const horaEl  = document.getElementById('mck-hora');
+  const coordEl = document.getElementById('mck-coord');
+  const obsEl   = document.getElementById('mck-observador');
+
+  const listaObj = {
+    _id:        gerarUUID(),
+    num:        mckSessao.numLista,
+    data:       dataEl?.value  || new Date().toISOString().slice(0,10),
+    hora:       horaEl?.value  || '',
+    coord:      coordEl?.value || '',
+    observador: obsEl?.value   || '',
+    campId:     campAtiva?._id   || mckSessao.campId   || '',
+    campNome:   campAtiva?.nome  || mckSessao.campNome  || '',
+    pontoId:    pontoAtivo?._id  || mckSessao.pontoId  || '',
+    pontoNome:  pontoAtivo?.nome || mckSessao.pontoNome || '',
+    tamanho:    mckSessao.tamanho,
+    incompleta: !!incompleta,
+    especies:   [...lista],
+    nEspecies:  lista.length,
+  };
+
+  mckSessao.listas.push(listaObj);
+  mckSessao.listaAtual = [];
+  mckSessao.numLista++;
+  document.getElementById('mck-completa-wrap').style.display = 'none';
+  mckSalvar();
+
+  // Salvar também como registros manuais para aparecer na aba Dados/Dashboard
+  lista.forEach(s => {
+    const reg = {
+      _id: gerarUUID(),
+      _ts: new Date().toISOString(),
+      campId: listaObj.campId, pontoId: listaObj.pontoId,
+      campanha: listaObj.campNome, projeto: campAtiva?.projeto || '',
+      ponto: listaObj.pontoNome, coord: listaObj.coord,
+      data: listaObj.data, horario: listaObj.hora,
+      metodo: `Listas de Mackinnon (L${listaObj.num})`,
+      tipo_registro: 'Visual + auditivo',
+      classe: s.cl || 'Aves', ordem: '', familia: s.fa || '',
+      especie: s.sp, n_individuos: 1, sexo: '',
+      consultor: listaObj.observador, obs: `Lista ${listaObj.num} de Mackinnon`,
+      ...getCondicoesAmbientais()
+    };
+    registros.push(reg);
+  });
+  salvarDados().catch(e=>console.warn(e));
+
+  toast(`✅ Lista ${listaObj.num} salva · ${lista.length} espécies`);
+  mckRenderAtual();
+  mckRenderHistorico();
+  mckRenderIFL();
+}
+
+function mckEncerrarSessao() {
+  if (mckSessao.listaAtual.length > 0) {
+    if (!confirm(`Encerrar sessão? A lista atual (${mckSessao.listaAtual.length} espécies) será descartada. Use "Salvar lista incompleta" para mantê-la.`)) return;
+  }
+  mckSessao.listaAtual = [];
+  mckSessao.ativa = false;
+  mckSalvar();
+  mckRenderAtual();
+  toast('Sessão encerrada');
+}
+
+// ── Renderização ──────────────────────────────────────────
+function mckRenderAtual() {
+  const lista = mckSessao.listaAtual;
+  const tam   = mckSessao.tamanho;
+  const pct   = Math.round((lista.length / tam) * 100);
+
+  // Header
+  const numEl = document.getElementById('mck-lista-num');
+  const compEl = document.getElementById('mck-listas-completas');
+  if (numEl) numEl.textContent = mckSessao.numLista;
+  if (compEl) compEl.textContent = mckSessao.listas.length;
+
+  // Progress bar
+  const fillEl = document.getElementById('mck-prog-fill');
+  const txtEl  = document.getElementById('mck-prog-txt');
+  const maxEl  = document.getElementById('mck-prog-max');
+  if (fillEl) fillEl.style.width = pct + '%';
+  if (txtEl)  txtEl.textContent  = `${lista.length} espécie${lista.length!==1?'s':''} nesta lista`;
+  if (maxEl)  maxEl.textContent  = `meta: ${tam}`;
+
+  // Lista de espécies
+  const listEl = document.getElementById('mck-sp-list');
+  if (listEl) {
+    if (!lista.length) {
+      listEl.innerHTML = '<div style="text-align:center;color:var(--texto-muted);font-size:12px;padding:12px">Nenhuma espécie adicionada ainda</div>';
+    } else {
+      listEl.innerHTML = lista.map((s, i) =>
+        `<div class="mck-sp-item">
+          <span class="mck-sp-num">${i+1}</span>
+          <div style="flex:1;min-width:0">
+            <div class="mck-sp-name">${s.sp}</div>
+            ${s.np ? `<div class="mck-sp-np">${s.np}</div>` : ''}
+          </div>
+          ${s.cl ? `<span class="top-sp-cl cl-${s.cl}" style="font-size:9px">${s.cl}</span>` : ''}
+          <button class="mck-sp-del" onclick="mckRemoverEspecie(${i})">✕</button>
+        </div>`
+      ).join('');
+    }
+  }
+}
+
+function mckRenderHistorico() {
+  const el = document.getElementById('mck-hist-list');
+  if (!el) return;
+  const listas = mckSessao.listas;
+  if (!listas.length) {
+    el.innerHTML = '<div class="empty"><div class="empty-icon">📋</div><p>Nenhuma lista registrada ainda.</p></div>';
+    return;
+  }
+  const fmt = d => d ? new Date(d+'T12:00:00').toLocaleDateString('pt-BR') : '';
+  el.innerHTML = listas.slice().reverse().map(l =>
+    `<div class="mck-hist-card">
+      <div class="mck-hist-header">
+        <span class="mck-hist-num">Lista ${l.num}${l.incompleta?' <span style="color:var(--alerta);font-size:9px">(incompleta)</span>':''}</span>
+        <span class="mck-hist-meta">${fmt(l.data)}${l.hora?' '+l.hora:''} · ${l.nEspecies} spp</span>
+      </div>
+      ${l.pontoNome ? `<div style="font-size:10px;color:var(--texto-muted);margin-bottom:3px">📍 ${l.pontoNome}</div>` : ''}
+      <div class="mck-hist-spp">${l.especies.map(s=>s.sp).join(' · ')}</div>
+    </div>`
+  ).join('');
+}
+
+function mckRenderIFL() {
+  const el = document.getElementById('mck-ifl-wrap');
+  if (!el) return;
+  const listas = mckSessao.listas.filter(l => !l.incompleta);
+  if (listas.length < 2) {
+    el.innerHTML = '<div class="empty"><div class="empty-icon">📊</div><p>Complete ao menos 2 listas para calcular o IFL.</p></div>';
+    return;
+  }
+
+  // Calcular frequência de cada espécie
+  const freq = {};
+  listas.forEach(l => {
+    const sppNaLista = new Set(l.especies.map(s => s.sp));
+    sppNaLista.forEach(sp => { freq[sp] = (freq[sp] || 0) + 1; });
+  });
+
+  const N = listas.length;
+  const ranked = Object.entries(freq)
+    .map(([sp, n]) => ({ sp, n, ifl: Math.round((n / N) * 100) }))
+    .sort((a, b) => b.ifl - a.ifl);
+
+  const total  = ranked.length;
+  const maxIFL = ranked[0]?.ifl || 1;
+
+  // IFL por categoria
+  const consts   = ranked.filter(s => s.ifl >= 75);
+  const comuns   = ranked.filter(s => s.ifl >= 50 && s.ifl < 75);
+  const moderads = ranked.filter(s => s.ifl >= 25 && s.ifl < 50);
+  const raras    = ranked.filter(s => s.ifl < 25);
+
+  el.innerHTML = `
+    <div style="margin-bottom:10px">
+      <div class="dash-section-title">Resumo</div>
+      <div class="indices-grid">
+        <div class="idx-card shannon">
+          <div class="idx-num">${N}</div>
+          <div class="idx-label">Listas completas</div>
+        </div>
+        <div class="idx-card equit">
+          <div class="idx-num">${total}</div>
+          <div class="idx-label">Espécies únicas</div>
+        </div>
+        <div class="idx-card margalef">
+          <div class="idx-num">${consts.length}</div>
+          <div class="idx-label">Constantes ≥75%</div>
+        </div>
+        <div class="idx-card dom">
+          <div class="idx-num">${raras.length}</div>
+          <div class="idx-label">Raras &lt;25%</div>
+        </div>
+      </div>
+    </div>
+    <div class="dash-section-title">IFL por espécie (top 20)</div>
+    <div style="background:var(--branco);border:1px solid var(--verde-borda);border-radius:var(--radius);padding:10px;margin-bottom:10px">
+      ${ranked.slice(0,20).map(s => `
+        <div class="ifl-bar-row">
+          <span class="ifl-name" title="${s.sp}">${s.sp}</span>
+          <div class="ifl-bar"><div class="ifl-fill" style="width:${(s.ifl/maxIFL*100).toFixed(0)}%"></div></div>
+          <span class="ifl-pct">${s.ifl}%</span>
+        </div>`).join('')}
+    </div>
+    <div style="font-size:9px;color:var(--texto-muted);text-align:center">
+      IFL = frequência de aparição nas listas completas<br>
+      Constante ≥75% · Comum 50–74% · Moderada 25–49% · Rara &lt;25%
+    </div>
+  `;
+}
+
+// ── Exportar XLSX das listas ──────────────────────────────
+function mckExportarXLSX() {
+  if (!mckSessao.listas.length) { toast('Nenhuma lista para exportar'); return; }
+  const wb = XLSX.utils.book_new();
+
+  // Aba 1: Lista completa de espécies × listas
+  const sppSet = new Set();
+  mckSessao.listas.forEach(l => l.especies.forEach(s => sppSet.add(s.sp)));
+  const sppArr = [...sppSet].sort();
+  const headers = ['Espécie', ...mckSessao.listas.map(l => `L${l.num}`),'Freq.(N)','IFL(%)'];
+  const N = mckSessao.listas.length;
+  const rows = sppArr.map(sp => {
+    const presenca = mckSessao.listas.map(l => l.especies.some(s=>s.sp===sp) ? 1 : 0);
+    const freq = presenca.reduce((a,b)=>a+b,0);
+    return [sp, ...presenca, freq, Math.round((freq/N)*100)];
+  });
+  const ws1 = XLSX.utils.aoa_to_sheet([headers, ...rows]);
+  ws1['!cols'] = [{wch:30}, ...mckSessao.listas.map(()=>({wch:5})), {wch:8},{wch:8}];
+  XLSX.utils.book_append_sheet(wb, ws1, 'IFL');
+
+  // Aba 2: Detalhes de cada lista
+  const headers2 = ['Lista','Data','Hora','Ponto','Observador','Nº Espécies','Incompleta','Espécies'];
+  const rows2 = mckSessao.listas.map(l => [
+    l.num, l.data, l.hora, l.pontoNome, l.observador,
+    l.nEspecies, l.incompleta ? 'Sim' : 'Não',
+    l.especies.map(s=>s.sp).join('; ')
+  ]);
+  const ws2 = XLSX.utils.aoa_to_sheet([headers2, ...rows2]);
+  ws2['!cols'] = [{wch:6},{wch:12},{wch:8},{wch:20},{wch:20},{wch:10},{wch:10},{wch:80}];
+  XLSX.utils.book_append_sheet(wb, ws2, 'Listas');
+
+  XLSX.writeFile(wb, `mackinnon_${new Date().toISOString().slice(0,10)}.xlsx`);
+  toast('📥 XLSX exportado');
+}
+
+
+// ══════════════════════════════════════════════════════════
+// PERFIL DO CONSULTOR
+// ══════════════════════════════════════════════════════════
+const PERFIL_KEY = 'fauna_perfil_v1';
+let perfilUsuario = {
+  uuid:          '',   // identificador único permanente do usuário
+  nome:          '',
+  inst:          '',
+  cargo:         '',
+  registro:      '',   // CRBio / CREA
+  especialidade: '',
+  email:         '',
+  telefone:      '',
+};
+
+function gerarUUID() {
+  // UUID v4
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
+    const r = Math.random() * 16 | 0;
+    return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+  });
+}
+
+function carregarPerfil() {
+  try {
+    const d = JSON.parse(localStorage.getItem(PERFIL_KEY));
+    if (d) {
+      perfilUsuario = { ...perfilUsuario, ...d };
+    }
+  } catch(e) {}
+  // Garantir UUID permanente
+  if (!perfilUsuario.uuid) {
+    perfilUsuario.uuid = gerarUUID();
+    salvarPerfilLocal();
+  }
+  renderPerfil();
+}
+
+function salvarPerfilLocal() {
+  localStorage.setItem(PERFIL_KEY, JSON.stringify(perfilUsuario));
+}
+
+function salvarPerfil() {
+  const nome = document.getElementById('pfr-nome')?.value.trim();
+  if (!nome) { mostrarAlert('pfr-alert','error','Informe seu nome.'); return; }
+
+  perfilUsuario.nome          = nome;
+  perfilUsuario.inst          = document.getElementById('pfr-inst')?.value.trim()          || '';
+  perfilUsuario.cargo         = document.getElementById('pfr-cargo')?.value.trim()         || '';
+  perfilUsuario.registro      = document.getElementById('pfr-registro')?.value.trim()      || '';
+  perfilUsuario.especialidade = document.getElementById('pfr-especialidade')?.value        || '';
+  perfilUsuario.email         = document.getElementById('pfr-email')?.value.trim()         || '';
+  perfilUsuario.telefone      = document.getElementById('pfr-telefone')?.value.trim()      || '';
+
+  salvarPerfilLocal();
+  renderPerfil();
+  togglePerfilForm();
+
+  // Propagar nome para campos de consultor em aberto
+  propagarConsultor();
+  toast('✓ Perfil salvo');
+}
+
+function togglePerfilForm() {
+  const form = document.getElementById('perfil-form');
+  const show = !form.classList.contains('show');
+  form.classList.toggle('show', show);
+
+  if (show) {
+    // Preencher form com dados atuais
+    const fields = ['nome','inst','cargo','registro','especialidade','email','telefone'];
+    fields.forEach(f => {
+      const el = document.getElementById('pfr-' + f);
+      if (el) el.value = perfilUsuario[f] || '';
+    });
+    document.getElementById('pfr-nome')?.focus();
+  }
+}
+
+function renderPerfil() {
+  const p = perfilUsuario;
+
+  // Avatar — inicial do nome
+  const avatarEl = document.getElementById('perfil-avatar');
+  if (avatarEl) avatarEl.textContent = p.nome ? p.nome[0].toUpperCase() : '👤';
+
+  // Nome e instituição
+  const nomeEl = document.getElementById('perfil-display-nome');
+  const instEl = document.getElementById('perfil-display-inst');
+  const uuidEl = document.getElementById('perfil-display-uuid');
+  if (nomeEl) nomeEl.textContent = p.nome || '— perfil não configurado —';
+  if (instEl) instEl.textContent = [p.cargo, p.inst].filter(Boolean).join(' · ');
+  if (uuidEl) uuidEl.textContent = 'ID: ' + (p.uuid || '—');
+
+  // Chips
+  const chipsEl = document.getElementById('perfil-chips');
+  if (chipsEl) {
+    const chips = [];
+    if (p.registro)      chips.push(p.registro);
+    if (p.especialidade) chips.push(p.especialidade);
+    if (p.email)         chips.push(p.email);
+    chipsEl.innerHTML = chips.map(c =>
+      `<span class="perfil-chip">${c}</span>`
+    ).join('');
+  }
+
+  // Badge no header
+  const badge = document.getElementById('user-badge');
+  if (badge) {
+    if (p.nome) {
+      badge.textContent = '👤 ' + p.nome.split(' ')[0];
+      badge.style.display = '';
+    } else {
+      badge.style.display = 'none';
+    }
+  }
+
+  // Notificação para configurar perfil se vazio
+  if (!p.nome) {
+    const enviarPanel = document.getElementById('panel-enviar');
+    if (enviarPanel && enviarPanel.classList.contains('active')) {
+      setTimeout(() => {
+        const form = document.getElementById('perfil-form');
+        if (form && !form.classList.contains('show')) {
+          mostrarAlert('pfr-alert','warn','👆 Configure seu perfil para identificar seus registros');
+          form.classList.add('show');
+        }
+      }, 500);
+    }
+  }
+}
+
+// Propagar consultor para todos os formulários abertos
+function propagarConsultor() {
+  const nome = perfilUsuario.nome;
+  if (!nome) return;
+  const ids = [
+    'm-consultor',
+    'bav-consultor','bma-consultor','bhe-consultor','bic-consultor','bqu-consultor',
+    'mck-observador', 'nc-consultor'
+  ];
+  ids.forEach(id => {
+    const el = document.getElementById(id);
+    if (el && !el.value) {
+      el.value = nome;
+      el.classList.add('autofilled');
+      setTimeout(() => el.classList.remove('autofilled'), 2000);
+    }
+  });
+}
+
+// Injetar UUID + perfil em TODOS os registros salvos
+function injetarPerfilNoRegistro(r) {
+  return {
+    ...r,
+    _coletor_uuid:  perfilUsuario.uuid  || '',
+    _coletor_nome:  perfilUsuario.nome  || '',
+    _coletor_inst:  perfilUsuario.inst  || '',
+    _coletor_reg:   perfilUsuario.registro || '',
+  };
 }
 
 init();
