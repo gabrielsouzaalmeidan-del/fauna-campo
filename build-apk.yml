@@ -49,12 +49,13 @@ jobs:
           cat > package.json << 'EOF'
           {
             "name": "fauna-campo",
-            "version": "1.7.0",
+            "version": "1.8.0",
             "private": true,
             "dependencies": {
               "@capacitor/android": "6.0.0",
               "@capacitor/cli": "6.0.0",
-              "@capacitor/core": "6.0.0"
+              "@capacitor/core": "6.0.0",
+              "@capacitor/geolocation": "6.0.0"
             }
           }
           EOF
@@ -68,17 +69,22 @@ jobs:
             "webDir": "www",
             "android": {
               "allowMixedContent": true
+            },
+            "plugins": {
+              "Geolocation": {
+                "permissions": ["location"]
+              }
             }
           }
           EOF
 
-      - name: Instalar Capacitor
+      - name: Instalar Capacitor e plugins
         run: npm install
 
       - name: Adicionar plataforma Android
         run: npx cap add android
 
-      - name: Sincronizar arquivos
+      - name: Sincronizar arquivos e plugins
         run: npx cap sync android
 
       - name: Cache Gradle
@@ -95,7 +101,7 @@ jobs:
         run: |
           MANIFEST="android/app/src/main/AndroidManifest.xml"
           if [ -f "$MANIFEST" ]; then
-            sed -i 's|<uses-permission android:name="android.permission.INTERNET"/>|<uses-permission android:name="android.permission.INTERNET"/>\n    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>\n    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>\n    <uses-permission android:name="android.permission.CAMERA"/>\n    <uses-permission android:name="android.permission.WAKE_LOCK"/>|' "$MANIFEST"
+            sed -i 's|<uses-permission android:name="android.permission.INTERNET"/>|<uses-permission android:name="android.permission.INTERNET"/>\n    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>\n    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>\n    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION"/>\n    <uses-permission android:name="android.permission.CAMERA"/>\n    <uses-permission android:name="android.permission.WAKE_LOCK"/>|' "$MANIFEST"
             echo "Permissões adicionadas:"
             grep "permission" "$MANIFEST"
           fi
@@ -121,7 +127,9 @@ jobs:
           tag_name: build-${{ github.run_number }}
           name: "Fauna Campo — Build ${{ github.run_number }}"
           body: |
-            ## 📱 Fauna Campo — APK Android
+            ## 📱 Fauna Campo v1.8 — APK Android
+            **Novidades:**
+            - ✅ GPS com solicitação de permissão nativa no Android
             **Como instalar:**
             1. Baixe o arquivo `.apk` abaixo
             2. No celular Android: Configurações → Segurança → Permitir fontes desconhecidas
