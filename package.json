@@ -1,16 +1,11 @@
 {
-  "name": "fauna-campo",
-  "version": "1.7.0",
-  "description": "App de coleta de dados faunísticos em campo",
+  "name": "wildlog",
+  "version": "1.9.0",
   "private": true,
-  "scripts": {
-    "build": "echo 'Static app - no build needed'",
-    "cap:sync": "npx cap sync android",
-    "cap:android": "npx cap open android"
-  },
   "dependencies": {
     "@capacitor/android": "6.0.0",
     "@capacitor/cli": "6.0.0",
-    "@capacitor/core": "6.0.0"
+    "@capacitor/core": "6.0.0",
+    "@capacitor/geolocation": "6.0.0"
   }
 }

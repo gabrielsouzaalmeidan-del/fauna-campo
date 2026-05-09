@@ -1,20 +1,13 @@
 {
-  "appId": "br.com.faunacampo.app",
-  "appName": "Fauna Campo",
+  "appId": "br.com.wildlog.app",
+  "appName": "WildLog",
   "webDir": "www",
-  "bundledWebRuntime": false,
   "android": {
-    "allowMixedContent": true,
-    "captureInput": true,
-    "webContentsDebuggingEnabled": false,
-    "minWebViewVersion": 60
+    "allowMixedContent": true
   },
   "plugins": {
-    "SplashScreen": {
-      "launchShowDuration": 2000,
-      "backgroundColor": "#1a2e1a",
-      "showSpinner": false,
-      "androidScaleType": "CENTER_CROP"
+    "Geolocation": {
+      "permissions": ["location"]
     }
   }
 }
