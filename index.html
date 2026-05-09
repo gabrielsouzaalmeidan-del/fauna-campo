@@ -5,7 +5,17 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
 <meta name="theme-color" content="#1a2e1a" />
 <meta name="apple-mobile-web-app-capable" content="yes" />
-<title>Fauna Campo</title>
+<title>WildLog</title>
+
+<!-- Capacitor core — carregado apenas no APK -->
+<script>
+  (function() {
+    var s = document.createElement('script');
+    s.src = 'capacitor.js';
+    s.onerror = function() {};
+    document.head.appendChild(s);
+  })();
+</script>
 
 <!-- SheetJS para exportar .xlsx offline -->
 <script src="xlsx.full.min.js"></script>
@@ -1316,12 +1326,12 @@ input.req-missing, select.req-missing, textarea.req-missing {
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="Fauna Campo">
+  <meta name="apple-mobile-web-app-title" content="WildLog">
   <meta name="theme-color" content="#1a2e1a">
   <script>
     const SW_CODE = "const CACHE_NAME = 'fauna-campo-v1';\nconst ASSETS = ['./', './index.html'];\n\nself.addEventListener('install', e => {\n  e.waitUntil(\n    caches.open(CACHE_NAME).then(c => c.addAll(ASSETS))\n      .then(() => self.skipWaiting())\n  );\n});\n\nself.addEventListener('activate', e => {\n  e.waitUntil(\n    caches.keys().then(keys =>\n      Promise.all(keys.filter(k => k !== CACHE_NAME).map(k => caches.delete(k)))\n    ).then(() => self.clients.claim())\n  );\n});\n\nself.addEventListener('fetch', e => {\n  // Cache-first para assets locais\n  e.respondWith(\n    caches.match(e.request).then(cached => cached || fetch(e.request))\n  );\n});";
     const PWA_MANIFEST = {
-  "name": "Fauna Campo",
+  "name": "WildLog",
   "short_name": "Fauna",
   "description": "Coleta de dados faunísticos em campo",
   "start_url": "./",
@@ -1343,7 +1353,7 @@ input.req-missing, select.req-missing, textarea.req-missing {
 <div class="header">
   <div class="header-top">
     <div style="flex:1;min-width:0">
-      <h1>🌿 Fauna Campo</h1>
+      <h1>🌿 WildLog</h1>
       <div id="camp-indicator" class="camp-indicator none">🗂️ Sem campanha ativa</div>
       <div class="user-badge" id="user-badge" style="display:none">👤 —</div>
     </div>
@@ -4228,6 +4238,17 @@ async function captureGps(fieldId, metaId, detailId) {
   const btn = document.querySelector(`[data-gps="${fieldId}"]`);
   const progBase = fieldId;
 
+  // Aguardar Capacitor carregar (ate 3s)
+  if (typeof window.Capacitor === 'undefined') {
+    await new Promise(resolve => {
+      let tries = 0;
+      const check = setInterval(() => {
+        tries++;
+        if (window.Capacitor || tries > 30) { clearInterval(check); resolve(); }
+      }, 100);
+    });
+  }
+
   // ── Detectar se está rodando como APK Capacitor ───────
   const isCapacitor = !!(window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.Geolocation);
 
@@ -5408,7 +5429,7 @@ function instalarApp() {
   });
 }
 
-window.addEventListener('appinstalled', () => toast('✅ Fauna Campo instalado!'));
+window.addEventListener('appinstalled', () => toast('✅ WildLog instalado!'));
 
 
 // ══════════════════════════════════════════════════════════
