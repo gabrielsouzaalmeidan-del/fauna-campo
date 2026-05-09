@@ -20,7 +20,7 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
-          cache: gradle
+          # ✅ REMOVIDO: cache: gradle (causava erro pois android/ não existe ainda)
 
       - name: Configurar Node.js 20
         uses: actions/setup-node@v4
@@ -29,25 +29,17 @@ jobs:
 
       - name: Preparar estrutura do projeto
         run: |
-          # Criar pasta www/ e mover index.html para dentro
           mkdir -p www
           if [ -f "index.html" ]; then
             cp index.html www/index.html
             echo "index.html copiado para www/"
           fi
-
-          # Baixar XLSX para uso offline
-          npm install xlsx jszip --no-save --silent 2>/dev/null || true
+          npm install xlsx --no-save --silent 2>/dev/null || true
           cp node_modules/xlsx/dist/xlsx.full.min.js www/xlsx.full.min.js 2>/dev/null || true
-          cp node_modules/jszip/dist/jszip.min.js www/jszip.min.js 2>/dev/null || true
-
-          # Corrigir referências CDN no index.html para locais
           if [ -f "www/index.html" ]; then
             sed -i 's|src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/[^"]*"|src="xlsx.full.min.js"|g' www/index.html
-            sed -i "s|'https://cdnjs.cloudflare.com/ajax/libs/jszip/[^']*'|'jszip.min.js'|g" www/index.html
             echo "Referências CDN corrigidas"
           fi
-
           ls -lah www/
 
       - name: Criar package.json
@@ -87,12 +79,23 @@ jobs:
       - name: Sincronizar arquivos
         run: npx cap sync android
 
+      # ✅ Cache do Gradle DEPOIS que android/ foi criado
+      - name: Cache Gradle
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: gradle-${{ hashFiles('android/**/*.gradle*', 'android/**/gradle-wrapper.properties') }}
+          restore-keys: |
+            gradle-
+
       - name: Adicionar permissões no AndroidManifest
         run: |
           MANIFEST="android/app/src/main/AndroidManifest.xml"
           if [ -f "$MANIFEST" ]; then
             sed -i 's|<uses-permission android:name="android.permission.INTERNET"/>|<uses-permission android:name="android.permission.INTERNET"/>\n    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>\n    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>\n    <uses-permission android:name="android.permission.CAMERA"/>\n    <uses-permission android:name="android.permission.WAKE_LOCK"/>|' "$MANIFEST"
-            echo "Permissões adicionadas"
+            echo "Permissões adicionadas:"
             grep "permission" "$MANIFEST"
           fi
 
@@ -118,12 +121,10 @@ jobs:
           name: "Fauna Campo — Build ${{ github.run_number }}"
           body: |
             ## 📱 Fauna Campo — APK Android
-
             **Como instalar:**
             1. Baixe o arquivo `.apk` abaixo
             2. No celular Android: Configurações → Segurança → Permitir fontes desconhecidas
             3. Abra o `.apk` e toque em Instalar
-
             **Build:** #${{ github.run_number }}
           files: android/app/build/outputs/apk/debug/app-debug.apk
           draft: false
