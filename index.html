@@ -1641,6 +1641,307 @@ body.dark-mode .record-grupo-icon.reptilia { background: #0d2010; }
 body.dark-mode .record-grupo-icon.amphibia { background: #0d1a2e; }
 body.dark-mode .record-grupo-icon.pisces { background: #0a1929; }
 body.dark-mode .record-badge { filter: brightness(0.85); }
+
+/* ── GRÁFICOS DO DASHBOARD ─────────────────────────────── */
+.dash-charts-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+@media (max-width: 420px) {
+  .dash-charts-row { grid-template-columns: 1fr; }
+}
+.chart-card {
+  background: var(--areia);
+  border: 1px solid var(--verde-borda);
+  border-radius: 12px;
+  padding: 12px;
+}
+.chart-card-title {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--texto-suave);
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.donut-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+.donut-canvas-wrap {
+  position: relative;
+  width: 120px;
+  height: 120px;
+}
+#donut-canvas {
+  width: 120px;
+  height: 120px;
+}
+.donut-center-label {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  pointer-events: none;
+}
+.donut-center-num {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--texto);
+  line-height: 1;
+}
+.donut-center-sub {
+  font-size: 9px;
+  color: var(--texto-muted);
+  margin-top: 1px;
+}
+.donut-legend {
+  width: 100%;
+}
+.donut-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: var(--texto);
+  margin-bottom: 4px;
+}
+.donut-legend-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.donut-legend-label { flex: 1; }
+.donut-legend-pct {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--texto-suave);
+  min-width: 28px;
+  text-align: right;
+}
+.ponto-bars-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+.ponto-bar-row {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+.ponto-bar-label {
+  font-size: 10px;
+  color: var(--texto-suave);
+  min-width: 28px;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 44px;
+}
+.ponto-bar-track {
+  flex: 1;
+  height: 14px;
+  background: var(--verde-borda);
+  border-radius: 7px;
+  overflow: hidden;
+}
+.ponto-bar-fill {
+  height: 100%;
+  border-radius: 7px;
+  background: var(--verde-medio);
+  transition: width 0.4s ease;
+  min-width: 4px;
+}
+.ponto-bar-num {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--texto);
+  min-width: 18px;
+  text-align: right;
+}
+.ponto-empty {
+  font-size: 11px;
+  color: var(--texto-muted);
+  text-align: center;
+  padding: 20px 0;
+}
+
+/* dark mode */
+body.dark-mode .chart-card { background: #1e3a1e; border-color: #2d5a27; }
+body.dark-mode .donut-center-num { color: #e8f2e6; }
+body.dark-mode .ponto-bar-track { background: #2d5a27; }
+body.dark-mode .ponto-bar-fill { background: #4ade80; }
+
+/* ── HISTÓRICO DE ESPÉCIES RECENTES ─── */
+.recentes-wrap {
+  margin-bottom: 8px;
+  display: none;
+}
+.recentes-wrap.show { display: block; }
+.recentes-label {
+  font-size: 10px;
+  color: var(--texto-muted);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  margin-bottom: 5px;
+}
+.recentes-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+.recente-chip {
+  background: var(--verde-suave);
+  border: 1px solid var(--verde-borda);
+  border-radius: 20px;
+  padding: 3px 10px;
+  font-size: 11px;
+  color: var(--verde-medio);
+  cursor: pointer;
+  font-style: italic;
+  transition: all 0.15s;
+  -webkit-tap-highlight-color: transparent;
+}
+.recente-chip:active {
+  background: var(--verde-medio);
+  color: #fff;
+}
+
+/* ── FILTROS RÁPIDOS NA ABA DADOS ─── */
+.filtros-bar {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  padding: 8px 14px;
+  background: var(--branco);
+  border-bottom: 1px solid var(--verde-borda);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+.filtro-chip {
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+  border: 1.5px solid var(--verde-borda);
+  background: var(--branco);
+  color: var(--texto-suave);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+.filtro-chip.ativo {
+  background: var(--verde-medio);
+  color: #fff;
+  border-color: var(--verde-medio);
+}
+
+/* ── MARCADOR NOTÁVEL ─── */
+.btn-notavel {
+  background: none;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+  padding: 2px 4px;
+  line-height: 1;
+  -webkit-tap-highlight-color: transparent;
+  opacity: 0.35;
+  transition: opacity 0.15s, transform 0.15s;
+}
+.btn-notavel.ativo {
+  opacity: 1;
+  transform: scale(1.15);
+}
+.record-item.notavel {
+  border-color: var(--alerta);
+  background: var(--alerta-bg);
+}
+.badge-notavel {
+  background: var(--alerta-bg);
+  color: var(--alerta);
+  border-radius: 20px;
+  padding: 2px 7px;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+/* ── BADGE IUCN / MMA ─── */
+.badge-iucn {
+  border-radius: 4px;
+  padding: 2px 6px;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: .03em;
+}
+.iucn-cr { background: #fdf0ee; color: #c0392b; }
+.iucn-en { background: #fdf0ee; color: #c0392b; }
+.iucn-vu { background: #fef9ed; color: #8b6914; }
+.iucn-nt { background: #e8f0fe; color: #1a56b0; }
+.iucn-lc { background: var(--verde-suave); color: var(--verde-medio); }
+.mma-badge { background: #fdf0ee; color: #c0392b; border-radius: 4px; padding: 2px 6px; font-size: 9px; font-weight: 700; }
+
+/* ── ENTRADA POR VOZ ─── */
+.mic-btn {
+  background: none;
+  border: none;
+  padding: 6px 8px;
+  cursor: pointer;
+  font-size: 18px;
+  line-height: 1;
+  color: var(--texto-suave);
+  transition: color 0.15s, transform 0.15s;
+  -webkit-tap-highlight-color: transparent;
+  flex-shrink: 0;
+}
+.mic-btn.gravando {
+  color: #c0392b;
+  animation: pulse-mic 0.8s ease-in-out infinite alternate;
+}
+@keyframes pulse-mic {
+  from { transform: scale(1); }
+  to   { transform: scale(1.25); }
+}
+.especie-input-row {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  position: relative;
+}
+.especie-input-row input {
+  flex: 1;
+  border-radius: 10px 0 0 10px !important;
+  border-right: none !important;
+}
+.especie-input-row .mic-btn {
+  border: 1.5px solid var(--verde-borda);
+  border-left: none;
+  border-radius: 0 10px 10px 0;
+  padding: 8px 10px;
+  height: 100%;
+  background: var(--branco);
+}
+
+/* dark mode */
+body.dark-mode .recente-chip { background: #1e3a1e; border-color: #2d5a27; color: #9fc99c; }
+body.dark-mode .filtro-chip { background: #1e3a1e; border-color: #2d5a27; color: #9fc99c; }
+body.dark-mode .filtro-chip.ativo { background: #4ade80; color: #1a2e1a; border-color: #4ade80; }
+body.dark-mode .record-item.notavel { background: #2a1f00; border-color: #f59e0b; }
+body.dark-mode .badge-iucn.iucn-cr,
+body.dark-mode .badge-iucn.iucn-en { background: #3a0a0a; color: #f87171; }
+body.dark-mode .badge-iucn.iucn-vu { background: #2a1f00; color: #fbbf24; }
+body.dark-mode .especie-input-row .mic-btn { background: #1e3a1e; border-color: #2d5a27; }
 </style>
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -1876,6 +2177,11 @@ body.dark-mode .record-badge { filter: brightness(0.85); }
           <div class="ac-inline" id="ac-inline" aria-hidden="true">
             <span class="ac-typed" id="ac-typed"></span><span class="ac-ghost" id="ac-ghost"></span>
           </div>
+          <div id="recentes-wrap" class="recentes-wrap">
+            <div class="recentes-label">Registradas recentemente</div>
+            <div class="recentes-chips" id="recentes-chips"></div>
+          </div>
+          <div class="especie-input-row">
           <input id="m-especie" placeholder="Nome científico ou popular..."
             autocomplete="off" spellcheck="false"
             oninput="acOnInput(this.value)"
@@ -1883,7 +2189,8 @@ body.dark-mode .record-badge { filter: brightness(0.85); }
             onblur="setTimeout(acClose,180)"
             onfocus="acOnInput(this.value)" />
           <div class="ac-dropdown" id="ac-dropdown"></div>
-        </div>
+          <button type="button" class="mic-btn" id="mic-btn" onclick="toggleVoz()" title="Ditar espécie por voz">🎙️</button>
+          </div>
       </div>
     <div class="field-row">
       <div class="field-group"><label>Nº indivíduos</label><input id="m-n" type="number" min="0" value="1" /></div>
@@ -2124,6 +2431,8 @@ body.dark-mode .record-badge { filter: brightness(0.85); }
 
 
 <!-- MACKINNON panel removido — integrado ao panel-manual -->
+
+</div>
 
 <!-- BIOMETRIA -->
 <div class="panel" id="panel-biometria">
@@ -3163,6 +3472,36 @@ body.dark-mode .record-badge { filter: brightness(0.85); }
     </div>
   </div>
 
+  <!-- Gráficos visuais -->
+  <div class="dash-charts-row">
+
+    <!-- Donut chart por grupo taxonômico -->
+    <div class="chart-card">
+      <div class="chart-card-title">🥧 Por grupo</div>
+      <div class="donut-wrap">
+        <div class="donut-canvas-wrap">
+          <canvas id="donut-canvas" width="120" height="120"></canvas>
+          <div class="donut-center-label">
+            <div class="donut-center-num" id="donut-center-num">0</div>
+            <div class="donut-center-sub">registros</div>
+          </div>
+        </div>
+        <div class="donut-legend" id="donut-legend">
+          <div class="ponto-empty">Sem dados</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Barras por ponto amostral -->
+    <div class="chart-card">
+      <div class="chart-card-title">📍 Por ponto</div>
+      <div class="ponto-bars-wrap" id="ponto-bars">
+        <div class="ponto-empty">Sem dados</div>
+      </div>
+    </div>
+
+  </div>
+
   <div class="card">
     <div class="card-title">📊 Resumo da Campanha</div>
     <div id="dash-camp-label" style="font-size:11px;color:var(--texto-muted);margin-bottom:8px;text-align:center"></div>
@@ -3310,6 +3649,15 @@ body.dark-mode .record-badge { filter: brightness(0.85); }
 
 <!-- REGISTROS -->
 <div class="panel" id="panel-registros">
+  <div class="filtros-bar" id="filtros-bar">
+    <span class="filtro-chip ativo" onclick="filtrarDados('todos', this)">Todos</span>
+    <span class="filtro-chip" onclick="filtrarDados('Aves', this)">🐦 Aves</span>
+    <span class="filtro-chip" onclick="filtrarDados('Mammalia', this)">🦁 Mamíf.</span>
+    <span class="filtro-chip" onclick="filtrarDados('Reptilia', this)">🦎 Répteis</span>
+    <span class="filtro-chip" onclick="filtrarDados('Amphibia', this)">🐸 Anfíb.</span>
+    <span class="filtro-chip" onclick="filtrarDados('Pisces', this)">🐟 Peixes</span>
+    <span class="filtro-chip" onclick="filtrarDados('notavel', this)">⭐ Notáveis</span>
+  </div>
   <div class="record-count-bar" id="record-count-bar">0 registros salvos localmente</div>
   <div id="lista-registros"></div>
   <div class="section-header" style="margin-top:16px">📏 Registros de biometria</div>
@@ -3653,6 +4001,7 @@ function autoFillFromSpecies(s) {
   sel.classList.add('autofilled');
   setTimeout(() => sel.classList.remove('autofilled'), 3000);
   atualizarIconeBio(sel.value); // atualiza ícone ao autocompletar espécie
+  aplicarStatusConservacao(s); // guarda status IUCN/MMA
 
   // Auto-fill inputs
   [['m-ordem', s.or], ['m-familia', s.fa]].forEach(function(pair) {
@@ -3757,6 +4106,241 @@ function onMetodoChange(val) {
   }
 }
 
+// ══════════════════════════════════════════════════════
+// 1. HISTÓRICO DE ESPÉCIES RECENTES
+// ══════════════════════════════════════════════════════
+function atualizarRecentes() {
+  const wrap = document.getElementById('recentes-wrap');
+  const chips = document.getElementById('recentes-chips');
+  if (!wrap || !chips) return;
+
+  // Pegar últimas 6 espécies únicas da campanha ativa
+  const fonte = campAtiva
+    ? registros.filter(r => r.campId === campAtiva._id || r.campanha === campAtiva.nome)
+    : registros;
+
+  const vistas = [];
+  const seen = new Set();
+  for (let i = fonte.length - 1; i >= 0 && vistas.length < 6; i--) {
+    const sp = fonte[i].especie;
+    if (sp && !seen.has(sp)) { seen.add(sp); vistas.push(sp); }
+  }
+
+  if (vistas.length === 0) { wrap.classList.remove('show'); return; }
+
+  wrap.classList.add('show');
+  chips.innerHTML = vistas.map(sp =>
+    `<span class="recente-chip" onclick="preencherEspecieRecente('${sp.replace(/'/g,"\\'")}')"><i>${sp}</i></span>`
+  ).join('');
+}
+
+function preencherEspecieRecente(sp) {
+  const el = document.getElementById('m-especie');
+  if (!el) return;
+  el.value = sp;
+  acOnInput(sp);
+  // Aplicar autocomplete se encontrar
+  setTimeout(() => {
+    const match = SPECIES_DB.find(s => s.sp === sp);
+    if (match) autoFillFromSpecies(match);
+  }, 50);
+}
+
+// ══════════════════════════════════════════════════════
+// 2. FILTROS RÁPIDOS NA ABA DADOS
+// ══════════════════════════════════════════════════════
+let filtroAtual = 'todos';
+
+function filtrarDados(filtro, chipEl) {
+  filtroAtual = filtro;
+  // Atualizar visual dos chips
+  document.querySelectorAll('.filtro-chip').forEach(c => c.classList.remove('ativo'));
+  if (chipEl) chipEl.classList.add('ativo');
+  // Re-renderizar com filtro
+  renderRegistrosFiltrado();
+}
+
+function renderRegistrosFiltrado() {
+  const lista = document.getElementById('lista-registros');
+  if (!lista) return;
+
+  let fonte = registros.slice().reverse();
+
+  if (filtroAtual === 'notavel') {
+    fonte = fonte.filter(r => r.notavel);
+  } else if (filtroAtual !== 'todos') {
+    fonte = fonte.filter(r => r.classe === filtroAtual);
+  }
+
+  const bar = document.getElementById('record-count-bar');
+  const total = registros.length + (bioRegistros ? bioRegistros.length : 0);
+  if (bar) bar.textContent = filtroAtual === 'todos'
+    ? `${registros.length} obs. manuais + ${bioRegistros.length} biometria = ${total} registros salvos`
+    : `${fonte.length} registro${fonte.length !== 1 ? 's' : ''} filtrados`;
+
+  if (fonte.length === 0) {
+    lista.innerHTML = '<div class="empty"><div class="empty-icon">🔍</div><p>Nenhum registro com este filtro.</p></div>';
+    return;
+  }
+
+  // Reusar a lógica do renderRegistros mas com fonte filtrada
+  const grupoIcon = {
+    'Aves': '🐦', 'Mammalia': '🦁', 'Reptilia': '🦎',
+    'Amphibia': '🐸', 'Pisces': '🐟', 'Quiroptera': '🦇', 'default': '🔬'
+  };
+  const grupoClass = {
+    'Aves': 'aves', 'Mammalia': 'mammalia', 'Reptilia': 'reptilia',
+    'Amphibia': 'amphibia', 'Pisces': 'pisces', 'default': 'default'
+  };
+
+  lista.innerHTML = fonte.map((r) => {
+    const idx = registros.indexOf(r);
+    const gIcon = grupoIcon[r.classe] || grupoIcon['default'];
+    const gClass = grupoClass[r.classe] || grupoClass['default'];
+    const dataFmt = r.data ? new Date(r.data + 'T12:00:00').toLocaleDateString('pt-BR') : '';
+    const thumbHtml = r.foto
+      ? `<img class="foto-thumb" src="${r.foto}" onclick="abrirLightbox(registros[${idx}].foto)" title="Ver foto"/>`
+      : '';
+    return `<div class="record-item ${r.notavel ? 'notavel' : ''}" id="rec-card-${idx}">
+      <div class="record-actions">
+        <button class="btn-notavel ${r.notavel ? 'ativo' : ''}" onclick="toggleNotavel(${idx})" title="Marcar como notável">⭐</button>
+        <button class="btn-edit-rec" onclick="editarManual(${idx})">✏️</button>
+        <button class="record-del" onclick="deletarRegistro(${idx})">✕</button>
+      </div>
+      <div class="record-item-header">
+        <div class="record-grupo-icon ${gClass}">${gIcon}</div>
+        <div style="flex:1;min-width:0">
+          <div class="record-species">${r.especie || '—'}</div>
+          <div class="record-popular">${r.nomePopular || (r.classe ? r.classe + ' · ' + (r.ordem || '') : '')}</div>
+        </div>
+        ${thumbHtml}
+      </div>
+      <div class="record-badges">
+        ${r.ponto ? `<span class="record-badge rb-ponto">📍 ${r.ponto}</span>` : ''}
+        ${r.metodologia ? `<span class="record-badge rb-metodo">${r.metodologia}</span>` : ''}
+        ${dataFmt ? `<span class="record-badge rb-data">${dataFmt}</span>` : ''}
+        ${r.notavel ? `<span class="badge-notavel">⭐ notável</span>` : ''}
+        ${r._iucn ? `<span class="badge-iucn iucn-${(r._iucn||'').toLowerCase()}">${r._iucn} IUCN</span>` : ''}
+        ${r._mma ? `<span class="mma-badge">⚠️ ${r._mma} MMA</span>` : ''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ══════════════════════════════════════════════════════
+// 3. MARCADOR DE ESPÉCIE NOTÁVEL
+// ══════════════════════════════════════════════════════
+async function toggleNotavel(idx) {
+  if (!registros[idx]) return;
+  registros[idx].notavel = !registros[idx].notavel;
+  await idbPut('registros', registros[idx]);
+  renderRegistrosFiltrado();
+  mostrarSyncIndicator(registros[idx].notavel ? '⭐ Marcado como notável' : '☆ Removido dos notáveis');
+}
+
+// ══════════════════════════════════════════════════════
+// 4. STATUS DE CONSERVAÇÃO — preencher ao selecionar espécie
+// ══════════════════════════════════════════════════════
+function aplicarStatusConservacao(s) {
+  // s = objeto do SPECIES_DB com campos iu (IUCN) e mm (MMA)
+  if (!s) return;
+  // Guardar no currentMatch para salvar com o registro
+  if (window.acCurrentMatch) {
+    window.acCurrentMatch._iucn = s.iu || '';
+    window.acCurrentMatch._mma  = s.mm || '';
+  }
+}
+
+// ══════════════════════════════════════════════════════
+// 5. ENTRADA POR VOZ
+// ══════════════════════════════════════════════════════
+let vozRecognition = null;
+let vozAtiva = false;
+
+async function toggleVoz() {
+  if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+    toast('⚠️ Reconhecimento de voz não disponível neste dispositivo');
+    return;
+  }
+
+  if (vozAtiva) {
+    pararVoz();
+    return;
+  }
+
+  // Solicitar permissão de microfone explicitamente (Android)
+  try {
+    if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      // Permissão concedida — parar o stream (só queríamos a permissão)
+      stream.getTracks().forEach(t => t.stop());
+    }
+  } catch(e) {
+    if (e.name === 'NotAllowedError' || e.name === 'PermissionDeniedError') {
+      toast('🎙️ Permissão de microfone negada — vá em Configurações do app > Permissões > Microfone e ative');
+      return;
+    }
+    // Outros erros (NotFoundError etc.) — tentar prosseguir mesmo assim
+  }
+
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  vozRecognition = new SpeechRecognition();
+  vozRecognition.lang = 'pt-BR';
+  vozRecognition.continuous = false;
+  vozRecognition.interimResults = false;
+  vozRecognition.maxAlternatives = 1;
+
+  vozRecognition.onstart = () => {
+    vozAtiva = true;
+    const btn = document.getElementById('mic-btn');
+    if (btn) btn.classList.add('gravando');
+    toast('🎙️ Ouvindo... fale o nome da espécie');
+  };
+
+  vozRecognition.onresult = (event) => {
+    const texto = event.results[0][0].transcript.trim();
+    const el = document.getElementById('m-especie');
+    if (el) {
+      el.value = texto;
+      acOnInput(texto);
+    }
+    pararVoz();
+  };
+
+  vozRecognition.onerror = (event) => {
+    pararVoz();
+    if (event.error === 'not-allowed') {
+      toast('🎙️ Permissão de microfone negada — vá em Configurações > Permissões do app > Microfone e ative');
+    } else if (event.error === 'no-speech') {
+      toast('🎙️ Nenhuma fala detectada — tente novamente');
+    } else if (event.error === 'network') {
+      toast('🎙️ Reconhecimento de voz requer internet neste dispositivo');
+    } else if (event.error !== 'aborted') {
+      toast('⚠️ Erro de voz: ' + event.error);
+    }
+  };
+
+  vozRecognition.onend = () => pararVoz();
+
+  try {
+    vozRecognition.start();
+  } catch(e) {
+    pararVoz();
+    toast('⚠️ Não foi possível iniciar o microfone');
+  }
+}
+
+function pararVoz() {
+  vozAtiva = false;
+  const btn = document.getElementById('mic-btn');
+  if (btn) btn.classList.remove('gravando');
+  if (vozRecognition) {
+    try { vozRecognition.stop(); } catch(e) {}
+    vozRecognition = null;
+  }
+}
+
+
 async function init() {
   buildAcIndex();
   await carregarDados();
@@ -3797,6 +4381,7 @@ async function init() {
   atualizarOfflineBar();
   atualizarDashInicio();
   initIconeBio();
+  atualizarRecentes();
 }
 
 // carregarDados e salvarDados → versão IDB abaixo
@@ -3838,7 +4423,7 @@ function irPara(panel, btn) {
   document.getElementById('panel-' + panel).classList.add('active');
   if (btn) btn.classList.add('active');
   if (panel === 'dashboard') { atualizarDashInicio(); renderDashboard(); }
-  if (panel === 'registros') { renderRegistros(); renderBioRegistros(document.getElementById('bio-lista')); }
+  if (panel === 'registros') { renderRegistrosFiltrado(); renderBioRegistros(document.getElementById('bio-lista')); }
   if (panel === 'dashboard') { renderDashboard(); }
   if (panel === 'enviar')    { renderReqConfig(); renderPerfil(); if (!perfilUsuario.nome) { document.getElementById('perfil-form').classList.add('show'); } }
   if (panel === 'campanhas')  { renderCampanhas(); }
@@ -3989,6 +4574,8 @@ function adicionarManual() {
     foto: document.getElementById('m-foto-b64') ? document.getElementById('m-foto-b64').value : '',
     campId:  window._campIdAtivo  || '',
     pontoId: window._pontoIdAtivo || '',
+    _iucn: acCurrentMatch ? (acCurrentMatch._iucn || acCurrentMatch.iu || '') : '',
+    _mma:  acCurrentMatch ? (acCurrentMatch._mma  || acCurrentMatch.mm || '') : '',
     data: document.getElementById('m-data').value,
     horario: document.getElementById('m-horario').value,
     periodo: document.getElementById('m-periodo').value,
@@ -4063,8 +4650,9 @@ function renderRegistros() {
       : '';
     const gIcon = grupoIcon[r.classe] || grupoIcon['default'];
     const gClass = grupoClass[r.classe] || grupoClass['default'];
-    return `<div class="record-item" id="rec-card-${idx}">
+    return `<div class="record-item ${r.notavel ? 'notavel' : ''}" id="rec-card-${idx}">
       <div class="record-actions">
+        <button class="btn-notavel ${r.notavel ? 'ativo' : ''}" onclick="toggleNotavel(${idx})" title="Marcar como notável">⭐</button>
         <button class="btn-edit-rec" onclick="editarManual(${idx})">✏️</button>
         <button class="record-del" onclick="deletarRegistro(${idx})">✕</button>
       </div>
@@ -4081,6 +4669,9 @@ function renderRegistros() {
         ${r.metodologia ? `<span class="record-badge rb-metodo">${r.metodologia}</span>` : ''}
         ${dataFmt ? `<span class="record-badge rb-data">${dataFmt}</span>` : ''}
         ${r.horario ? `<span class="record-badge rb-data">⏱ ${r.horario}</span>` : ''}
+        ${r.notavel ? `<span class="badge-notavel">⭐ notável</span>` : ''}
+        ${r._iucn ? `<span class="badge-iucn iucn-${(r._iucn||'').toLowerCase()}">${r._iucn} IUCN</span>` : ''}
+        ${r._mma ? `<span class="mma-badge">⚠️ ${r._mma} MMA</span>` : ''}
       </div>
       <div class="record-meta" style="margin-top:4px">
             ${r.classe || ''} · ${r.ordem || ''} · ${r.familia || ''}<br>
@@ -4160,6 +4751,7 @@ function atualizarResumo() {
 }
 
 function gerarXLSX() {
+  try {
   const cabecalho1 = ['Dados do Projeto','','','Variáveis Geográficas','','','','','Variáveis temporais','','','','Variáveis metodológicas','','','Variaveis biológicas','','','','','','Equipe','Informações Gerais'];
   const cabecalho2 = ['PROJETO','FASE','CAMPANHA','ÁREA DE INFLUÊNCIA','PONTO','ZONA','UTM (X)','UTM (Y)','DATA','HORÁRIO (00:00)','PERÍODO','ESTAÇÃO','MÉTODO','TIPO DE REGISTRO','DESTINAÇÃO','CLASSE','ORDEM','FAMÍLIA','ESPÉCIE','NUMERO DE INDIVÍDUOS','SEXO','Consultor | Auxiliar','Observações'];
 
@@ -4186,6 +4778,11 @@ function gerarXLSX() {
   const wb = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(wb, ws, 'BANCO DE DADOS');
   return wb;
+  } catch(e) {
+    console.error('gerarXLSX erro:', e);
+    toast('❌ Erro ao gerar planilha: ' + (e.message || e));
+    return null;
+  }
 }
 
 function nomeArquivo() {
@@ -5414,6 +6011,138 @@ function verificarRecaptura(anilha) {
 // ══════════════════════════════════════════════════════════
 // DASHBOARD — renderização completa
 // ══════════════════════════════════════════════════════════
+// ── DONUT CHART E BARRAS POR PONTO ───────────────────────
+
+const GRUPO_CORES = {
+  'Aves':      '#4a8c3f',
+  'Mammalia':  '#8b6914',
+  'Reptilia':  '#2d8a5c',
+  'Amphibia':  '#2d5a8a',
+  'Pisces':    '#5a2d8a',
+  'Quiroptera':'#8a2d5a',
+};
+const GRUPO_ICONS = {
+  'Aves':'🐦','Mammalia':'🦁','Reptilia':'🦎',
+  'Amphibia':'🐸','Pisces':'🐟','Quiroptera':'🦇',
+};
+
+function renderDonutChart(dadosGrupo) {
+  try {
+  const canvas = document.getElementById('donut-canvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const W = 120, H = 120, cx = W/2, cy = H/2;
+  const R = 50, r = 30;
+
+  ctx.clearRect(0, 0, W, H);
+
+  const total = Object.values(dadosGrupo).reduce((s,v)=>s+v, 0);
+  const centerEl = document.getElementById('donut-center-num');
+  if (centerEl) centerEl.textContent = total;
+
+  const legend = document.getElementById('donut-legend');
+
+  if (total === 0) {
+    // Anel vazio
+    ctx.beginPath();
+    ctx.arc(cx, cy, R, 0, Math.PI * 2);
+    ctx.arc(cx, cy, r, 0, Math.PI * 2, true);
+    ctx.fillStyle = '#e8dfc8';
+    ctx.fill();
+    if (legend) legend.innerHTML = '<div class="ponto-empty">Sem dados</div>';
+    return;
+  }
+
+  // Ordenar por valor
+  const entries = Object.entries(dadosGrupo)
+    .filter(([,v])=>v>0)
+    .sort((a,b)=>b[1]-a[1]);
+
+  let startAngle = -Math.PI / 2;
+  entries.forEach(([grupo, count]) => {
+    const slice = (count / total) * Math.PI * 2;
+    const cor = GRUPO_CORES[grupo] || '#7a9977';
+
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.arc(cx, cy, R, startAngle, startAngle + slice);
+    ctx.arc(cx, cy, r, startAngle + slice, startAngle, true);
+    ctx.closePath();
+    ctx.fillStyle = cor;
+    ctx.fill();
+    ctx.strokeStyle = '#fff';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    startAngle += slice;
+  });
+
+  // Legenda
+  if (legend) {
+    legend.innerHTML = entries.map(([grupo, count]) => {
+      const pct = Math.round(count / total * 100);
+      const cor = GRUPO_CORES[grupo] || '#7a9977';
+      const icon = GRUPO_ICONS[grupo] || '🔬';
+      return `<div class="donut-legend-item">
+        <div class="donut-legend-dot" style="background:${cor}"></div>
+        <span class="donut-legend-label">${icon} ${grupo}</span>
+        <span class="donut-legend-pct">${pct}%</span>
+      </div>`;
+    }).join('');
+  }
+  } catch(e) { console.error('donut chart erro:', e); }
+}
+
+function renderBarrasPonto(dadosPonto) {
+  const wrap = document.getElementById('ponto-bars');
+  if (!wrap) return;
+
+  const entries = Object.entries(dadosPonto)
+    .filter(([,v])=>v>0)
+    .sort((a,b)=>b[1]-a[1])
+    .slice(0, 8); // máx 8 pontos
+
+  if (entries.length === 0) {
+    wrap.innerHTML = '<div class="ponto-empty">Sem dados por ponto</div>';
+    return;
+  }
+
+  const maxVal = Math.max(1, ...entries.map(([,v])=>v));
+  const cores = ['#2d5a27','#4a8c3f','#22c55e','#16a34a','#15803d','#166534','#14532d','#052e16'];
+
+  wrap.innerHTML = entries.map(([ponto, count], i) => {
+    const pct = Math.round(count / maxVal * 100);
+    const cor = cores[i % cores.length];
+    const label = ponto.length > 6 ? ponto.substring(0,6)+'…' : ponto;
+    return `<div class="ponto-bar-row">
+      <span class="ponto-bar-label" title="${ponto}">${label}</span>
+      <div class="ponto-bar-track">
+        <div class="ponto-bar-fill" style="width:${pct}%;background:${cor}"></div>
+      </div>
+      <span class="ponto-bar-num">${count}</span>
+    </div>`;
+  }).join('');
+}
+
+function renderGraficoDashboard(allReg, getClasse) {
+  // Montar dados por grupo
+  const dadosGrupo = {};
+  allReg.forEach(r => {
+    const cl = getClasse(r) || 'Outros';
+    dadosGrupo[cl] = (dadosGrupo[cl] || 0) + 1;
+  });
+
+  // Montar dados por ponto
+  const dadosPonto = {};
+  allReg.forEach(r => {
+    const p = r.ponto || r.p || '';
+    if (p) dadosPonto[p] = (dadosPonto[p] || 0) + 1;
+  });
+
+  renderDonutChart(dadosGrupo);
+  renderBarrasPonto(dadosPonto);
+}
+
 function renderDashboard() {
   // Combinar todos os registros
   // Filtrar por campanha ativa se houver, senão mostrar todos
@@ -5444,6 +6173,9 @@ function renderDashboard() {
   const getClasse = r => r._src === 'bio'
     ? (classeMap[r._tipo] || r._tipo || '')
     : (r.classe || '');
+
+  // ── Gráficos visuais (donut + barras por ponto) ────────
+  renderGraficoDashboard(allReg, getClasse);
 
   // ── Totais gerais ────────────────────────────────────────
   const totalReg = registros.length;
