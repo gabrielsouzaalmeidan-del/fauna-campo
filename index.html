@@ -27,6 +27,7 @@
   --verde-claro: #4a8c3f;
   --verde-suave: #e8f2e6;
   --verde-borda: #b8d4b3;
+  --borda: #b8d4b3;
   --areia: #f5f0e8;
   --areia-escura: #e8dfc8;
   --texto: #1a2e1a;
@@ -42,6 +43,7 @@
   --sombra: 0 1px 3px rgba(26,46,26,0.12);
   --radius: 10px;
   --radius-sm: 7px;
+  --fundo: var(--areia);
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
@@ -710,6 +712,7 @@ textarea { resize: vertical; min-height: 60px; }
 
 /* ── MODO ESCURO ─────────────────────────────────────────── */
 body.dark-mode {
+  --borda: #2d5a27;
   --verde-escuro: #0d1f0d;
   --verde-medio: #4caf50;
   --verde-claro: #66bb6a;
@@ -1777,6 +1780,10 @@ body.dark-mode .record-badge { filter: brightness(0.85); }
 
 /* dark mode */
 body.dark-mode .chart-card { background: #1e3a1e; border-color: #2d5a27; }
+body.dark-mode .donut-wrap { color: #e8f2e6; }
+body.dark-mode .donut-center-num { color: #e8f2e6; }
+body.dark-mode #manual-bio-wrap { background: transparent; }
+body.dark-mode #mck-inline-block .card { background: #1e3a1e; border-color: #2d5a27; }
 body.dark-mode .donut-center-num { color: #e8f2e6; }
 body.dark-mode .ponto-bar-track { background: #2d5a27; }
 body.dark-mode .ponto-bar-fill { background: #4ade80; }
@@ -1942,6 +1949,233 @@ body.dark-mode .badge-iucn.iucn-cr,
 body.dark-mode .badge-iucn.iucn-en { background: #3a0a0a; color: #f87171; }
 body.dark-mode .badge-iucn.iucn-vu { background: #2a1f00; color: #fbbf24; }
 body.dark-mode .especie-input-row .mic-btn { background: #1e3a1e; border-color: #2d5a27; }
+
+
+/* ── FORMULÁRIO MANUAL — visual aprimorado ────────── */
+
+/* Card principal do manual com padding consistente */
+#panel-manual .card {
+  padding: 16px !important;
+  margin-bottom: 0 !important;
+}
+
+/* Section headers como faixas coloridas */
+#panel-manual .section-header,
+#manual-bio-wrap .section-header {
+  background: var(--verde-suave);
+  border-left: 3px solid var(--verde-medio);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  padding: 7px 12px !important;
+  margin: 16px -16px 12px -16px !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: .06em !important;
+  color: var(--verde-medio) !important;
+  border-bottom: none !important;
+}
+
+/* Primeiro section-header sem margin-top extra */
+#panel-manual .card > .ctx-banner + .section-header,
+#panel-manual .card > .section-header:first-of-type {
+  margin-top: 8px !important;
+}
+
+/* field-groups com melhor espaçamento */
+#panel-manual .field-group,
+#manual-bio-wrap .field-group {
+  margin-bottom: 12px !important;
+}
+
+/* Labels mais visíveis */
+#panel-manual .field-group > label,
+#manual-bio-wrap .field-group > label {
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  color: var(--texto-suave) !important;
+  text-transform: uppercase !important;
+  letter-spacing: .04em !important;
+  margin-bottom: 5px !important;
+  display: block !important;
+}
+
+/* Inputs e selects com visual consistente */
+#panel-manual input,
+#panel-manual select,
+#panel-manual textarea,
+#manual-bio-wrap input,
+#manual-bio-wrap select {
+  background: var(--areia) !important;
+  border: 1.5px solid var(--verde-borda) !important;
+  border-radius: 8px !important;
+  padding: 10px 12px !important;
+  font-size: 14px !important;
+  color: var(--texto) !important;
+  width: 100% !important;
+  transition: border-color .2s, box-shadow .2s !important;
+}
+
+#panel-manual input:focus,
+#panel-manual select:focus,
+#panel-manual textarea:focus,
+#manual-bio-wrap input:focus,
+#manual-bio-wrap select:focus {
+  border-color: var(--verde-medio) !important;
+  box-shadow: 0 0 0 3px rgba(45,90,39,.12) !important;
+  outline: none !important;
+  background: var(--branco) !important;
+}
+
+/* Input de espécie com destaque especial */
+#m-especie {
+  font-size: 15px !important;
+  font-style: italic !important;
+  border-color: var(--verde-claro) !important;
+}
+
+/* field-row com gap consistente */
+#panel-manual .field-row,
+#manual-bio-wrap .field-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 0 !important;
+}
+
+/* Separador visual entre seções */
+#panel-manual .section-header + .field-group,
+#panel-manual .section-header + .field-row,
+#manual-bio-wrap .section-header + .field-group,
+#manual-bio-wrap .section-header + .field-row {
+  margin-top: 0 !important;
+}
+
+/* Botão Adicionar registro — estilo MacKinnon */
+#btn-adicionar-manual {
+  background: var(--verde-medio) !important;
+  color: #fff !important;
+  border: none !important;
+  border-radius: 10px !important;
+  padding: 13px !important;
+  font-size: 15px !important;
+  font-weight: 700 !important;
+  width: 100% !important;
+  margin-top: 8px !important;
+  letter-spacing: .02em !important;
+  box-shadow: 0 2px 8px rgba(45,90,39,.25) !important;
+}
+#btn-adicionar-manual:active {
+  transform: scale(.98) !important;
+  box-shadow: none !important;
+}
+
+/* ctx-banner do manual mais compacto */
+#ctx-banner-manual {
+  margin-bottom: 8px !important;
+  border-radius: 8px !important;
+}
+
+/* Tipo de registro field-group igual ao Método */
+#manual-tipo-group {
+  margin-bottom: 8px !important;
+}
+
+/* Alert do manual */
+#manual-alert {
+  margin-bottom: 8px !important;
+}
+
+/* ── dark mode ── */
+body.dark-mode #panel-manual .section-header,
+body.dark-mode #manual-bio-wrap .section-header {
+  background: #0d2010;
+  border-left-color: #4ade80;
+  color: #4ade80 !important;
+}
+body.dark-mode #panel-manual input,
+body.dark-mode #panel-manual select,
+body.dark-mode #panel-manual textarea,
+body.dark-mode #manual-bio-wrap input,
+body.dark-mode #manual-bio-wrap select {
+  background: #1e3a1e !important;
+  border-color: #2d5a27 !important;
+  color: #e8f2e6 !important;
+}
+body.dark-mode #panel-manual input:focus,
+body.dark-mode #panel-manual select:focus,
+body.dark-mode #manual-bio-wrap input:focus,
+body.dark-mode #manual-bio-wrap select:focus {
+  background: #2d5a27 !important;
+  border-color: #4ade80 !important;
+}
+
+/* ── CARD DADOS BIOLÓGICOS — estilo MacKinnon ─────── */
+#manual-bio-wrap .card {
+  border-left: 3px solid var(--verde-claro) !important;
+  background: var(--branco) !important;
+}
+#manual-bio-wrap .card-title {
+  font-size: 13px !important;
+  font-weight: 700 !important;
+  color: var(--verde-medio) !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  padding-bottom: 10px !important;
+  border-bottom: 1px solid var(--verde-borda) !important;
+  margin-bottom: 12px !important;
+}
+/* Remover section-header interno (agora usamos card-title) */
+#manual-bio-wrap .section-header {
+  display: none !important;
+}
+/* Campos dentro do card bio */
+#manual-bio-wrap .field-group > label {
+  font-size: 10px !important;
+  font-weight: 700 !important;
+  color: var(--texto-muted) !important;
+  text-transform: uppercase !important;
+  letter-spacing: .05em !important;
+  margin-bottom: 4px !important;
+  display: block !important;
+}
+#manual-bio-wrap input,
+#manual-bio-wrap select,
+#manual-bio-wrap textarea {
+  background: var(--areia) !important;
+  border: 1.5px solid var(--verde-borda) !important;
+  border-radius: 8px !important;
+  padding: 9px 12px !important;
+  font-size: 14px !important;
+  color: var(--texto) !important;
+}
+#manual-bio-wrap input:focus,
+#manual-bio-wrap select:focus {
+  border-color: var(--verde-medio) !important;
+  box-shadow: 0 0 0 3px rgba(45,90,39,.1) !important;
+  background: var(--branco) !important;
+}
+/* Botão Adicionar dentro do card */
+#btn-adicionar-manual {
+  margin-top: 14px !important;
+}
+
+/* dark mode */
+body.dark-mode #manual-bio-wrap .card {
+  background: #1e3a1e !important;
+  border-left-color: #4ade80 !important;
+}
+body.dark-mode #manual-bio-wrap .card-title {
+  color: #4ade80 !important;
+  border-bottom-color: #2d5a27 !important;
+}
+body.dark-mode #manual-bio-wrap input,
+body.dark-mode #manual-bio-wrap select,
+body.dark-mode #manual-bio-wrap textarea {
+  background: #0d2010 !important;
+  border-color: #2d5a27 !important;
+  color: #e8f2e6 !important;
+}
 </style>
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -2121,10 +2355,9 @@ body.dark-mode .especie-input-row .mic-btn { background: #1e3a1e; border-color: 
     </div>
 
     <div class="section-header">🔬 Metodologia</div>
-    <div class="field-row">
-      <div class="field-group">
+    <div class="field-group">
         <label>Método</label>
-        <select id="m-metodo" onchange="onMetodoChange(this.value)">
+        <select id="m-metodo" onchange="onMetodoChange(this.value)" oninput="onMetodoChange(this.value)">
             <option value="">— selecione —</option>
             <option>Listas de Mackinnon</option>
             <option>Ponto de escuta</option>
@@ -2139,7 +2372,7 @@ body.dark-mode .especie-input-row .mic-btn { background: #1e3a1e; border-color: 
             <option>Observação embarcada</option>
           </select>
       </div>
-      <div class="field-group">
+    <div class="field-group" id="manual-tipo-group">
         <label>Tipo de registro</label>
         <select id="m-tipo">
             <option value="">— selecione —</option>
@@ -2156,101 +2389,9 @@ body.dark-mode .especie-input-row .mic-btn { background: #1e3a1e; border-color: 
             <option>Indireto (outro)</option>
           </select>
       </div>
-    </div>
 
-    <div class="section-header" id="bio-section-header"><span id="bio-section-icon">🦜</span> Dados biológicos</div>
-    <div class="field-row">
-      <div class="field-group">
-        <label>Classe</label>
-        <select id="m-classe" onchange="atualizarIconeBio(this.value)"><option>Aves</option><option>Mammalia</option><option>Reptilia</option><option>Amphibia</option><option>Pisces</option></select>
-      </div>
-      <div class="field-group"><label>Ordem</label><input id="m-ordem" placeholder="Passeriformes..." /></div>
-    </div>
-    <div class="field-group"><label>Família</label><input id="m-familia" placeholder="Tyrannidae..." /></div>
-    <div id="status-row" style="display:none;" class="field-group">
-      <label>Status de conservação</label>
-      <div class="status-chips" id="status-chips"></div>
-    </div>
-    <div class="field-group">
-        <label>Espécie * <span id="autofill-badge" class="autofill-badge">✓ auto-preenchido</span></label>
-        <div class="ac-wrapper">
-          <div class="ac-inline" id="ac-inline" aria-hidden="true">
-            <span class="ac-typed" id="ac-typed"></span><span class="ac-ghost" id="ac-ghost"></span>
-          </div>
-          <div id="recentes-wrap" class="recentes-wrap">
-            <div class="recentes-label">Registradas recentemente</div>
-            <div class="recentes-chips" id="recentes-chips"></div>
-          </div>
-          <div class="especie-input-row">
-          <input id="m-especie" placeholder="Nome científico ou popular..."
-            autocomplete="off" spellcheck="false"
-            oninput="acOnInput(this.value)"
-            onkeydown="acOnKeydown(event)"
-            onblur="setTimeout(acClose,180)"
-            onfocus="acOnInput(this.value)" />
-          <div class="ac-dropdown" id="ac-dropdown"></div>
-          <button type="button" class="mic-btn" id="mic-btn" onclick="toggleVoz()" title="Ditar espécie por voz">🎙️</button>
-          </div>
-      </div>
-    <div class="field-row">
-      <div class="field-group"><label>Nº indivíduos</label><input id="m-n" type="number" min="0" value="1" /></div>
-      <div class="field-group">
-        <label>Sexo</label>
-        <select id="m-sexo"><option value=""></option><option>Macho</option><option>Fêmea</option><option>Casal</option><option>Indeterminado</option></select>
-      </div>
-    </div>
-    <div class="field-row">
-      <div class="field-group">
-        <label>Destinação</label>
-        <select id="m-destinacao">
-          <option value="">—</option>
-          <option>Solto no local</option>
-          <option>Solto em outro local</option>
-          <option>Fotografado e solto</option>
-          <option>Coletado (voucher)</option>
-          <option>Encontrado morto</option>
-          <option>Encaminhado para reabilitação</option>
-          <option>Não aplicável</option>
-        </select>
-      </div>
-      <div class="field-group">
-        <label>Microhabitat</label>
-        <select id="m-microhabitat">
-          <option value="">—</option>
-          <option>Solo</option><option>Folhiço</option>
-          <option>Estrato herbáceo</option><option>Arbustivo</option>
-          <option>Sub-bosque</option><option>Dossel</option>
-          <option>Tronco/galho</option><option>Água</option>
-          <option>Margem</option><option>Área aberta</option>
-          <option>Borda de mata</option><option>Interior de mata</option>
-        </select>
-      </div>
-    </div>
-    <div class="field-group"><label>Consultor</label><input id="m-consultor" /></div>
-    <div class="field-group"><label>Observações</label><textarea id="m-obs" placeholder="Condições climáticas, comportamento..."></textarea></div>
 
-    <div class="field-group">
-      <label>📷 Foto do registro (opcional)</label>
-      <div class="foto-preview-wrap" id="m-foto-wrap">
-        <img class="foto-preview" id="m-foto-prev" src="" alt="" onclick="abrirLightbox(this.src)"/>
-        <button class="foto-del-btn" onclick="document.getElementById('m-foto-b64').value='';document.getElementById('m-foto-prev').src='';document.getElementById('m-foto-wrap').classList.remove('show')">✕</button>
-      </div>
-      <div class="foto-zone" onclick="document.getElementById('m-foto-input').click()">
-        <div class="foto-zone-icon">📷</div>
-        <div class="foto-zone-txt">Tirar foto ou escolher da galeria</div>
-        <input type="file" id="m-foto-input" accept="image/*" capture="environment"
-          style="display:none" onchange="comprimirFoto(this.files[0], b64=>{
-            document.getElementById('m-foto-b64').value=b64;
-            document.getElementById('m-foto-prev').src=b64;
-            document.getElementById('m-foto-wrap').classList.add('show');
-          })"/>
-      </div>
-      <input type="hidden" id="m-foto-b64"/>
-    </div>
-    <div class="alert" id="manual-alert"></div>
-    <button class="btn btn-primary" id="btn-adicionar-manual" onclick="adicionarManual()">Adicionar registro</button>
-
-    <!-- ════ MACKINNON INLINE ════ -->
+    <!-- MACKINNON INLINE -->
     <div id="mck-inline-block" style="display:none;margin-top:12px">
       <div class="card" style="margin:0;padding:14px">
         <div class="card-title" style="margin-bottom:10px">🐦 Listas de MacKinnon</div>
@@ -2426,13 +2567,110 @@ body.dark-mode .especie-input-row .mic-btn { background: #1e3a1e; border-color: 
       </div>
     </div>
     <!-- ════ FIM MACKINNON ════ -->
-  </div>
-</div>
+    </div>
+    <!-- /MACKINNON INLINE -->
+    <div id="manual-bio-wrap">
+    <div class="card" style="margin:0;padding:14px;margin-top:12px">
+      <div class="card-title" style="margin-bottom:10px">
+        <span id="bio-section-icon">🦜</span>
+        <span id="bio-section-label"> Dados biológicos</span>
+      </div>
+    <div class="field-row">
+      <div class="field-group">
+        <label>Classe</label>
+        <select id="m-classe" onchange="atualizarIconeBio(this.value)"><option>Aves</option><option>Mammalia</option><option>Reptilia</option><option>Amphibia</option><option>Pisces</option></select>
+      </div>
+      <div class="field-group"><label>Ordem</label><input id="m-ordem" placeholder="Passeriformes..." /></div>
+    </div>
+    <div class="field-group"><label>Família</label><input id="m-familia" placeholder="Tyrannidae..." /></div>
+    <div id="status-row" style="display:none;" class="field-group">
+      <label>Status de conservação</label>
+      <div class="status-chips" id="status-chips"></div>
+    </div>
+    <div class="field-group">
+        <label>Espécie * <span id="autofill-badge" class="autofill-badge">✓ auto-preenchido</span></label>
+        <div class="ac-wrapper">
+          <div class="ac-inline" id="ac-inline" aria-hidden="true">
+            <span class="ac-typed" id="ac-typed"></span><span class="ac-ghost" id="ac-ghost"></span>
+          </div>
+          <div id="recentes-wrap" class="recentes-wrap">
+            <div class="recentes-label">Registradas recentemente</div>
+            <div class="recentes-chips" id="recentes-chips"></div>
+          </div>
+          <div class="especie-input-row">
+          <input id="m-especie" placeholder="Nome científico ou popular..."
+            autocomplete="off" spellcheck="false"
+            oninput="acOnInput(this.value)"
+            onkeydown="acOnKeydown(event)"
+            onblur="setTimeout(acClose,180)"
+            onfocus="acOnInput(this.value)" />
+          <div class="ac-dropdown" id="ac-dropdown"></div>
+          <button type="button" class="mic-btn" id="mic-btn" onclick="toggleVoz()" title="Ditar espécie por voz">🎙️</button>
+          </div>
+      </div>
+    <div class="field-row">
+      <div class="field-group"><label>Nº indivíduos</label><input id="m-n" type="number" min="0" value="1" /></div>
+      <div class="field-group">
+        <label>Sexo</label>
+        <select id="m-sexo"><option value=""></option><option>Macho</option><option>Fêmea</option><option>Casal</option><option>Indeterminado</option></select>
+      </div>
+    </div>
+    <div class="field-row">
+      <div class="field-group">
+        <label>Destinação</label>
+        <select id="m-destinacao">
+          <option value="">—</option>
+          <option>Solto no local</option>
+          <option>Solto em outro local</option>
+          <option>Fotografado e solto</option>
+          <option>Coletado (voucher)</option>
+          <option>Encontrado morto</option>
+          <option>Encaminhado para reabilitação</option>
+          <option>Não aplicável</option>
+        </select>
+      </div>
+      <div class="field-group">
+        <label>Microhabitat</label>
+        <select id="m-microhabitat">
+          <option value="">—</option>
+          <option>Solo</option><option>Folhiço</option>
+          <option>Estrato herbáceo</option><option>Arbustivo</option>
+          <option>Sub-bosque</option><option>Dossel</option>
+          <option>Tronco/galho</option><option>Água</option>
+          <option>Margem</option><option>Área aberta</option>
+          <option>Borda de mata</option><option>Interior de mata</option>
+        </select>
+      </div>
+    </div>
+    <div class="field-group"><label>Consultor</label><input id="m-consultor" /></div>
+    <div class="field-group"><label>Observações</label><textarea id="m-obs" placeholder="Condições climáticas, comportamento..."></textarea></div>
 
+    <div class="field-group">
+      <label>📷 Foto do registro (opcional)</label>
+      <div class="foto-preview-wrap" id="m-foto-wrap">
+        <img class="foto-preview" id="m-foto-prev" src="" alt="" onclick="abrirLightbox(this.src)"/>
+        <button class="foto-del-btn" onclick="document.getElementById('m-foto-b64').value='';document.getElementById('m-foto-prev').src='';document.getElementById('m-foto-wrap').classList.remove('show')">✕</button>
+      </div>
+      <div class="foto-zone" onclick="document.getElementById('m-foto-input').click()">
+        <div class="foto-zone-icon">📷</div>
+        <div class="foto-zone-txt">Tirar foto ou escolher da galeria</div>
+        <input type="file" id="m-foto-input" accept="image/*" capture="environment"
+          style="display:none" onchange="comprimirFoto(this.files[0], b64=>{
+            document.getElementById('m-foto-b64').value=b64;
+            document.getElementById('m-foto-prev').src=b64;
+            document.getElementById('m-foto-wrap').classList.add('show');
+          })"/>
+      </div>
+      <input type="hidden" id="m-foto-b64"/>
+    </div>
+    <div class="alert" id="manual-alert"></div>
+    <button class="btn btn-primary" id="btn-adicionar-manual" onclick="adicionarManual()">Adicionar registro</button>
+    </div><!-- /card bio -->
+    </div><!-- /manual-bio-wrap -->
+  </div><!-- /card manual -->
+</div><!-- /panel-manual -->
 
 <!-- MACKINNON panel removido — integrado ao panel-manual -->
-
-</div>
 
 <!-- BIOMETRIA -->
 <div class="panel" id="panel-biometria">
@@ -3245,7 +3483,7 @@ body.dark-mode .especie-input-row .mic-btn { background: #1e3a1e; border-color: 
 
     <!-- Formulário nova/editar campanha -->
     <div class="new-camp-form" id="new-camp-form">
-      <div class="section-header" style="margin-bottom:8px" id="new-camp-title">Nova campanha</div>
+      <div class="section-header" style="margin-bottom:8px" id="new-camp-title">🏕️ Nova campanha</div>
       <div class="field-group"><label>Nome da campanha *</label>
         <input id="nc-nome" placeholder="Ex: Campanha 01 — Caatinga"/></div>
       <div class="field-group"><label>Projeto / Empreendimento</label>
@@ -3338,7 +3576,7 @@ body.dark-mode .especie-input-row .mic-btn { background: #1e3a1e; border-color: 
 
       <!-- Formulário novo ponto -->
       <div class="new-camp-form" id="new-ponto-form">
-        <div class="section-header" style="margin-bottom:8px">Novo ponto amostral</div>
+        <div class="section-header" style="margin-bottom:8px">📍 Novo ponto amostral</div>
         <div class="field-group"><label>Nome / Código *</label>
           <input id="np-nome" placeholder="Ex: P01, Trilha A, Riacho R1"/></div>
         <div class="field-group"><label>Tipo de ambiente</label>
@@ -4076,8 +4314,10 @@ const CLASSE_ICONE = {
 
 function atualizarIconeBio(classe) {
   const icone = CLASSE_ICONE[classe] || '🦜';
-  const el = document.getElementById('bio-section-icon');
-  if (el) el.textContent = icone;
+  const elIcon = document.getElementById('bio-section-icon');
+  const elLabel = document.getElementById('bio-section-label');
+  if (elIcon) elIcon.textContent = icone;
+  if (elLabel) elLabel.textContent = ' Dados biológicos' + (classe ? ' — ' + classe : '');
 }
 
 // Inicializar ícone com o valor atual do select ao carregar
@@ -4090,11 +4330,14 @@ function initIconeBio() {
 // ── MacKinnon integrado ao formulário manual ────────────
 function onMetodoChange(val) {
   const isMck = val === 'Listas de Mackinnon';
-  const mckBlock = document.getElementById('mck-inline-block');
-  const btnAdicionar = document.getElementById('btn-adicionar-manual');
+  const mckBlock  = document.getElementById('mck-inline-block');
+  const biowrap   = document.getElementById('manual-bio-wrap');
+  const tipoGroup = document.getElementById('manual-tipo-group');
 
-  if (mckBlock) mckBlock.style.display = isMck ? 'block' : 'none';
-  if (btnAdicionar) btnAdicionar.style.display = isMck ? 'none' : '';
+  // MacKinnon: mostrar módulo, ocultar campos bio do Manual + Tipo de registro
+  if (mckBlock)  mckBlock.style.display  = isMck ? 'block' : 'none';
+  if (biowrap)   biowrap.style.display   = isMck ? 'none'  : '';
+  if (tipoGroup) tipoGroup.style.display = isMck ? 'none'  : '';
 
   if (isMck) {
     setTimeout(() => {
@@ -4341,6 +4584,15 @@ function pararVoz() {
 }
 
 
+// Garantir que onMetodoChange é registrado como listener nativo
+document.addEventListener('DOMContentLoaded', function() {
+  const sel = document.getElementById('m-metodo');
+  if (sel) {
+    sel.addEventListener('change', function() { onMetodoChange(this.value); });
+    sel.addEventListener('input',  function() { onMetodoChange(this.value); });
+  }
+});
+
 async function init() {
   buildAcIndex();
   await carregarDados();
@@ -4375,6 +4627,13 @@ async function init() {
   setTimeout(() => {
     document.getElementById('m-projeto').value = document.getElementById('ctx-projeto').value;
     document.getElementById('m-consultor').value = document.getElementById('ctx-consultor').value;
+    // Restaurar método e disparar mudança visual
+    const metodoEl = document.getElementById('m-metodo');
+    const ctxMetodo = document.getElementById('ctx-metodo');
+    if (metodoEl && ctxMetodo && ctxMetodo.value) {
+      metodoEl.value = ctxMetodo.value;
+      onMetodoChange(ctxMetodo.value);
+    }
   }, 100);
 
   atualizarCtxBar();
@@ -4382,6 +4641,11 @@ async function init() {
   atualizarDashInicio();
   initIconeBio();
   atualizarRecentes();
+  // Garantir estado inicial correto do formulário Manual
+  setTimeout(() => {
+    const mel = document.getElementById('m-metodo');
+    if (mel) onMetodoChange(mel.value);
+  }, 200);
 }
 
 // carregarDados e salvarDados → versão IDB abaixo
@@ -4423,6 +4687,7 @@ function irPara(panel, btn) {
   document.getElementById('panel-' + panel).classList.add('active');
   if (btn) btn.classList.add('active');
   if (panel === 'dashboard') { atualizarDashInicio(); renderDashboard(); }
+  if (panel === 'manual') { const mel = document.getElementById('m-metodo'); if (mel) onMetodoChange(mel.value); }
   if (panel === 'registros') { renderRegistrosFiltrado(); renderBioRegistros(document.getElementById('bio-lista')); }
   if (panel === 'dashboard') { renderDashboard(); }
   if (panel === 'enviar')    { renderReqConfig(); renderPerfil(); if (!perfilUsuario.nome) { document.getElementById('perfil-form').classList.add('show'); } }
