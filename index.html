@@ -1736,6 +1736,7 @@ body.dark-mode .record-badge { filter: brightness(0.85); }
   <div class="offline-bar" id="offline-bar">
     ☁️ <span id="offline-msg">Sem conexão — dados salvos localmente</span>
   </div>
+</div>
 
 <!-- PANELS -->
 <div class="panel active" id="panel-escanear">
@@ -1845,7 +1846,7 @@ body.dark-mode .record-badge { filter: brightness(0.85); }
     <div class="field-row">
       <div class="field-group">
         <label>Método</label>
-        <select id="m-metodo">
+        <select id="m-metodo" onchange="onMetodoChange(this.value)">
             <option value="">— selecione —</option>
             <option>Listas de Mackinnon</option>
             <option>Ponto de escuta (IPA)</option>
@@ -1964,17 +1965,13 @@ body.dark-mode .record-badge { filter: brightness(0.85); }
       <input type="hidden" id="m-foto-b64"/>
     </div>
     <div class="alert" id="manual-alert"></div>
-    <button class="btn btn-primary" onclick="adicionarManual()">Adicionar registro</button>
-  </div>
-</div>
+    <button class="btn btn-primary" id="btn-adicionar-manual" onclick="adicionarManual()">Adicionar registro</button>
 
-
-<!-- MACKINNON -->
-<div class="panel" id="panel-mackinnon">
- <div class="card">
-  <div class="card-title">🐦 Listas de Mackinnon</div>
-
-  <!-- Contexto da campanha -->
+    <!-- ════ MACKINNON INLINE ════ -->
+    <div id="mck-inline-block" style="display:none;margin-top:12px">
+      <div class="card" style="margin:0;padding:14px">
+        <div class="card-title" style="margin-bottom:10px">🐦 Listas de MacKinnon</div>
+        <!-- Contexto da campanha -->
   <div class="ctx-banner show" id="mck-ctx-banner">
     <div class="ctx-banner-row">
       <div>
@@ -2143,9 +2140,14 @@ body.dark-mode .record-badge { filter: brightness(0.85); }
         <p>Complete ao menos 2 listas para calcular o IFL.</p></div>
     </div>
   </div>
-
- </div>
+      </div>
+    </div>
+    <!-- ════ FIM MACKINNON ════ -->
+  </div>
 </div>
+
+
+<!-- MACKINNON panel removido — integrado ao panel-manual -->
 
 <!-- BIOMETRIA -->
 <div class="panel" id="panel-biometria">
@@ -3166,16 +3168,20 @@ body.dark-mode .record-badge { filter: brightness(0.85); }
       <div class="dash-acao" onclick="irPara('biometria', document.querySelectorAll('.nav-btn')[2])">
         <span class="da-icon">📏</span>Biometria
       </div>
-      <div class="dash-acao" onclick="irPara('mackinnon', document.querySelectorAll('.nav-btn')[3])">
+      <div class="dash-acao" onclick="(function(){
+  const el = document.getElementById('m-metodo');
+  if(el){el.value='Listas de Mackinnon';onMetodoChange('Listas de Mackinnon');}
+  irPara('manual', document.querySelectorAll('.nav-btn')[1]);
+})()">
         <span class="da-icon">🐦</span>MacKinnon
       </div>
-      <div class="dash-acao" onclick="irPara('registros', document.querySelectorAll('.nav-btn')[6])">
+      <div class="dash-acao" onclick="irPara('registros', document.querySelectorAll('.nav-btn')[5])">
         <span class="da-icon">📋</span>Ver dados
       </div>
-      <div class="dash-acao" onclick="irPara('campanhas', document.querySelectorAll('.nav-btn')[4])">
+      <div class="dash-acao" onclick="irPara('campanhas', document.querySelectorAll('.nav-btn')[3])">
         <span class="da-icon">🗂️</span>Campanha
       </div>
-      <div class="dash-acao" onclick="irPara('enviar', document.querySelectorAll('.nav-btn')[7])">
+      <div class="dash-acao" onclick="irPara('enviar', document.querySelectorAll('.nav-btn')[6])">
         <span class="da-icon">📤</span>Exportar
       </div>
     </div>
@@ -3509,9 +3515,6 @@ body.dark-mode .record-badge { filter: brightness(0.85); }
   <button class="nav-btn" onclick="irPara('biometria', this)" title="Biometria">
     <span class="nav-icon">📏</span>Bio
   </button>
-  <button class="nav-btn" onclick="irPara('mackinnon', this)" title="MacKinnon IFL">
-    <span class="nav-icon">🐦</span>Mack.
-  </button>
   <button class="nav-btn" onclick="irPara('campanhas', this)" title="Campanhas e pontos">
     <span class="nav-icon">🗂️</span>Camp.
   </button>
@@ -3733,6 +3736,26 @@ let imgBase64 = null;
 let isOnline = navigator.onLine;
 
 // ── INIT ────────────────────────────────────────────────
+
+// ── MacKinnon integrado ao formulário manual ────────────
+function onMetodoChange(val) {
+  const isMck = val === 'Listas de Mackinnon';
+  const mckBlock = document.getElementById('mck-inline-block');
+  const btnAdicionar = document.getElementById('btn-adicionar-manual');
+
+  if (mckBlock) mckBlock.style.display = isMck ? 'block' : 'none';
+  if (btnAdicionar) btnAdicionar.style.display = isMck ? 'none' : '';
+
+  if (isMck) {
+    setTimeout(() => {
+      mckIniciar();
+      mckRenderAtual();
+      mckRenderHistorico();
+      mckRenderIFL();
+    }, 50);
+  }
+}
+
 async function init() {
   buildAcIndex();
   await carregarDados();
@@ -3801,6 +3824,13 @@ function atualizarOnline() {
 
 // ── NAVEGAÇÃO ───────────────────────────────────────────
 function irPara(panel, btn) {
+  // MacKinnon agora é método dentro do panel-manual
+  if (panel === 'mackinnon') {
+    const el = document.getElementById('m-metodo');
+    if (el) { el.value = 'Listas de Mackinnon'; onMetodoChange('Listas de Mackinnon'); }
+    panel = 'manual';
+    btn = document.querySelectorAll('.nav-btn')[1];
+  }
   document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
   document.getElementById('panel-' + panel).classList.add('active');
@@ -8256,7 +8286,6 @@ init();
       <button class="perm-btn-sec"  onclick="fecharPermModal()">Fechar</button>
     </div>
   </div>
-</div>
 </div>
 </div>
 
