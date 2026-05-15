@@ -302,6 +302,7 @@ textarea { resize: vertical; min-height: 60px; }
   background: var(--branco);
   transition: all 0.15s; font-size: 13px; font-weight: 600;
   color: var(--verde-medio);
+  width: 100%; font-family: inherit; display: block;
 }
 .send-btn:active { background: var(--verde-suave); transform: scale(0.97); }
 .send-btn .send-icon { font-size: 24px; display: block; margin-bottom: 4px; }
@@ -4016,22 +4017,22 @@ body.dark-mode #manual-bio-wrap textarea {
       <span style="font-size:11px;opacity:.8">HTML completo com espécies, biometria e índices</span></span>
     </button>
     <div class="send-grid">
-      <div class="send-btn" onclick="baixarXLSX()">
+      <button class="send-btn" onclick="baixarXLSX()">
         <span class="send-icon">📥</span>
         Baixar .xlsx
-      </div>
-      <div class="send-btn" onclick="compartilharWhatsApp()">
+      </button>
+      <button class="send-btn" onclick="compartilharWhatsApp()">
         <span class="send-icon">💬</span>
         WhatsApp
-      </div>
-      <div class="send-btn" onclick="abrirEmail()">
+      </button>
+      <button class="send-btn" onclick="abrirEmail()">
         <span class="send-icon">📧</span>
         E-mail
-      </div>
-      <div class="send-btn" onclick="uploadDrive()">
+      </button>
+      <button class="send-btn" onclick="uploadDrive()">
         <span class="send-icon">☁️</span>
         Google Drive
-      </div>
+      </button>
     </div>
     <div class="alert" id="export-alert"></div>
   </div>
@@ -4714,7 +4715,15 @@ function irPara(panel, btn) {
   document.getElementById('panel-' + panel).classList.add('active');
   if (btn) btn.classList.add('active');
   if (panel === 'dashboard') { atualizarDashInicio(); renderDashboard(); }
-  if (panel === 'manual') { const mel = document.getElementById('m-metodo'); if (mel) onMetodoChange(mel.value); }
+  if (panel === 'manual') {
+    const mel = document.getElementById('m-metodo');
+    // Sincronizar ctx-metodo → m-metodo se o campo estiver vazio
+    if (mel && !mel.value) {
+      const ctxMet = document.getElementById('ctx-metodo');
+      if (ctxMet && ctxMet.value) { mel.value = ctxMet.value; }
+    }
+    if (mel) onMetodoChange(mel.value);
+  }
   if (panel === 'registros') { renderRegistrosFiltrado(); renderBioRegistros(document.getElementById('bio-lista')); }
   if (panel === 'dashboard') { renderDashboard(); }
   if (panel === 'enviar')    { renderReqConfig(); renderPerfil(); if (!perfilUsuario.nome) { document.getElementById('perfil-form').classList.add('show'); } }
@@ -4847,6 +4856,13 @@ function adicionarManual() {
   // Limpar marcações anteriores
   document.querySelectorAll('.req-missing').forEach(el => el.classList.remove('req-missing'));
   if (!especie) { mostrarAlert('manual-alert', 'error', 'Informe ao menos o nome da espécie.'); return; }
+  // Validação explícita de método (sempre obrigatório, independente de REQ_OPTS)
+  const metodoEl = document.getElementById('m-metodo');
+  if (!metodoEl || !metodoEl.value) {
+    if (metodoEl) metodoEl.classList.add('req-missing');
+    mostrarAlert('manual-alert', 'error', '✗ Selecione o Método amostral antes de salvar.');
+    return;
+  }
   const missingManual = verificarCamposObrigatoriosManual();
   if (missingManual.length) {
     mostrarAlert('manual-alert', 'error', '✗ Campos obrigatórios: ' + missingManual.join(', '));
@@ -4881,7 +4897,7 @@ function adicionarManual() {
     ordem: document.getElementById('m-ordem').value,
     familia: document.getElementById('m-familia').value,
     especie,
-    n_individuos: parseInt(document.getElementById('m-n').value) || 0,
+    n_individuos: parseInt(document.getElementById('m-n').value) || 1,
     sexo: document.getElementById('m-sexo').value,
     consultor: document.getElementById('m-consultor').value,
     obs: document.getElementById('m-obs').value
@@ -5045,8 +5061,8 @@ function atualizarResumo() {
 
 function gerarXLSX() {
   try {
-  const cabecalho1 = ['Dados do Projeto','','','Variáveis Geográficas','','','','','Variáveis temporais','','','','Variáveis metodológicas','','','Variáveis biológicas','','','','','','','Conservação','','','Equipe','Observações'];
-  const cabecalho2 = ['PROJETO','FASE','CAMPANHA','ÁREA DE INFLUÊNCIA','PONTO','ZONA','UTM (X)','UTM (Y)','DATA','HORÁRIO (00:00)','PERÍODO','ESTAÇÃO','MÉTODO','TIPO DE REGISTRO','DESTINAÇÃO','MICROHABITAT','CLASSE','ORDEM','FAMÍLIA','ESPÉCIE','Nº INDIVÍDUOS','SEXO','IUCN','MMA','NOTÁVEL','Consultor | Auxiliar','Observações'];
+  const cabecalho1 = ['Dados do Projeto','','Variáveis Geográficas','','','','','Variáveis temporais','','','','Variáveis metodológicas','','','Variáveis biológicas','','','','','','','Conservação','','','Equipe','Observações'];
+  const cabecalho2 = ['PROJETO','CAMPANHA','ÁREA DE INFLUÊNCIA','PONTO','ZONA','UTM (X)','UTM (Y)','DATA','HORÁRIO (00:00)','PERÍODO','ESTAÇÃO','MÉTODO','TIPO DE REGISTRO','DESTINAÇÃO','MICROHABITAT','CLASSE','ORDEM','FAMÍLIA','ESPÉCIE','Nº INDIVÍDUOS','SEXO','IUCN','MMA','NOTÁVEL','Consultor | Auxiliar','Observações'];
 
   const linhas = registros.map(r => {
     const dataFmt = r.data ? new Date(r.data + 'T12:00:00').toLocaleDateString('pt-BR') : '';
@@ -5057,15 +5073,15 @@ function gerarXLSX() {
       if (m) { utmZona = m[1]; utmX = m[2]; utmY = m[3]; }
       else { utmZona = r.coord; } // fallback: put raw value in ZONA col
     }
-    return [r.projeto||'','',r.campanha||'',r.area||'',r.ponto||'',utmZona,utmX,utmY,dataFmt,r.hora||r.horario||'',r.periodo||'',r.estacao||'',r.metodo||'',r.tipo_registro||'',r.destinacao||'',r.microhabitat||'',r.classe||'',r.ordem||'',r.familia||'',r.especie||'',r.n_individuos||0,r.sexo||'',r._iucn||'',r._mma||'',r.notavel?'Sim':'',r.consultor||'',r.obs||''];
+    return [r.projeto||'',r.campanha||'',r.area||'',r.ponto||'',utmZona,utmX,utmY,dataFmt,r.hora||r.horario||'',r.periodo||'',r.estacao||'',r.metodo||'',r.tipo_registro||'',r.destinacao||'',r.microhabitat||'',r.classe||'',r.ordem||'',r.familia||'',r.especie||'',r.n_individuos||0,r.sexo||'',r._iucn||'',r._mma||'',r.notavel?'Sim':'',r.consultor||'',r.obs||''];
   });
 
   const ws = XLSX.utils.aoa_to_sheet([cabecalho1, cabecalho2, ...linhas]);
-  ws['!cols'] = [12,8,12,18,10,6,10,12,12,10,10,10,10,14,10,12,14,16,24,10,10,8,8,6,20,30].map(w => ({wch:w}));
+  ws['!cols'] = [12,12,18,10,6,10,12,12,10,10,10,10,14,10,12,14,16,24,10,10,8,8,6,20,30,40].map(w => ({wch:w}));
   ws['!merges'] = [
-    {s:{r:0,c:0},e:{r:0,c:2}},{s:{r:0,c:3},e:{r:0,c:7}},
-    {s:{r:0,c:8},e:{r:0,c:11}},{s:{r:0,c:12},e:{r:0,c:14}},
-    {s:{r:0,c:15},e:{r:0,c:21}},{s:{r:0,c:22},e:{r:0,c:24}}
+    {s:{r:0,c:0},e:{r:0,c:1}},{s:{r:0,c:2},e:{r:0,c:6}},
+    {s:{r:0,c:7},e:{r:0,c:10}},{s:{r:0,c:11},e:{r:0,c:13}},
+    {s:{r:0,c:14},e:{r:0,c:20}},{s:{r:0,c:21},e:{r:0,c:23}}
   ];
 
   const wb = XLSX.utils.book_new();
@@ -8116,6 +8132,7 @@ const REQ_KEY = 'fauna_req_config';
 const REQ_OPTS_MANUAL = [
   { id: 'data',     label: 'Data' },
   { id: 'horario',  label: 'Horário' },
+  { id: 'metodo',   label: 'Método' },
   { id: 'ponto',    label: 'Ponto' },
   { id: 'coord',    label: 'Coordenadas' },
   { id: 'classe',   label: 'Classe' },
