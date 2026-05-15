@@ -4847,6 +4847,13 @@ function adicionarManual() {
   // Limpar marcações anteriores
   document.querySelectorAll('.req-missing').forEach(el => el.classList.remove('req-missing'));
   if (!especie) { mostrarAlert('manual-alert', 'error', 'Informe ao menos o nome da espécie.'); return; }
+  // Validação explícita de método (sempre obrigatório, independente de REQ_OPTS)
+  const metodoEl = document.getElementById('m-metodo');
+  if (!metodoEl || !metodoEl.value) {
+    if (metodoEl) metodoEl.classList.add('req-missing');
+    mostrarAlert('manual-alert', 'error', '✗ Selecione o Método amostral antes de salvar.');
+    return;
+  }
   const missingManual = verificarCamposObrigatoriosManual();
   if (missingManual.length) {
     mostrarAlert('manual-alert', 'error', '✗ Campos obrigatórios: ' + missingManual.join(', '));
@@ -8116,6 +8123,7 @@ const REQ_KEY = 'fauna_req_config';
 const REQ_OPTS_MANUAL = [
   { id: 'data',     label: 'Data' },
   { id: 'horario',  label: 'Horário' },
+  { id: 'metodo',   label: 'Método' },
   { id: 'ponto',    label: 'Ponto' },
   { id: 'coord',    label: 'Coordenadas' },
   { id: 'classe',   label: 'Classe' },
