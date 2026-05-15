@@ -302,6 +302,7 @@ textarea { resize: vertical; min-height: 60px; }
   background: var(--branco);
   transition: all 0.15s; font-size: 13px; font-weight: 600;
   color: var(--verde-medio);
+  width: 100%; font-family: inherit; display: block;
 }
 .send-btn:active { background: var(--verde-suave); transform: scale(0.97); }
 .send-btn .send-icon { font-size: 24px; display: block; margin-bottom: 4px; }
@@ -4016,22 +4017,22 @@ body.dark-mode #manual-bio-wrap textarea {
       <span style="font-size:11px;opacity:.8">HTML completo com espécies, biometria e índices</span></span>
     </button>
     <div class="send-grid">
-      <div class="send-btn" onclick="baixarXLSX()">
+      <button class="send-btn" onclick="baixarXLSX()">
         <span class="send-icon">📥</span>
         Baixar .xlsx
-      </div>
-      <div class="send-btn" onclick="compartilharWhatsApp()">
+      </button>
+      <button class="send-btn" onclick="compartilharWhatsApp()">
         <span class="send-icon">💬</span>
         WhatsApp
-      </div>
-      <div class="send-btn" onclick="abrirEmail()">
+      </button>
+      <button class="send-btn" onclick="abrirEmail()">
         <span class="send-icon">📧</span>
         E-mail
-      </div>
-      <div class="send-btn" onclick="uploadDrive()">
+      </button>
+      <button class="send-btn" onclick="uploadDrive()">
         <span class="send-icon">☁️</span>
         Google Drive
-      </div>
+      </button>
     </div>
     <div class="alert" id="export-alert"></div>
   </div>
