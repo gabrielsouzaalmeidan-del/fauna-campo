@@ -4715,7 +4715,15 @@ function irPara(panel, btn) {
   document.getElementById('panel-' + panel).classList.add('active');
   if (btn) btn.classList.add('active');
   if (panel === 'dashboard') { atualizarDashInicio(); renderDashboard(); }
-  if (panel === 'manual') { const mel = document.getElementById('m-metodo'); if (mel) onMetodoChange(mel.value); }
+  if (panel === 'manual') {
+    const mel = document.getElementById('m-metodo');
+    // Sincronizar ctx-metodo → m-metodo se o campo estiver vazio
+    if (mel && !mel.value) {
+      const ctxMet = document.getElementById('ctx-metodo');
+      if (ctxMet && ctxMet.value) { mel.value = ctxMet.value; }
+    }
+    if (mel) onMetodoChange(mel.value);
+  }
   if (panel === 'registros') { renderRegistrosFiltrado(); renderBioRegistros(document.getElementById('bio-lista')); }
   if (panel === 'dashboard') { renderDashboard(); }
   if (panel === 'enviar')    { renderReqConfig(); renderPerfil(); if (!perfilUsuario.nome) { document.getElementById('perfil-form').classList.add('show'); } }
