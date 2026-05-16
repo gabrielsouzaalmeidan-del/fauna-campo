@@ -4085,6 +4085,9 @@ button[data-gps], button[onclick*="captureGps"] {
     <span class="filtro-chip" onclick="filtrarDados('Amphibia', this)">🐸 Anfíb.</span>
     <span class="filtro-chip" onclick="filtrarDados('Pisces', this)">🐟 Peixes</span>
     <span class="filtro-chip" onclick="filtrarDados('notavel', this)">⭐ Notáveis</span>
+    <span class="filtro-chip filtro-sep" style="border-left:1px solid var(--borda);margin-left:4px;padding-left:8px" onclick="filtrarDados('hoje', this)">📅 Hoje</span>
+    <span class="filtro-chip" onclick="filtrarDados('semana', this)">📅 Semana</span>
+    <span class="filtro-chip" onclick="filtrarDados('campanha', this)">🗂️ Campanha</span>
   </div>
   <div class="record-count-bar" id="record-count-bar">0 registros salvos localmente</div>
   <div id="lista-registros"></div>
@@ -4644,8 +4647,18 @@ function renderRegistrosFiltrado() {
 
   let fonte = registros.slice().reverse();
 
+  const hoje = new Date().toISOString().slice(0,10);
+  const semanaAtras = new Date(Date.now() - 7*24*60*60*1000).toISOString().slice(0,10);
+
   if (filtroAtual === 'notavel') {
     fonte = fonte.filter(r => r.notavel);
+  } else if (filtroAtual === 'hoje') {
+    fonte = fonte.filter(r => (r.data || '').slice(0,10) === hoje);
+  } else if (filtroAtual === 'semana') {
+    fonte = fonte.filter(r => (r.data || '').slice(0,10) >= semanaAtras);
+  } else if (filtroAtual === 'campanha') {
+    const campAtiva = window._campIdAtivo || document.getElementById('ctx-campanha')?.value || '';
+    fonte = campAtiva ? fonte.filter(r => r.campanha === campAtiva || r.campId === campAtiva) : fonte;
   } else if (filtroAtual !== 'todos') {
     fonte = fonte.filter(r => r.classe === filtroAtual);
   }
