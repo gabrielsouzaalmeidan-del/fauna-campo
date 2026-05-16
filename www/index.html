@@ -788,6 +788,18 @@ body.dark-mode .ctx-bar {
 }
 body.dark-mode .ctx-bar select,
 body.dark-mode .ctx-bar input { background: rgba(74,222,128,0.08); border-color: rgba(74,222,128,0.25); color: #86efac; }
+.offline-bar {
+  background: #fef3c7;
+  border-bottom: 1px solid #f59e0b;
+  color: #78350f;
+  font-size: 11px;
+  font-weight: 500;
+  padding: 6px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
 body.dark-mode .offline-bar {
   background: #1a1000;
   border-bottom: 1px solid #4a3500;
@@ -1635,18 +1647,19 @@ button[data-gps], button[onclick*="captureGps"] {
   font-weight: 600 !important;
 }
 
-/* ── MELHORIAS VISUAIS v2.0 ─────────────────────────── */
 
-/* Nav compacta com 5 abas + indicador ativo */
+
+/* ── Field Pro: Nav-bar ───────────────────── */
 .nav-bar {
   display: flex;
-  background: var(--verde-escuro);
-  border-top: 1px solid rgba(255,255,255,0.08);
+  background: var(--branco);
+  border-top: 1px solid var(--borda);
   position: fixed;
   bottom: 0; left: 0; right: 0;
   z-index: 100;
-  padding: 4px 6px 6px;
+  padding: 4px 6px 8px;
   gap: 3px;
+  box-shadow: 0 -1px 4px rgba(0,0,0,0.06);
 }
 .nav-btn {
   flex: 1;
@@ -1655,335 +1668,46 @@ button[data-gps], button[onclick*="captureGps"] {
   background: none;
   border: none;
   cursor: pointer;
-  color: rgba(255,255,255,0.45);
+  color: var(--texto-muted);
   font-size: 9px;
   font-weight: 500;
-  transition: all 0.15s;
+  transition: color 0.15s, background 0.15s;
+  border-radius: var(--radius-sm);
   -webkit-tap-highlight-color: transparent;
-  border-radius: 10px 10px 6px 6px;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 3px;
-  letter-spacing: 0.01em;
 }
-.nav-btn.active {
-  color: #4ade80;
-  background: rgba(74,222,128,0.1);
-}
-.nav-btn .nav-icon {
-  font-size: 18px;
-  line-height: 1;
-  display: block;
-}
-.nav-btn.active 
+.nav-btn.active { color: var(--verde-medio); background: var(--verde-suave); border-radius: 8px; }
+.nav-btn .nav-icon { font-size: 18px; line-height: 1; display: block; }
 
-/* Barra de contexto ativo */
+/* ── Field Pro: Ctx-bar ────────────────────── */
 .ctx-bar {
-  background: var(--verde-medio);
-  padding: 5px 14px;
+  background: var(--areia-escura);
+  padding: 5px 14px 6px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 8px;
   font-size: 11px;
-  color: rgba(255,255,255,0.9);
-  border-bottom: 1px solid rgba(255,255,255,0.08);
+  color: var(--texto-suave);
+  border-bottom: 1px solid var(--borda);
+  flex-wrap: wrap;
 }
 .ctx-bar-left { display: flex; align-items: center; gap: 6px; min-width: 0; }
-.ctx-bar-label { font-size: 10px; opacity: 0.7; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.ctx-bar-value { font-size: 11px; font-weight: 600; color: #4ade80; white-space: nowrap; }
-.ctx-bar-edit { font-size: 10px; opacity: 0.6; cursor: pointer; flex-shrink: 0; padding: 2px 6px; border-radius: 5px; border: 1px solid rgba(255,255,255,0.2); }
-
-/* Chips de seleção de grupo */
-.grupo-chips { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; }
-.grupo-chip {
-  display: flex; flex-direction: column; align-items: center; gap: 2px;
-  background: var(--branco); border: 1.5px solid var(--verde-borda);
-  border-radius: 10px; padding: 8px 10px; cursor: pointer;
-  font-size: 10px; color: var(--texto-suave); font-weight: 500;
-  transition: all 0.15s; min-width: 52px;
-}
-.grupo-chip .gc-icon { font-size: 20px; line-height: 1; }
-.grupo-chip.ativo {
-  background: var(--verde-suave);
-  border-color: var(--verde-claro);
-  color: var(--verde-medio);
-}
-
-/* Cards de registro ricos */
-.record-item {
+.ctx-bar-label { font-size: 10px; color: var(--texto-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ctx-bar-value { font-size: 11px; font-weight: 600; color: var(--texto); white-space: nowrap; }
+.ctx-bar-edit { font-size: 10px; color: var(--texto-muted); cursor: pointer; flex-shrink: 0; padding: 2px 8px; border-radius: 99px; border: 1px solid var(--borda); background: var(--branco); }
+.ctx-bar select, .ctx-bar input {
   background: var(--branco);
-  border: 1px solid var(--verde-borda);
-  border-radius: 12px;
-  padding: 10px 12px;
-  margin-bottom: 8px;
-  position: relative;
-  transition: box-shadow 0.15s;
-}
-.record-item:active { box-shadow: 0 0 0 2px var(--verde-borda); }
-.record-item-header { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
-.record-grupo-icon {
-  width: 36px; height: 36px; border-radius: 9px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 18px; flex-shrink: 0;
-}
-.record-grupo-icon.aves { background: #e8f2e6; }
-.record-grupo-icon.mammalia { background: #fef3e2; }
-.record-grupo-icon.reptilia { background: #e8f5ee; }
-.record-grupo-icon.amphibia { background: #e8f0fe; }
-.record-grupo-icon.pisces { background: #e3f2fd; }
-.record-grupo-icon.default { background: var(--areia-escura); }
-.record-species { font-size: 13px; font-weight: 600; color: var(--texto); }
-.record-popular { font-size: 11px; color: var(--texto-suave); margin-top: 1px; }
-.record-badges { display: flex; gap: 5px; flex-wrap: wrap; margin-top: 6px; }
-.record-badge {
-  font-size: 10px; padding: 2px 7px; border-radius: 20px;
-  font-weight: 500;
-}
-.rb-ponto { background: var(--verde-suave); color: var(--verde-medio); }
-.rb-metodo { background: var(--alerta-bg); color: var(--alerta); }
-.rb-data { background: var(--areia-escura); color: var(--texto-suave); }
-.rb-status { background: #e3f2fd; color: #1565c0; }
-
-/* Status offline */
-.offline-bar {
-  background: #fef3c7;
-  border-bottom: 1px solid #f59e0b;
-  color: #78350f;
-  font-size: 11px;
-  font-weight: 500;
-  padding: 6px 14px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-}
-.offline-bar.show { display: flex; }
-
-/* Ficha de espécie inline */
-.especie-ficha {
-  background: var(--verde-suave);
-  border: 1px solid var(--verde-borda);
-  border-radius: 10px;
-  padding: 10px 12px;
-  margin-top: 6px;
-  display: none;
-}
-.especie-ficha.show { display: block; }
-.especie-ficha-header { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
-.especie-ficha-icon { font-size: 28px; }
-.especie-ficha-nome { font-size: 13px; font-weight: 600; color: var(--texto); }
-.especie-ficha-popular { font-size: 11px; color: var(--texto-suave); }
-.especie-ficha-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
-.especie-ficha-item label { font-size: 9px; color: var(--texto-muted); text-transform: uppercase; letter-spacing: .05em; }
-.especie-ficha-item span { font-size: 11px; color: var(--texto); font-weight: 500; display: block; }
-
-/* Dashboard de início rápido */
-.dash-inicio {
-  background: var(--branco);
-  border: 1px solid var(--verde-borda);
-  border-radius: 14px;
-  padding: 14px;
-  margin-bottom: 14px;
-}
-.dash-inicio-saudacao { font-size: 15px; font-weight: 600; color: var(--texto); margin-bottom: 2px; }
-.dash-inicio-sub { font-size: 11px; color: var(--texto-muted); margin-bottom: 12px; }
-.dash-stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 12px; }
-.dash-stat-mini { background: var(--areia); border-radius: 10px; padding: 8px; text-align: center; }
-.dash-stat-mini .num { font-size: 20px; font-weight: 700; color: var(--texto); }
-.dash-stat-mini .lbl { font-size: 9px; color: var(--texto-muted); margin-top: 1px; }
-.dash-acoes-rapidas { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; }
-.dash-acao {
-  background: var(--areia); border-radius: 10px; padding: 9px 6px;
-  text-align: center; cursor: pointer; border: 1px solid var(--verde-borda);
-  font-size: 10px; color: var(--texto-suave); font-weight: 500;
-  display: flex; flex-direction: column; align-items: center; gap: 4px;
-  -webkit-tap-highlight-color: transparent;
-}
-.dash-acao .da-icon { font-size: 20px; }
-.dash-acao:active { background: var(--verde-suave); border-color: var(--verde-claro); }
-
-/* Indicador de sync */
-.sync-indicator {
-  position: fixed;
-  bottom: 70px;
-  right: 12px;
-  background: var(--verde-medio);
-  color: #fff;
-  border-radius: 20px;
-  padding: 5px 10px;
-  font-size: 11px;
-  font-weight: 500;
-  z-index: 99;
-  display: none;
-  align-items: center;
-  gap: 5px;
-  box-shadow: 0 2px 8px rgba(26,46,26,0.3);
-}
-.sync-indicator.show { display: flex; }
-
-/* Campo GPS melhorado */
-.gps-estado {
-  font-size: 11px;
-  margin-top: 4px;
-  padding: 4px 8px;
-  border-radius: 6px;
-  display: none;
-}
-.gps-estado.buscando { display: block; background: var(--alerta-bg); color: var(--alerta); }
-.gps-estado.capturado { display: block; background: var(--sucesso-bg); color: var(--sucesso); }
-.gps-estado.erro { display: block; background: var(--perigo-bg); color: var(--perigo); }
-
-/* Modo escuro aprimorado */
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/* ── GRÁFICOS DO DASHBOARD ─────────────────────────────── */
-.dash-charts-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-  margin-bottom: 14px;
-}
-@media (max-width: 420px) {
-  .dash-charts-row { grid-template-columns: 1fr; }
-}
-.chart-card {
-  background: var(--areia);
-  border: 1px solid var(--verde-borda);
-  border-radius: 12px;
-  padding: 12px;
-}
-.chart-card-title {
-  font-size: 11px;
-  font-weight: 700;
-  color: var(--texto-suave);
-  text-transform: uppercase;
-  letter-spacing: .05em;
-  margin-bottom: 10px;
-  display: flex;
-  align-items: center;
-  gap: 5px;
-}
-.donut-wrap {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-}
-.donut-canvas-wrap {
-  position: relative;
-  width: 120px;
-  height: 120px;
-}
-#donut-canvas {
-  width: 120px;
-  height: 120px;
-}
-.donut-center-label {
-  position: absolute;
-  top: 50%; left: 50%;
-  transform: translate(-50%, -50%);
-  text-align: center;
-  pointer-events: none;
-}
-.donut-center-num {
-  font-size: 22px;
-  font-weight: 700;
-  color: var(--texto);
-  line-height: 1;
-}
-.donut-center-sub {
-  font-size: 9px;
-  color: var(--texto-muted);
-  margin-top: 1px;
-}
-.donut-legend {
-  width: 100%;
-}
-.donut-legend-item {
-  display: flex;
-  align-items: center;
-  gap: 6px;
+  border: 1px solid var(--borda);
+  border-radius: 99px;
+  padding: 3px 8px;
   font-size: 11px;
   color: var(--texto);
-  margin-bottom: 4px;
-}
-.donut-legend-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  flex-shrink: 0;
-}
-.donut-legend-label { flex: 1; }
-.donut-legend-pct {
-  font-size: 11px;
-  font-weight: 600;
-  color: var(--texto-suave);
-  min-width: 28px;
-  text-align: right;
-}
-.ponto-bars-wrap {
-  display: flex;
-  flex-direction: column;
-  gap: 7px;
-}
-.ponto-bar-row {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-}
-.ponto-bar-label {
-  font-size: 10px;
-  color: var(--texto-suave);
-  min-width: 28px;
-  font-weight: 600;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 44px;
-}
-.ponto-bar-track {
-  flex: 1;
-  height: 14px;
-  background: var(--verde-borda);
-  border-radius: 7px;
-  overflow: hidden;
-}
-.ponto-bar-fill {
-  height: 100%;
-  border-radius: 7px;
-  background: var(--verde-medio);
-  transition: width 0.4s ease;
-  min-width: 4px;
-}
-.ponto-bar-num {
-  font-size: 10px;
-  font-weight: 700;
-  color: var(--texto);
-  min-width: 18px;
-  text-align: right;
-}
-.ponto-empty {
-  font-size: 11px;
-  color: var(--texto-muted);
-  text-align: center;
-  padding: 20px 0;
+  width: auto; min-width: 80px; max-width: 140px;
+  cursor: pointer;
 }
 
 /* dark mode */
