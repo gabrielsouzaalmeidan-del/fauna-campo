@@ -2422,7 +2422,13 @@ button[data-gps], button[onclick*="captureGps"] {
         <div class="ctx-bar-value" id="ctx-bar-value">Sem campanha ativa</div>
       </div>
     </div>
-    <button class="ctx-bar-edit" onclick="irPara('campanhas', document.querySelector('.nav-btn:nth-child(4)'))">✏️ alterar</button>
+    <div style="display:flex;align-items:center;gap:8px">
+      <div id="ctx-gps-pill" style="display:none;align-items:center;gap:5px;background:var(--verde-suave);border:1px solid var(--verde-borda);border-radius:99px;padding:2px 9px;font-size:10px;color:var(--verde-medio)">
+        <span id="ctx-gps-dot" style="width:6px;height:6px;border-radius:50%;background:var(--verde-medio);flex-shrink:0"></span>
+        <span id="ctx-gps-text">—</span>
+      </div>
+      <button class="ctx-bar-edit" onclick="irPara('campanhas', document.querySelector('.nav-btn:nth-child(4)'))">✏️ alterar</button>
+    </div>
   </div>
 
   <!-- Barra offline -->
@@ -5832,6 +5838,17 @@ function applyGpsResult(fieldId, metaId, detailId, pos, isFallback) {
 
   if (el) el.value = formatUtm(utm);
   gpsCache[fieldId] = { lat, lon, acc, alt, utm, ts: Date.now() };
+
+  // ── Atualizar indicador GPS ao vivo no ctx-bar ──
+  const gpsPill = document.getElementById('ctx-gps-pill');
+  const gpsText = document.getElementById('ctx-gps-text');
+  const gpsDot  = document.getElementById('ctx-gps-dot');
+  if (gpsPill && gpsText) {
+    gpsPill.style.display = 'flex';
+    gpsText.textContent = `${utm.zone}${utm.letter} ±${acc}m`;
+    gpsDot.style.background = acc <= 30 ? '#16a34a' : acc <= 100 ? '#d97706' : '#dc2626';
+    gpsPill.title = `E ${Math.round(utm.easting)}  N ${Math.round(utm.northing)} · Precisão ±${acc}m`;
+  }
 
   // parar barra de progresso
   const progBase = fieldId.replace('-coord','') + '-coord';
