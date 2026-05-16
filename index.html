@@ -1,4 +1,13 @@
-<!DOCTYPE html>
+<
+async function idbGet(store, id) {
+  return new Promise((res, rej) => {
+    const tx = db.transaction(store, 'readonly');
+    const req = tx.objectStore(store).get(id);
+    req.onsuccess = () => res(req.result);
+    req.onerror  = () => rej(req.error);
+  });
+}
+!DOCTYPE html>
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8" />
@@ -2441,7 +2450,7 @@ button[data-gps], button[onclick*="captureGps"] {
       <div class="field-group"><label>Ponto</label><input id="ctx-ponto" placeholder="P1, Trilha..." /></div>
       <div class="field-group">
         <label>Método</label>
-        <select id="ctx-metodo">
+        <select id="ctx-metodo" onchange="salvarMetodoPadrao(this.value)">
           <option value="">— selecione —</option>
           <option>Ponto de escuta</option>
           <option>Censo por transecto</option>
@@ -2538,7 +2547,7 @@ button[data-gps], button[onclick*="captureGps"] {
     <div class="section-header">🔬 Metodologia</div>
     <div class="field-group">
         <label>Método</label>
-        <select id="m-metodo" onchange="onMetodoChange(this.value)" oninput="onMetodoChange(this.value)">
+        <select id="m-metodo" onchange="salvarMetodoPadrao(this.value);onMetodoChange(this.value)" oninput="onMetodoChange(this.value)">
             <option value="">— selecione —</option>
             <option>Listas de Mackinnon</option>
             <option>Ponto de escuta</option>
@@ -4584,6 +4593,49 @@ function filtrarDados(filtro, chipEl) {
   renderRegistrosFiltrado();
 }
 
+// ── Web Share API para registro individual ──────────────────
+async function compartilharRegistro(idx) {
+  const r = registros[idx];
+  if (!r) return;
+  const iucn = r._iucn ? ` | IUCN: ${r._iucn}` : '';
+  const mma  = r._mma  ? ` | MMA: ${r._mma}`   : '';
+  const texto = [
+    `🌿 *WildLog — Registro de campo*`,
+    ``,
+    `📌 Espécie: ${r.especie || '—'}`,
+    `📋 Classe: ${r.classe || '—'} | Família: ${r.familia || '—'}`,
+    `🔬 Método: ${r.metodo || '—'}`,
+    `📍 Ponto: ${r.ponto || '—'} | Coord: ${r.coord || '—'}`,
+    `📅 Data: ${r.data || '—'} às ${r.hora || '—'}`,
+    `👥 Nº indivíduos: ${r.n_individuos || 1}`,
+    `🏷️ Status: ${r.tipo_registro || '—'}${iucn}${mma}`,
+    r.obs ? `💬 Obs: ${r.obs}` : '',
+    ``,
+    `📲 Enviado via WildLog App`
+  ].filter(Boolean).join('
+');
+
+  if (navigator.share) {
+    try {
+      await navigator.share({ title: `WildLog — ${r.especie || 'Registro'}`, text: texto });
+    } catch(e) {
+      if (e.name !== 'AbortError') copiarParaArea(texto);
+    }
+  } else {
+    copiarParaArea(texto);
+  }
+}
+
+function copiarParaArea(texto) {
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(texto).then(() =>
+      mostrarToast('✅ Registro copiado para a área de transferência!')
+    ).catch(() => mostrarToast('⚠️ Não foi possível copiar'));
+  } else {
+    mostrarToast('ℹ️ Web Share não disponível neste dispositivo');
+  }
+}
+
 function renderRegistrosFiltrado() {
   const lista = document.getElementById('lista-registros');
   if (!lista) return;
@@ -4628,6 +4680,7 @@ function renderRegistrosFiltrado() {
     return `<div class="record-item ${r.notavel ? 'notavel' : ''}" id="rec-card-${idx}">
       <div class="record-actions">
         <button class="btn-notavel ${r.notavel ? 'ativo' : ''}" onclick="toggleNotavel(${idx})" title="Marcar como notável">⭐</button>
+        <button class="btn-share-rec" onclick="compartilharRegistro(${idx})" title="Compartilhar" style="background:none;border:none;color:var(--texto-muted);font-size:14px;cursor:pointer;padding:4px 5px;border-radius:6px;line-height:1;">⬆️</button>
         <button class="btn-edit-rec" onclick="editarManual(${idx})">✏️</button>
         <button class="record-del" onclick="deletarRegistro(${idx})">✕</button>
       </div>
@@ -4782,6 +4835,7 @@ async function init() {
   carregarReqConfig();
   mckCarregar();
   await carregarConfig();
+  await restaurarMetodoPadrao();
   loadDarkMode();
   registrarPWA();
   // Indicador online/offline
@@ -5239,6 +5293,30 @@ function gerarXLSX() {
 
   const wb = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(wb, ws, 'BANCO DE DADOS');
+  
+  // ── Abas de Biometria (uma por grupo) ──────────────────────────
+  const BIO_GRUPOS = ['Avifauna','Mastofauna','Herpetofauna','Ictiofauna','Quiropterofauna'];
+  const BIO_STORE_KEYS = {
+    Avifauna: 'bav', Mastofauna: 'bma', Herpetofauna: 'bhe',
+    Ictiofauna: 'bic', Quiropterofauna: 'bqu'
+  };
+  BIO_GRUPOS.forEach(grupo => {
+    const prefix = BIO_STORE_KEYS[grupo];
+    const cfg = BIO_FIELDS[grupo];
+    if (!cfg) return;
+    const regs = bioRegistros.filter(r => r._tipo === grupo || r._tipo === prefix);
+    if (!regs.length) return;
+    const headers = cfg.exportHeaders || cfg.exportCols || [];
+    const cols    = cfg.exportCols    || cfg.exportHeaders || [];
+    const linhasBio = regs.map(r => cols.map(col => {
+      const val = r[col] !== undefined ? r[col] : (r[prefix+'-'+col] !== undefined ? r[prefix+'-'+col] : '');
+      return val === null || val === undefined ? '' : val;
+    }));
+    const wsBio = XLSX.utils.aoa_to_sheet([headers, ...linhasBio]);
+    // Larguras automáticas baseadas nos headers
+    wsBio['!cols'] = headers.map(h => ({wch: Math.max(10, (h||'').length + 2)}));
+    XLSX.utils.book_append_sheet(wb, wsBio, grupo.substring(0,31));
+  });
   return wb;
   } catch(e) {
     console.error('gerarXLSX erro:', e);
@@ -5252,7 +5330,7 @@ function nomeArquivo() {
 }
 
 function baixarXLSX() {
-  if (registros.length === 0) {
+  if (registros.length === 0 && (!window.bioRegistros || bioRegistros.length === 0)) {
     mostrarAlert('export-alert','error','Nenhum registro para exportar.');
     return;
   }
@@ -6625,7 +6703,36 @@ function renderGraficoDashboard(allReg, getClasse) {
 function renderDashboard() {
   // Combinar todos os registros
   // Filtrar por campanha ativa se houver, senão mostrar todos
-  const filtrarCamp = campAtiva !== null;
+  // Estado vazio orientativo
+  const totalAll = registros.length + bioRegistros.length;
+  const dashEl = document.getElementById('panel-dashboard');
+  const emptyId = 'dash-empty-state';
+  const existing = document.getElementById(emptyId);
+  if (existing) existing.remove();
+
+  if (totalAll === 0) {
+    const emptyDiv = document.createElement('div');
+    emptyDiv.id = emptyId;
+    emptyDiv.style.cssText = 'text-align:center;padding:40px 20px;';
+    emptyDiv.innerHTML = `
+      <div style="font-size:48px;margin-bottom:12px;">📊</div>
+      <div style="font-size:16px;font-weight:500;color:var(--texto);margin-bottom:8px;">Dashboard vazio</div>
+      <div style="font-size:13px;color:var(--texto-muted);line-height:1.6;max-width:260px;margin:0 auto 20px;">
+        Adicione seu primeiro registro na aba <strong>Manual</strong> para visualizar os gráficos de distribuição por classe, espécies e pontos amostrais.
+      </div>
+      <div style="display:flex;flex-direction:column;gap:8px;max-width:200px;margin:0 auto;">
+        <button class="btn btn-primary" onclick="irPara('manual',document.querySelector('.nav-btn:nth-child(2)'))">
+          📝 Adicionar registro
+        </button>
+        <button class="btn btn-secondary" onclick="irPara('biometria',document.querySelector('.nav-btn:nth-child(3)'))">
+          📏 Registrar biometria
+        </button>
+      </div>`;
+    if (dashEl) dashEl.prepend(emptyDiv);
+    return;
+  }
+
+    const filtrarCamp = campAtiva !== null;
   const regFiltrados = filtrarCamp
     ? registros.filter(r => r.campId === campAtiva._id || r.campanha === campAtiva.nome)
     : registros;
@@ -9078,6 +9185,28 @@ function renderPerfil() {
 }
 
 // Propagar consultor para todos os formulários abertos
+// ── Persistência do método amostral ─────────────────────────
+async function salvarMetodoPadrao(val) {
+  if (!val) return;
+  try {
+    await idbPut('config', {_id: 'metodo_padrao', valor: val});
+  } catch(e) {
+    localStorage.setItem('wl_metodo_padrao', val);
+  }
+}
+
+async function restaurarMetodoPadrao() {
+  try {
+    const row = await idbGet('config', 'metodo_padrao');
+    const val = row ? row.valor : localStorage.getItem('wl_metodo_padrao');
+    if (!val) return;
+    const ctxEl = document.getElementById('ctx-metodo');
+    const mEl   = document.getElementById('m-metodo');
+    if (ctxEl) ctxEl.value = val;
+    if (mEl && !mEl.value) { mEl.value = val; onMetodoChange(val); }
+  } catch(e) {}
+}
+
 function propagarConsultor() {
   const nome = perfilUsuario.nome;
   if (!nome) return;
