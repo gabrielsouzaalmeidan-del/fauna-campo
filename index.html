@@ -5547,18 +5547,62 @@ function baixarXLSX() {
     return;
   }
   if (typeof XLSX === 'undefined') {
-    mostrarAlert('export-alert','error','Biblioteca XLSX não carregada. Verifique a conexão.');
+    mostrarAlert('export-alert','error','Biblioteca XLSX não carregada.');
     return;
   }
   try {
     const wb = gerarXLSX();
     if (!wb) {
-      mostrarAlert('export-alert','error','Erro ao gerar planilha. Verifique os dados e tente novamente.');
+      mostrarAlert('export-alert','error','Erro ao gerar planilha.');
       return;
     }
-    XLSX.writeFile(wb, nomeArquivo());
-    mostrarAlert('export-alert','success','✓ Arquivo baixado: ' + nomeArquivo());
-    toast('📥 Planilha .xlsx exportada!');
+    const nome = nomeArquivo();
+
+    // Gerar Blob e criar link de download manual
+    // (XLSX.writeFile usa <a> internamente mas falha no WebView do Android)
+    const wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+    const blob  = new Blob([wbout], {
+      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    });
+
+    // Método 1: URL.createObjectURL (funciona na maioria dos ambientes)
+    if (window.URL && window.URL.createObjectURL) {
+      const url = URL.createObjectURL(blob);
+      const a   = document.createElement('a');
+      a.href     = url;
+      a.download = nome;
+      a.style.display = 'none';
+      document.body.appendChild(a);
+      a.click();
+      setTimeout(() => { URL.revokeObjectURL(url); a.remove(); }, 1000);
+      mostrarAlert('export-alert','success','✓ Baixando: ' + nome);
+      toast('📥 Planilha .xlsx exportada!');
+      return;
+    }
+
+    // Método 2: FileReader base64 → data URI (fallback para WebViews antigos)
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      const dataUri = e.target.result;
+      const a = document.createElement('a');
+      a.href     = dataUri;
+      a.download = nome;
+      a.style.display = 'none';
+      document.body.appendChild(a);
+      a.click();
+      setTimeout(() => a.remove(), 500);
+      mostrarAlert('export-alert','success','✓ Baixando: ' + nome);
+      toast('📥 Planilha .xlsx exportada!');
+    };
+    reader.onerror = function() {
+      // Método 3: window.open com data URI (último recurso)
+      const b64 = XLSX.write(wb, { bookType: 'xlsx', type: 'base64' });
+      const uri = 'data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,' + b64;
+      window.open(uri, '_blank');
+      mostrarAlert('export-alert','info','Planilha gerada. Salve o arquivo aberto.');
+    };
+    reader.readAsDataURL(blob);
+
   } catch(e) {
     console.error('baixarXLSX erro:', e);
     mostrarAlert('export-alert','error','Falha ao exportar: ' + (e.message || String(e)));
