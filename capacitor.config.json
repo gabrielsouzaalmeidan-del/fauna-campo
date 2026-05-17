@@ -7,7 +7,12 @@
   },
   "plugins": {
     "Geolocation": {
-      "permissions": ["location"]
+      "permissions": [
+        "location"
+      ]
+    },
+    "Filesystem": {
+      "iosScheme": "capacitor"
     }
   }
 }

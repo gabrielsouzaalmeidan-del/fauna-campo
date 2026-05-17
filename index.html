@@ -5554,23 +5554,72 @@ function baixarXLSX() {
     const wb = gerarXLSX();
     if (!wb) { mostrarAlert('export-alert','error','Erro ao gerar planilha.'); return; }
     const nome = nomeArquivo();
+    const b64  = XLSX.write(wb, { bookType: 'xlsx', type: 'base64' });
 
-    // Gerar como base64 (funciona no WebView Android via DownloadListener)
-    const b64 = XLSX.write(wb, { bookType: 'xlsx', type: 'base64' });
-    const mime = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
-    const dataUri = `data:${mime};base64,${b64}`;
+    // ── Capacitor (APK Android): usar Filesystem plugin diretamente ──
+    const CapFS = window.Capacitor &&
+                  window.Capacitor.Plugins &&
+                  window.Capacitor.Plugins.Filesystem;
+    if (CapFS) {
+      CapFS.writeFile({
+        path: nome,
+        data: b64,
+        directory: 'DOCUMENTS',  // Directory.Documents
+        recursive: true
+      }).then(() => {
+        mostrarAlert('export-alert','success','✓ Salvo em Documentos: ' + nome);
+        toast('📥 ' + nome + ' salvo!');
+      }).catch(err => {
+        console.error('Filesystem DOCUMENTS falhou, tentando DOWNLOADS:', err);
+        // Tentar pasta Downloads
+        CapFS.writeFile({
+          path: nome,
+          data: b64,
+          directory: 'DOWNLOADS',
+          recursive: true
+        }).then(() => {
+          mostrarAlert('export-alert','success','✓ Salvo em Downloads: ' + nome);
+          toast('📥 ' + nome + ' salvo!');
+        }).catch(err2 => {
+          console.error('Filesystem DOWNLOADS falhou, tentando Cache:', err2);
+          // Último recurso: cache + compartilhar
+          CapFS.writeFile({
+            path: nome,
+            data: b64,
+            directory: 'CACHE',
+            recursive: true
+          }).then(result => {
+            // Compartilhar o arquivo salvo no cache
+            const CapShare = window.Capacitor.Plugins.Share;
+            if (CapShare && result.uri) {
+              CapShare.share({
+                title: 'WildLog — ' + nome,
+                url: result.uri,
+                dialogTitle: 'Salvar planilha'
+              });
+            } else {
+              compartilharXLSX();
+            }
+          }).catch(() => compartilharXLSX());
+        });
+      });
+      return;
+    }
 
-    // Criar link com nome do arquivo — o DownloadListener do Android intercepta
-    const a = document.createElement('a');
-    a.href = dataUri;
-    a.download = nome;
-    a.style.display = 'none';
+    // ── Browser web: URL.createObjectURL ──
+    const wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+    const blob  = new Blob([wbout], {
+      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    });
+    const url = URL.createObjectURL(blob);
+    const a   = document.createElement('a');
+    a.href = url; a.download = nome; a.style.display = 'none';
     document.body.appendChild(a);
     a.click();
-    setTimeout(() => a.remove(), 500);
-
-    mostrarAlert('export-alert','success','✓ Salvando em Downloads: ' + nome);
+    setTimeout(() => { URL.revokeObjectURL(url); a.remove(); }, 1000);
+    mostrarAlert('export-alert','success','✓ Baixando: ' + nome);
     toast('📥 ' + nome);
+
   } catch(e) {
     console.error('baixarXLSX:', e);
     mostrarAlert('export-alert','error','Erro: ' + (e.message || String(e)));

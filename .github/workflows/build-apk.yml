@@ -39,7 +39,7 @@ jobs:
           ls -lah www/
 
       - name: Instalar Capacitor
-        run: npm install && npm install @capacitor/filesystem@6.0.0 --save
+        run: npm install && npm install @capacitor/filesystem@6.0.0 @capacitor/share@6.0.0 --save
 
       - name: Adicionar plataforma Android
         run: npx cap add android
