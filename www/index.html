@@ -255,7 +255,9 @@ textarea { resize: vertical; min-height: 60px; }
   border-radius: var(--radius);
   padding: 10px 12px;
   margin-bottom: 8px;
-  display: flex; align-items: flex-start; gap: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
   transition: box-shadow 0.15s;
 }
 .record-species { font-size: 14px; font-weight: 600; color: var(--texto); font-style: italic; }
@@ -2431,6 +2433,106 @@ body.dark-mode .richness-count { color: rgba(74,222,128,0.5); }
 }
 .send-btn-primary .send-icon { font-size: 20px; }
 body.dark-mode .send-btn-primary { background: #4ade80; color: #0d2b0d; border-color: #4ade80; }
+
+/* ── Record-item: estrutura interna ── */
+.record-item-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.record-item-header > div {
+  flex: 1;
+  min-width: 0;
+}
+.record-popular {
+  font-size: 12px;
+  color: var(--texto-muted);
+  margin-top: 1px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.record-actions {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+  justify-content: flex-start;
+  margin-bottom: 0;
+}
+.record-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 2px;
+}
+.record-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 11px;
+  padding: 2px 7px;
+  border-radius: 99px;
+  font-weight: 500;
+}
+.rb-ponto { background: var(--areia-escura); color: var(--texto-suave); }
+.rb-metodo { background: var(--verde-suave); color: var(--verde-medio); }
+.rb-data { background: var(--areia-escura); color: var(--texto-muted); }
+.badge-notavel { background: #fef3c7; color: #92400e; border-radius: 99px; font-size:11px; padding:2px 7px; font-weight:500; }
+.foto-thumb { width: 42px; height: 42px; border-radius: 8px; object-fit: cover; flex-shrink: 0; cursor: pointer; }
+
+/* ── Dark mode record internals ── */
+body.dark-mode .record-popular { color: rgba(74,222,128,0.5); }
+body.dark-mode .rb-ponto { background: #1a2e1a; color: #86efac; }
+body.dark-mode .rb-metodo { background: rgba(74,222,128,0.1); color: #4ade80; }
+body.dark-mode .rb-data { background: #1a2e1a; color: rgba(74,222,128,0.5); }
+body.dark-mode .badge-notavel { background: #1a1000; color: #fbbf24; }
+
+/* ── Record-item: novo layout ── */
+.record-header-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+  flex-shrink: 0;
+  text-align: right;
+}
+.record-ponto-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--texto);
+}
+.record-data-label {
+  font-size: 11px;
+  color: var(--texto-muted);
+}
+.record-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  margin-top: 2px;
+}
+.record-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  flex: 1;
+  min-width: 0;
+}
+.record-actions {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  flex-shrink: 0;
+}
+.rb-tipo { background: #eff6ff; color: #1e40af; }
+.badge-mma { background: #fef2f2; color: #991b1b; border-radius: 99px; font-size:10px; padding:2px 6px; font-weight:600; }
+
+/* Dark overrides novos */
+body.dark-mode .record-ponto-label { color: #d1fae5; }
+body.dark-mode .record-data-label { color: rgba(74,222,128,0.4); }
+body.dark-mode .rb-tipo { background: rgba(96,165,250,0.1); color: #93c5fd; }
+body.dark-mode .badge-mma { background: rgba(248,113,113,0.1); color: #f87171; }
 </style>
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -4771,28 +4873,33 @@ function renderRegistrosFiltrado() {
       ? `<img class="foto-thumb" src="${r.foto}" onclick="abrirLightbox(registros[${idx}].foto)" title="Ver foto"/>`
       : '';
     return `<div class="record-item ${r.notavel ? 'notavel' : ''}" id="rec-card-${idx}">
-      <div class="record-actions">
-        <button class="btn-notavel ${r.notavel ? 'ativo' : ''}" onclick="toggleNotavel(${idx})" title="Marcar como notável">⭐</button>
-        <button class="btn-share-rec" onclick="compartilharRegistro(${idx})" title="Compartilhar" style="background:none;border:none;color:var(--texto-muted);font-size:14px;cursor:pointer;padding:4px 5px;border-radius:6px;line-height:1;">⬆️</button>
-        <button class="btn-edit-rec" onclick="editarManual(${idx})">✏️</button>
-        <button class="record-del" onclick="deletarRegistro(${idx})">✕</button>
-      </div>
       <div class="record-item-header">
         <div class="record-grupo-icon ${gClass}">${gIcon}</div>
         <div style="flex:1;min-width:0">
           <div class="record-species">${r.especie || '—'}</div>
-          <div class="record-popular">${r.nomePopular || (r.classe ? r.classe + ' · ' + (r.ordem || '') : '')}</div>
+          <div class="record-popular">${r.classe ? r.classe + (r.ordem ? ' · ' + r.ordem : '') : ''}</div>
         </div>
-        ${thumbHtml}
+        <div class="record-header-right">
+          ${r.ponto ? `<span class="record-ponto-label">📍 ${r.ponto}</span>` : ''}
+          ${dataFmt ? `<span class="record-data-label">${dataFmt}</span>` : ''}
+        </div>
       </div>
-      <div class="record-badges">
-        ${r.ponto ? `<span class="record-badge rb-ponto">📍 ${r.ponto}</span>` : ''}
-        ${r.metodologia ? `<span class="record-badge rb-metodo">${r.metodologia}</span>` : ''}
-        ${dataFmt ? `<span class="record-badge rb-data">${dataFmt}</span>` : ''}
-        ${r.notavel ? `<span class="badge-notavel">⭐ notável</span>` : ''}
-        ${r._iucn ? `<span class="badge-iucn iucn-${(r._iucn||'').toLowerCase()}">${r._iucn} IUCN</span>` : ''}
-        ${r._mma ? `<span class="mma-badge">⚠️ ${r._mma} MMA</span>` : ''}
+      <div class="record-footer">
+        <div class="record-badges">
+          ${r.metodo || r.metodologia ? `<span class="record-badge rb-metodo">${r.metodo || r.metodologia}</span>` : ''}
+          ${r.tipo_registro ? `<span class="record-badge rb-tipo">${r.tipo_registro}</span>` : ''}
+          ${r._iucn ? `<span class="badge-iucn iucn-${(r._iucn||'').toLowerCase()}">${r._iucn}</span>` : ''}
+          ${r._mma ? `<span class="badge-mma">${r._mma} MMA</span>` : ''}
+          ${r.notavel ? `<span class="badge-notavel">⭐ notável</span>` : ''}
+        </div>
+        <div class="record-actions">
+          <button class="btn-notavel ${r.notavel ? 'ativo' : ''}" onclick="toggleNotavel(${idx})" title="Notável">⭐</button>
+          <button class="btn-share-rec" onclick="compartilharRegistro(${idx})" title="Compartilhar">⬆️</button>
+          <button class="btn-edit-rec" onclick="editarManual(${idx})">✏️</button>
+          <button class="record-del" onclick="deletarRegistro(${idx})">✕</button>
+        </div>
       </div>
+      ${thumbHtml ? `<div style="margin-top:6px">${thumbHtml}</div>` : ''}
     </div>`;
   }).join('');
 }
