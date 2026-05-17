@@ -5550,6 +5550,14 @@ function baixarXLSX() {
     mostrarAlert('export-alert','error','Biblioteca XLSX não carregada.');
     return;
   }
+
+  // No Capacitor (Android), redirecionar para compartilharXLSX()
+  // que usa a Web Share API nativa — único método que funciona no WebView
+  if (window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform()) {
+    compartilharXLSX();
+    return;
+  }
+
   try {
     const wb = gerarXLSX();
     if (!wb) {
@@ -5558,14 +5566,13 @@ function baixarXLSX() {
     }
     const nome = nomeArquivo();
 
-    // Gerar Blob e criar link de download manual
-    // (XLSX.writeFile usa <a> internamente mas falha no WebView do Android)
+    // Gerar Blob
     const wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
     const blob  = new Blob([wbout], {
       type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
     });
 
-    // Método 1: URL.createObjectURL (funciona na maioria dos ambientes)
+    // Método 1: URL.createObjectURL (browser moderno)
     if (window.URL && window.URL.createObjectURL) {
       const url = URL.createObjectURL(blob);
       const a   = document.createElement('a');
@@ -5580,12 +5587,11 @@ function baixarXLSX() {
       return;
     }
 
-    // Método 2: FileReader base64 → data URI (fallback para WebViews antigos)
+    // Método 2: FileReader base64 → data URI (fallback)
     const reader = new FileReader();
     reader.onload = function(e) {
-      const dataUri = e.target.result;
       const a = document.createElement('a');
-      a.href     = dataUri;
+      a.href     = e.target.result;
       a.download = nome;
       a.style.display = 'none';
       document.body.appendChild(a);
@@ -5595,17 +5601,37 @@ function baixarXLSX() {
       toast('📥 Planilha .xlsx exportada!');
     };
     reader.onerror = function() {
-      // Método 3: window.open com data URI (último recurso)
+      // Último recurso: abrir data URI
       const b64 = XLSX.write(wb, { bookType: 'xlsx', type: 'base64' });
-      const uri = 'data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,' + b64;
-      window.open(uri, '_blank');
-      mostrarAlert('export-alert','info','Planilha gerada. Salve o arquivo aberto.');
+      window.open('data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,' + b64, '_blank');
+      mostrarAlert('export-alert','info','Planilha gerada — salve o arquivo aberto.');
     };
     reader.readAsDataURL(blob);
 
   } catch(e) {
     console.error('baixarXLSX erro:', e);
     mostrarAlert('export-alert','error','Falha ao exportar: ' + (e.message || String(e)));
+  }
+}
+
+
+async function salvarComFilesystem(wb, nome) {
+  // Salvar usando @capacitor/filesystem diretamente na pasta Downloads do Android
+  try {
+    const { Filesystem, Directory } = await import('@capacitor/filesystem');
+    const wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'base64' });
+    await Filesystem.writeFile({
+      path: nome,
+      data: wbout,
+      directory: Directory.Documents,
+      encoding: 'base64'
+    });
+    mostrarAlert('export-alert','success','✓ Salvo em Documentos: ' + nome);
+    toast('📥 Planilha salva em Documentos!');
+    return true;
+  } catch(e) {
+    console.warn('Filesystem plugin indisponível, usando compartilhamento:', e.message);
+    return false;
   }
 }
 
@@ -5621,7 +5647,20 @@ async function compartilharXLSX() {
   if (!navigator.canShare) {
     // Fallback: baixar o arquivo normalmente
     mostrarAlert('export-alert','info','Compartilhamento direto não disponível. Baixando o arquivo...');
-    baixarXLSX();
+    try {
+      const wb = gerarXLSX();
+      if (!wb) return;
+      const wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+      const blob = new Blob([wbout], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = nomeArquivo(); a.style.display = 'none';
+      document.body.appendChild(a); a.click();
+      setTimeout(() => { URL.revokeObjectURL(url); a.remove(); }, 1000);
+      mostrarAlert('export-alert','success','✓ Baixando: ' + nomeArquivo());
+    } catch(e) {
+      mostrarAlert('export-alert','error','Erro: ' + e.message);
+    }
     return;
   }
 
@@ -5644,9 +5683,23 @@ async function compartilharXLSX() {
 
     // Verificar se o sistema aceita esse tipo de arquivo
     if (!navigator.canShare({ files: [arquivo] })) {
-      mostrarAlert('export-alert','info','Sistema não suporta compartilhamento de .xlsx. Baixando...');
-      baixarXLSX();
+      // Tentar download direto via URL.createObjectURL
+      const url = URL.createObjectURL(blob);
+      const a   = document.createElement('a');
+      a.href     = url;
+      a.download = arquivo.name;
+      a.style.display = 'none';
+      document.body.appendChild(a);
+      a.click();
+      setTimeout(() => { URL.revokeObjectURL(url); a.remove(); }, 1000);
+      mostrarAlert('export-alert','success','✓ Baixando: ' + arquivo.name);
       return;
+    }
+
+    // Tentar salvar direto nos Documentos via Filesystem plugin
+    if (window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform()) {
+      const salvou = await salvarComFilesystem(gerarXLSX(), arquivo.name);
+      if (salvou) return;
     }
 
     // Abrir gaveta nativa de compartilhamento do Android
@@ -5660,13 +5713,23 @@ async function compartilharXLSX() {
 
   } catch (err) {
     if (err.name === 'AbortError') {
-      // Usuário fechou a gaveta — não é erro
       mostrarAlert('export-alert','info','Compartilhamento cancelado.');
     } else {
       console.error('compartilharXLSX:', err);
-      // Fallback: baixar normalmente
-      mostrarAlert('export-alert','info','Erro ao compartilhar. Baixando o arquivo...');
-      baixarXLSX();
+      // Tentar download direto como fallback
+      try {
+        const wb2 = gerarXLSX();
+        const wbout2 = XLSX.write(wb2, { bookType: 'xlsx', type: 'array' });
+        const blob2  = new Blob([wbout2], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+        const url2   = URL.createObjectURL(blob2);
+        const a2     = document.createElement('a');
+        a2.href = url2; a2.download = nomeArquivo(); a2.style.display = 'none';
+        document.body.appendChild(a2); a2.click();
+        setTimeout(() => { URL.revokeObjectURL(url2); a2.remove(); }, 1000);
+        mostrarAlert('export-alert','success','✓ Baixando: ' + nomeArquivo());
+      } catch(e2) {
+        mostrarAlert('export-alert','error','Erro ao exportar: ' + (err.message || String(err)));
+      }
     }
   }
 }
