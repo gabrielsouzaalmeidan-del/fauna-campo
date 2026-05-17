@@ -166,6 +166,107 @@ jobs:
             android/app/src/main/res/values/strings.xml
           echo "=== strings.xml ===" && cat android/app/src/main/res/values/strings.xml
 
+      - name: Adicionar suporte a download de arquivos no WebView
+        run: |
+          # Criar MainActivity.java customizado com DownloadListener
+          # O Capacitor usa BridgeActivity — precisamos sobrescrever para adicionar
+          # o DownloadListener que intercepta downloads no WebView Android
+
+          MAIN_DIR="android/app/src/main/java/br/com/wildlog/app"
+          mkdir -p "$MAIN_DIR"
+
+          cat > "$MAIN_DIR/MainActivity.java" << 'JAVAEOF'
+          package br.com.wildlog.app;
+
+          import android.app.DownloadManager;
+          import android.content.Context;
+          import android.net.Uri;
+          import android.os.Bundle;
+          import android.os.Environment;
+          import android.webkit.DownloadListener;
+          import android.webkit.WebView;
+          import android.widget.Toast;
+          import com.getcapacitor.BridgeActivity;
+          import java.io.File;
+          import java.io.FileOutputStream;
+          import android.util.Base64;
+
+          public class MainActivity extends BridgeActivity {
+
+            @Override
+            public void onCreate(Bundle savedInstanceState) {
+              super.onCreate(savedInstanceState);
+
+              // Aguardar o WebView ser criado e adicionar DownloadListener
+              getBridge().getWebView().setDownloadListener(new DownloadListener() {
+                @Override
+                public void onDownloadStart(String url, String userAgent,
+                    String contentDisposition, String mimeType, long contentLength) {
+
+                  // Extrair nome do arquivo do Content-Disposition ou URL
+                  String filename = "FAUNA_download.xlsx";
+                  if (contentDisposition != null && contentDisposition.contains("filename=")) {
+                    filename = contentDisposition.replaceAll(".*filename="?([^";
+]+)"?.*", "$1").trim();
+                  } else if (url.contains("FAUNA_")) {
+                    int idx = url.lastIndexOf("FAUNA_");
+                    filename = url.substring(idx).replaceAll("[?#].*", "");
+                    if (!filename.endsWith(".xlsx")) filename += ".xlsx";
+                  }
+
+                  // Tratar data: URI (base64 inline)
+                  if (url.startsWith("data:")) {
+                    try {
+                      String base64Data = url.substring(url.indexOf(",") + 1);
+                      byte[] bytes = Base64.decode(base64Data, Base64.DEFAULT);
+
+                      File downloadsDir = Environment.getExternalStoragePublicDirectory(
+                          Environment.DIRECTORY_DOWNLOADS);
+                      if (!downloadsDir.exists()) downloadsDir.mkdirs();
+
+                      File outFile = new File(downloadsDir, filename);
+                      FileOutputStream fos = new FileOutputStream(outFile);
+                      fos.write(bytes);
+                      fos.close();
+
+                      // Notificar o DownloadManager para o arquivo aparecer
+                      DownloadManager dm = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
+                      Toast.makeText(MainActivity.this,
+                          "✓ Salvo em Downloads: " + filename, Toast.LENGTH_LONG).show();
+                    } catch (Exception e) {
+                      Toast.makeText(MainActivity.this,
+                          "Erro ao salvar: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                    return;
+                  }
+
+                  // Tratar blob: URL via DownloadManager normal
+                  try {
+                    DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
+                    request.setMimeType(mimeType);
+                    request.setTitle(filename);
+                    request.setDescription("WildLog — Exportação de dados");
+                    request.setNotificationVisibility(
+                        DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+                    request.setDestinationInExternalPublicDir(
+                        Environment.DIRECTORY_DOWNLOADS, filename);
+                    DownloadManager dm = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
+                    dm.enqueue(request);
+                    Toast.makeText(MainActivity.this,
+                        "Baixando: " + filename, Toast.LENGTH_SHORT).show();
+                  } catch (Exception e) {
+                    Toast.makeText(MainActivity.this,
+                        "Erro: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                  }
+                }
+              });
+            }
+          }
+          JAVAEOF
+
+          echo "=== MainActivity.java criado ==="
+          cat "$MAIN_DIR/MainActivity.java"
+
       - name: Build APK
         working-directory: android
         run: |
