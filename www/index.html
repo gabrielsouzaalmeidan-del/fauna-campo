@@ -2540,7 +2540,7 @@ body.dark-mode .badge-mma { background: rgba(248,113,113,0.1); color: #f87171; }
   <meta name="apple-mobile-web-app-title" content="WildLog">
   <meta name="theme-color" content="#1a2e1a">
   <script>
-    const SW_CODE = "const CACHE_NAME = 'fauna-campo-v1';\nconst ASSETS = ['./', './index.html'];\n\nself.addEventListener('install', e => {\n  e.waitUntil(\n    caches.open(CACHE_NAME).then(c => c.addAll(ASSETS))\n      .then(() => self.skipWaiting())\n  );\n});\n\nself.addEventListener('activate', e => {\n  e.waitUntil(\n    caches.keys().then(keys =>\n      Promise.all(keys.filter(k => k !== CACHE_NAME).map(k => caches.delete(k)))\n    ).then(() => self.clients.claim())\n  );\n});\n\nself.addEventListener('fetch', e => {\n  // Cache-first para assets locais\n  e.respondWith(\n    caches.match(e.request).then(cached => cached || fetch(e.request))\n  );\n});";
+    const SW_CODE = "const CACHE_NAME = 'wildlog-v" + Date.now() + "';\n\nself.addEventListener('install', e => {\n  self.skipWaiting();\n});\n\nself.addEventListener('activate', e => {\n  e.waitUntil(\n    caches.keys().then(keys =>\n      Promise.all(keys.map(k => caches.delete(k)))\n    ).then(() => self.clients.claim())\n  );\n});\n\nself.addEventListener('fetch', e => {\n  // Network-first: sempre buscar versão mais recente\n  e.respondWith(\n    fetch(e.request).catch(() => caches.match(e.request))\n  );\n});";
     const PWA_MANIFEST = {
   "name": "WildLog",
   "short_name": "Fauna",
@@ -5046,6 +5046,40 @@ async function init() {
   await restaurarMetodoPadrao();
   loadDarkMode();
   registrarPWA();
+
+  // Aviso de persistência para usuários do browser (não APK)
+  const isCapacitor = window.Capacitor && window.Capacitor.isNativePlatform
+                      && window.Capacitor.isNativePlatform();
+  const isStandalone = window.matchMedia('(display-mode: standalone)').matches
+                       || window.navigator.standalone === true;
+  if (!isCapacitor && !isStandalone) {
+    // Verificar se já avisamos antes
+    const jaAvisou = localStorage.getItem('_pwa_aviso_v1');
+    if (!jaAvisou) {
+      setTimeout(() => {
+        const banner = document.createElement('div');
+        banner.id = 'pwa-banner';
+        banner.style.cssText = `
+          position:fixed; bottom:70px; left:12px; right:12px; z-index:9999;
+          background:#1a2e1a; color:#d1fae5; border-radius:12px;
+          padding:12px 14px; font-size:13px; box-shadow:0 4px 20px rgba(0,0,0,0.3);
+          display:flex; align-items:center; gap:10px;
+        `;
+        banner.innerHTML = `
+          <span style="font-size:22px">📌</span>
+          <div style="flex:1">
+            <div style="font-weight:600;margin-bottom:2px">Instale o WildLog para não perder dados</div>
+            <div style="font-size:11px;opacity:0.8">No Safari: compartilhar → Adicionar à Tela de Início<br>No Chrome: menu ⋮ → Instalar aplicativo</div>
+          </div>
+          <button onclick="document.getElementById('pwa-banner').remove();localStorage.setItem('_pwa_aviso_v1','1')"
+            style="background:none;border:none;color:#4ade80;font-size:20px;cursor:pointer;padding:4px">✕</button>
+        `;
+        document.body.appendChild(banner);
+        // Auto-fechar em 8 segundos
+        setTimeout(() => banner?.remove(), 8000);
+      }, 3000);
+    }
+  }
   // Indicador online/offline
   function updateNetBadge() {
     const b = document.getElementById('network-badge');
@@ -7236,7 +7270,7 @@ function setText(id, val) {
 // INDEXEDDB — armazenamento robusto offline
 // ══════════════════════════════════════════════════════════
 const IDB_NAME    = 'FaunaCampoDB';
-const IDB_VERSION = 2;
+const IDB_VERSION = 3;
 let _db = null;
 
 function abrirDB() {
@@ -7251,7 +7285,7 @@ function abrirDB() {
       if (!db.objectStoreNames.contains('biometria'))
         db.createObjectStore('biometria', { keyPath: '_id' });
       if (!db.objectStoreNames.contains('config'))
-        db.createObjectStore('config', { keyPath: 'chave' });
+        db.createObjectStore('config', { keyPath: '_id' });
       if (!db.objectStoreNames.contains('fotos'))
         db.createObjectStore('fotos', { keyPath: '_id' });
       if (!db.objectStoreNames.contains('campanhas'))
@@ -7265,12 +7299,12 @@ function abrirDB() {
 }
 
 async function idbGet(store, id) {
-  return new Promise((res, rej) => {
-    const tx = db.transaction(store, 'readonly');
+  return abrirDB().then(db => new Promise((res, rej) => {
+    const tx  = db.transaction(store, 'readonly');
     const req = tx.objectStore(store).get(id);
     req.onsuccess = () => res(req.result);
-    req.onerror  = () => rej(req.error);
-  });
+    req.onerror   = () => rej(req.error);
+  }));
 }
 
 function idbGetAll(store) {
@@ -7338,14 +7372,17 @@ async function carregarDados() {
 
 async function salvarDados() {
   try {
-    // Salvar/atualizar cada registro individualmente
+    // Salvar no IDB (principal)
     await Promise.all(registros.map(r => idbPut('registros', r)));
+    // Backup no localStorage (redundância para GH Pages / Safari)
+    try { localStorage.setItem(DB_KEY, JSON.stringify(registros)); } catch(e2) {}
     atualizarResumo();
     atualizarBarraSalvo();
   } catch(e) {
     console.warn('IDB falhou, usando localStorage:', e);
-    localStorage.setItem(DB_KEY, JSON.stringify(registros));
+    try { localStorage.setItem(DB_KEY, JSON.stringify(registros)); } catch(e2) {}
     atualizarResumo();
+    atualizarBarraSalvo();
   }
 }
 
