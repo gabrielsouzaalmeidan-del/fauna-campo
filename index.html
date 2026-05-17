@@ -2419,6 +2419,18 @@ body.dark-mode .richness-bar-track { background: #2d5a2d; }
 body.dark-mode .richness-bar-fill { background: #4ade80; }
 body.dark-mode .richness-label { color: #86efac; }
 body.dark-mode .richness-count { color: rgba(74,222,128,0.5); }
+
+/* Botão principal de compartilhamento */
+.send-btn-primary {
+  grid-column: 1 / -1;
+  background: var(--verde-medio);
+  color: #fff;
+  border-color: var(--verde-medio);
+  font-size: 14px;
+  padding: 14px;
+}
+.send-btn-primary .send-icon { font-size: 20px; }
+body.dark-mode .send-btn-primary { background: #4ade80; color: #0d2b0d; border-color: #4ade80; }
 </style>
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -4246,13 +4258,13 @@ body.dark-mode .richness-count { color: rgba(74,222,128,0.5); }
       <span style="font-size:11px;opacity:.8">HTML completo com espécies, biometria e índices</span></span>
     </button>
     <div class="send-grid">
+      <button class="send-btn send-btn-primary" onclick="compartilharXLSX()">
+        <span class="send-icon">📤</span>
+        Compartilhar .xlsx
+      </button>
       <button class="send-btn" onclick="baixarXLSX()">
         <span class="send-icon">📥</span>
         Baixar .xlsx
-      </button>
-      <button class="send-btn" onclick="compartilharWhatsApp()">
-        <span class="send-icon">💬</span>
-        WhatsApp
       </button>
       <button class="send-btn" onclick="abrirEmail()">
         <span class="send-icon">📧</span>
@@ -5445,6 +5457,69 @@ function baixarXLSX() {
     mostrarAlert('export-alert','error','Falha ao exportar: ' + (e.message || String(e)));
   }
 }
+
+async function compartilharXLSX() {
+  // Web Share API — compartilha o .xlsx como arquivo real pelo Android
+  const temDados = registros.length > 0 || (window.bioRegistros && bioRegistros.length > 0);
+  if (!temDados) {
+    mostrarAlert('export-alert','error','Nenhum registro para compartilhar.');
+    return;
+  }
+
+  // Verificar suporte à Web Share API com arquivos
+  if (!navigator.canShare) {
+    // Fallback: baixar o arquivo normalmente
+    mostrarAlert('export-alert','info','Compartilhamento direto não disponível. Baixando o arquivo...');
+    baixarXLSX();
+    return;
+  }
+
+  try {
+    mostrarAlert('export-alert','info','Gerando planilha...');
+
+    // Gerar o workbook
+    const wb = gerarXLSX();
+    if (!wb) {
+      mostrarAlert('export-alert','error','Erro ao gerar planilha.');
+      return;
+    }
+
+    // Converter para ArrayBuffer
+    const wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+    const blob = new Blob([wbout], {
+      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    });
+    const arquivo = new File([blob], nomeArquivo(), { type: blob.type });
+
+    // Verificar se o sistema aceita esse tipo de arquivo
+    if (!navigator.canShare({ files: [arquivo] })) {
+      mostrarAlert('export-alert','info','Sistema não suporta compartilhamento de .xlsx. Baixando...');
+      baixarXLSX();
+      return;
+    }
+
+    // Abrir gaveta nativa de compartilhamento do Android
+    await navigator.share({
+      title: 'WildLog — ' + nomeArquivo(),
+      text: `Planilha de dados faunísticos — ${registros.length} obs. + ${bioRegistros.length} biometria`,
+      files: [arquivo]
+    });
+
+    mostrarAlert('export-alert','success','✓ Arquivo compartilhado!');
+
+  } catch (err) {
+    if (err.name === 'AbortError') {
+      // Usuário fechou a gaveta — não é erro
+      mostrarAlert('export-alert','info','Compartilhamento cancelado.');
+    } else {
+      console.error('compartilharXLSX:', err);
+      // Fallback: baixar normalmente
+      mostrarAlert('export-alert','info','Erro ao compartilhar. Baixando o arquivo...');
+      baixarXLSX();
+    }
+  }
+}
+
 
 function compartilharWhatsApp() {
   if (registros.length === 0) { mostrarAlert('export-alert','error','Nenhum registro para exportar.'); return; }
