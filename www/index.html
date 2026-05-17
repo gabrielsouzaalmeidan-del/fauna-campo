@@ -886,10 +886,11 @@ body.dark-mode .badge-iucn.iucn-en { background: #2c0a0a; color: #f87171; border
 body.dark-mode .badge-iucn.iucn-vu { background: #1a1000; color: #fbbf24; border-color: #4a3000; }
 body.dark-mode .badge-iucn.iucn-lc { background: #0d2b0d; color: #4ade80; border-color: #2d5a2d; }
 body.dark-mode .record-badge { filter: brightness(0.85); }
-body.dark-mode .dash-inicio {
-  background: var(--verde-suave);
+.dash-inicio {
+  background: var(--branco);
+  border: 1px solid var(--borda);
   border-radius: var(--radius);
-  border: 1px solid var(--verde-borda);
+  box-shadow: var(--sombra);
   padding: 16px;
   margin-bottom: 12px;
 }
@@ -918,7 +919,7 @@ body.dark-mode .dash-acao {
 }
 .dash-acao:hover, .dash-acao:active { background: var(--verde-suave); color: var(--verde-medio); }
 .dash-acao:hover { background: var(--verde-suave); color: var(--verde-medio); }
-body.dark-mode .chart-card { background: #1a2e1a; border-color: #2d5a2d; }
+body.dark-mode 
 body.dark-mode .donut-center-num { color: #d1fae5; }
 body.dark-mode .ponto-bar-track { background: #2d5a2d; }
 body.dark-mode .ponto-bar-fill { background: #4ade80; }
@@ -2312,6 +2313,112 @@ body.dark-mode .header-icon-btn { background: #1a2e1a; border-color: #2d5a2d; }
 body.dark-mode .online-pill { color: #4ade80; }
 body.dark-mode .online-pill-dot { background: #4ade80; }
 body.dark-mode .header-gps-pill { background: rgba(74,222,128,0.1); border-color: #2d5a2d; color: #4ade80; }
+
+/* ═══ DASHBOARD ════════════════════════════════════ */
+.dash-charts-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+.chart-card {
+  background: var(--branco);
+  border: 1px solid var(--borda);
+  border-radius: var(--radius);
+  padding: 12px;
+  box-shadow: var(--sombra);
+}
+.chart-card-title {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--texto-muted);
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  margin-bottom: 8px;
+}
+.donut-wrap { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+.donut-canvas-wrap { position: relative; width: 90px; height: 90px; }
+.donut-canvas-wrap canvas { width: 90px !important; height: 90px !important; }
+.donut-center-label {
+  position: absolute; top: 50%; left: 50%;
+  transform: translate(-50%,-50%);
+  text-align: center; pointer-events: none;
+}
+.donut-center-num { font-size: 18px; font-weight: 700; color: var(--verde-medio); }
+.donut-center-sub { font-size: 9px; color: var(--texto-muted); }
+.donut-legend { width: 100%; }
+.ponto-bars-wrap { display: flex; flex-direction: column; gap: 5px; }
+.ponto-bar-row { display: flex; align-items: center; gap: 6px; font-size: 10px; }
+.ponto-bar-label { flex-shrink: 0; width: 50px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--texto-suave); }
+.ponto-bar-track { flex: 1; height: 6px; background: var(--areia-escura); border-radius: 3px; overflow: hidden; }
+.ponto-bar-fill { height: 100%; background: var(--verde-medio); border-radius: 3px; }
+.ponto-bar-count { font-size: 10px; color: var(--texto-muted); flex-shrink: 0; }
+.ponto-empty {
+  font-size: 12px;
+  color: var(--texto-muted);
+  text-align: center;
+  padding: 16px 0;
+}
+.dash-section-title {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--verde-medio);
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  margin: 14px 0 8px;
+}
+.dash-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+.dash-card {
+  background: var(--areia-escura);
+  border: 1px solid var(--borda);
+  border-radius: var(--radius-sm);
+  padding: 10px;
+  text-align: center;
+}
+.dash-num {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--verde-medio);
+  line-height: 1.1;
+}
+.dash-label {
+  font-size: 11px;
+  color: var(--texto-suave);
+  margin-top: 2px;
+}
+.dash-sub {
+  font-size: 10px;
+  color: var(--texto-muted);
+  margin-top: 1px;
+}
+.richness-bar-wrap { display: flex; flex-direction: column; gap: 6px; margin-bottom: 10px; }
+.richness-row { display: flex; align-items: center; gap: 8px; }
+.richness-label { font-size: 12px; color: var(--texto-suave); width: 80px; flex-shrink: 0; }
+.richness-bar-track { flex: 1; height: 8px; background: var(--areia-escura); border-radius: 4px; overflow: hidden; }
+.richness-bar-fill { height: 100%; background: var(--verde-medio); border-radius: 4px; }
+.richness-count { font-size: 11px; color: var(--texto-muted); flex-shrink: 0; width: 30px; text-align: right; }
+
+/* dark-mode dashboard */
+body.dark-mode .chart-card { background: #1a2e1a !important; border-color: #2d5a2d !important; }
+body.dark-mode .chart-card-title { color: rgba(74,222,128,0.6); }
+body.dark-mode .donut-center-num { color: #4ade80; }
+body.dark-mode .ponto-bar-track { background: #2d5a2d; }
+body.dark-mode .ponto-bar-fill { background: #4ade80; }
+body.dark-mode .ponto-empty { color: rgba(74,222,128,0.4); }
+body.dark-mode .dash-card { background: #0d2b0d; border-color: #2d5a2d; }
+body.dark-mode .dash-num { color: #4ade80; }
+body.dark-mode .dash-label { color: #86efac; }
+body.dark-mode .dash-sub { color: rgba(74,222,128,0.5); }
+body.dark-mode .dash-section-title { color: #4ade80; }
+body.dark-mode .richness-bar-track { background: #2d5a2d; }
+body.dark-mode .richness-bar-fill { background: #4ade80; }
+body.dark-mode .richness-label { color: #86efac; }
+body.dark-mode .richness-count { color: rgba(74,222,128,0.5); }
 </style>
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -6708,28 +6815,42 @@ function renderDashboard() {
   if (existing) existing.remove();
 
   if (totalAll === 0) {
+    // Mostrar estado vazio acima do dash-inicio
     const emptyDiv = document.createElement('div');
     emptyDiv.id = emptyId;
-    emptyDiv.style.cssText = 'text-align:center;padding:40px 20px;';
+    emptyDiv.style.cssText = 'text-align:center;padding:32px 20px 16px;';
     emptyDiv.innerHTML = `
-      <div style="font-size:48px;margin-bottom:12px;">📊</div>
-      <div style="font-size:16px;font-weight:500;color:var(--texto);margin-bottom:8px;">Dashboard vazio</div>
-      <div style="font-size:13px;color:var(--texto-muted);line-height:1.6;max-width:260px;margin:0 auto 20px;">
-        Adicione seu primeiro registro na aba <strong>Manual</strong> para visualizar os gráficos de distribuição por classe, espécies e pontos amostrais.
+      <div style="font-size:44px;margin-bottom:10px;">📊</div>
+      <div style="font-size:16px;font-weight:600;color:var(--texto);margin-bottom:6px;">Dashboard vazio</div>
+      <div style="font-size:13px;color:var(--texto-muted);line-height:1.6;max-width:260px;margin:0 auto 16px;">
+        Adicione seu primeiro registro na aba <strong>Manual</strong> para visualizar os gráficos.
       </div>
-      <div style="display:flex;flex-direction:column;gap:8px;max-width:200px;margin:0 auto;">
-        <button class="btn btn-primary" onclick="irPara('manual',document.querySelector('.nav-btn:nth-child(2)'))">
-          📝 Adicionar registro
+      <div style="display:flex;flex-direction:column;gap:8px;max-width:220px;margin:0 auto;">
+        <button class="btn btn-primary" onclick="irPara('manual',document.querySelectorAll('.nav-btn')[1])">
+          ✏️ Adicionar registro
         </button>
-        <button class="btn btn-secondary" onclick="irPara('biometria',document.querySelector('.nav-btn:nth-child(3)'))">
-          📏 Registrar biometria
+        <button class="btn btn-secondary" onclick="irPara('biometria',document.querySelectorAll('.nav-btn')[2])">
+          📐 Registrar biometria
         </button>
       </div>`;
     if (dashEl) dashEl.prepend(emptyDiv);
+    // Atualizar saudação, stats zeradas e ações rápidas
+    atualizarDashInicio();
+    // Esconder seções de gráficos quando não há dados
+    const chartsRow = document.querySelector('.dash-charts-row');
+    const resumoCard = document.querySelector('#panel-dashboard .card');
+    if (chartsRow) chartsRow.style.display = 'none';
+    if (resumoCard) resumoCard.style.display = 'none';
     return;
   }
 
-    const filtrarCamp = campAtiva !== null;
+    // Restaurar seções de gráficos
+  const chartsRowR = document.querySelector('.dash-charts-row');
+  const resumoCardR = document.querySelector('#panel-dashboard .card');
+  if (chartsRowR) chartsRowR.style.display = '';
+  if (resumoCardR) resumoCardR.style.display = '';
+
+  const filtrarCamp = campAtiva !== null;
   const regFiltrados = filtrarCamp
     ? registros.filter(r => r.campId === campAtiva._id || r.campanha === campAtiva.nome)
     : registros;
